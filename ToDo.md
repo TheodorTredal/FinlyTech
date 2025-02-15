@@ -1,3 +1,5 @@
+SnapTrade eller Finly
+
 1. Få opp et fint skall på nettsiden
   - X Sidebar
   - Header
@@ -15,7 +17,9 @@
 3. 8Enkel graf som viser prishistorikken til en aksje
   - Her kan vi vise den samlede prestasjonen til alle aksjene i watchlist.
   - Velge mellom dag, måned, i år, 1 år, 3 år, 5 år, 10 år
-  - Skal helst være mulig å spesifisere nøyaktig dato. 
+  - Skal helst være mulig å spesifisere nøyaktig dato.
+
+4. Ha en samlet graf som viser linje for vekst i alle selskapene dine målt i prosent. 
 
 4. En søke bar
    - Trenger ikke mer enn å se pen ut for øyeblikket.

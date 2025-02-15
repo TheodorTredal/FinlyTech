@@ -12,7 +12,7 @@ interface ShowBasicStockInformationProps {
   export const ShowBasicStockInformation: React.FC<ShowBasicStockInformationProps> = ({ stocksPrices }) => {
     return (
         // <div className="flex flex-col ml-auto w-1/6 h-[400px]  border-white text-white rounded-lg relative p-4">
-        <div className="flex flex-col ml-auto w-1/6 h-[400px] border-2 border-grey-400 rounded-lg relative p-2">
+        <div className="flex flex-col ml-auto w-1/6 h-[300px] border-2 border-grey-400 rounded-lg relative p-2">
 
             <h2 className="text-xl mb-4 flex items-center">
                 Watch List
