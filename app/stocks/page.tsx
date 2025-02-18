@@ -3,7 +3,7 @@ import StocksPage from "./stock";
 const Page = () => {
 
     return (
-        <div>hello
+        <div>
             <StocksPage></StocksPage>
         </div>
     );

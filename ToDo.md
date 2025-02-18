@@ -40,6 +40,21 @@ SnapTrade eller Finly
 https://ui.shadcn.com/charts
 
 
+9. Supply chain
+  - Se hva den søkte bedriften er avhegnig av og hvilke bedrifter som er avhengig av den.
+
+
+10. Backtesting
+  - Våre egne algoritmer.
+  - Brukere skal enkelt få backtestet sine egne algoritmer.
+
+11. Kalender
+  - Viser Viktige dager for bedriftene man har på watchlisten
+  - Kan også vise store dager som renteendringer world economic forum, 
+    Altså store hendelser som skal skje frem i tid.
+
+
+
 
 
  - Dahsboard, hva har man lyst til å se? Det er her man har lyst til å få en grov oversikt over bevegelse i markedet.

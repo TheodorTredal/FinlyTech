@@ -59,13 +59,12 @@ export default function Dashboard() {
             {/* Vis Dashboard eller News komponenter basert på aktivt valg */}
             {activeComponent === "dashboard" && (
                 <div className="justify-start w-full p-2"> {/* Bruk space-y-4 for mindre avstand */}
-                    <div className="flex space-x-2 px-2 pb-2 justify-end w-full"> {/* Redusert padding fra p-6 til p-3 */}
-                        <LineChart data={NvidiaTestData} name={"Nvidia"} />
+                    <div className="flex space-x-2 px-2 pb-2 justify-start w-full"> {/* Redusert padding fra p-6 til p-3 */}
                         <LineChart data={NvidiaTestData} name={"Din portefølje"} />
                         <ShowBasicStockInformation stocksPrices={stock_prices} />
                     </div>
 
-                    <div className="flex space-x-2 px-2 justify-end w-full"> {/* Redusert padding her også */}
+                    <div className="flex space-x-2 px-2 justify-start w-full"> {/* Redusert padding her også */}
                         <PieChart data={PortfolioTestData} name={"Your Portfolio"} />
                         <PieChart data={ExposureTestData} name={"Market Exposure"} />
                         <ShowBasicStockInformation stocksPrices={osebx_stock_prices} />
