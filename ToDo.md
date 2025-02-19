@@ -11,8 +11,10 @@ SnapTrade eller Finly
     - Profilbilde
 
 2. Enkel boks som displayer informasjon om en aksje
-   - Bruk statisk data i begynnelsen
+   - X Bruk statisk data i begynnelsen
    - Endre til API data når nettsiden begynner å se bra ut :)
+     - Konverter stock nettsiden til å vise aksjedata fra yahoo finance.
+     - I begynnelsen kan det være lurt å lagre dataen i database for å slippe unødvendige kall til yahoo.
 
 3. Enkel graf som viser prishistorikken til en aksje
   - Her kan vi vise den samlede prestasjonen til alle aksjene i watchlist.
@@ -52,6 +54,14 @@ https://ui.shadcn.com/charts
   - Viser Viktige dager for bedriftene man har på watchlisten
   - Kan også vise store dager som renteendringer world economic forum, 
     Altså store hendelser som skal skje frem i tid.
+  - Ha et kart som viser hvilke aksjemarkeder som er åpne.
+
+12. Et vær kart. været kan påvirke shipping. Naturkatastorfer kan påvirke bedrifter.
+  - Hadde vært kult værapp som viser globale stormer, lokale stormer, og om det er noen påventende værkatastrofer i nær fremtid.
+  - Ha en enable knapp som bruker kan skru av og på, hvis de vil se om været påvirker noen av de satte filtrene
+  - Hadde vært kult med et kart som viste hele globen.
+
+13. Live kart over shipping og fly.
 
 
 
