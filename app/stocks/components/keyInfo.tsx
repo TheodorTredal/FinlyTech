@@ -7,7 +7,7 @@ const KeyInfo = () => {
 
 
     return (
-        <div className="justify-around p-6 bg-sidebar shadow-lg rounded-lg w-1/2 h-[300px]">
+        <div className="justify-around p-6 bg-sidebar shadow-lg rounded-lg w-3/1 h-[300px]">
             Key Stats
 
         <div>

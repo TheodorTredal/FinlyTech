@@ -5,13 +5,18 @@ import KeyInfo from "./components/keyInfo";
 import BarChart from "./components/BarChart";
 
 
+
+import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from "@/components/ui/menubar";
+
 // TestData
-import { NvidiaTestData } from "../testdata/nvidiatestdata";
 import BarChartData from "../testdata/BarChartData";
 import NettoInntektData from "../testdata/BarchartNetIncomeData";
 
 
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from "@/components/ui/menubar";
+let ticker = "nvda";
+
+
+
 
 // Definer en enum for aktive komponenter
 enum ActiveComponentEnum {
@@ -36,7 +41,7 @@ export default function StocksPage() {
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <Menubar className="rounded-xl shadow-md p-2 flex justify-start">
+      <Menubar className="rounded-xl p-2 flex justify-start">
         <MenubarMenu>
           <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Stock)}>Stock</MenubarTrigger>
           <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Financials)}>Financials</MenubarTrigger>
@@ -55,7 +60,7 @@ export default function StocksPage() {
       <div>
 
         <div className="flex justify-start space-x-2">
-          <StockGraph data={NvidiaTestData} name={"Nvidia"}>
+          <StockGraph ticker={ticker}>
           </StockGraph>
           <KeyInfo></KeyInfo>
         </div>

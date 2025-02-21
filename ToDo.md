@@ -20,6 +20,8 @@ SnapTrade eller Finly
   - Her kan vi vise den samlede prestasjonen til alle aksjene i watchlist.
   - Velge mellom dag, måned, i år, 1 år, 3 år, 5 år, 10 år
   - Skal helst være mulig å spesifisere nøyaktig dato.
+  - Skal være mulig å hovere over grafen og finne ut hvilke nyheter om bedriften skjedde den dagen
+    - Dette vil si noe om hvorfor aksjen gikk ned eller opp.
 
 4. Ha en samlet graf som viser linje for vekst i alle selskapene dine målt i prosent. 
 
@@ -32,7 +34,10 @@ SnapTrade eller Finly
    - Skal være mulig å legge til aksjer man har lyst til å følge med på
 
 6. Få en utbytte komponent, så man kan se hvor mye utbytte man har fått eller bedriften har gitt, Bruk komponenten  
-
+  - ha noe som sier om bedriften har utbytte, true false.
+  - Hvor ofte betaler de utbytte
+  - Hvor lenge har de betalt ut utbytte
+  - Har de betalt ut utbytte selv i dårlige tider.
 
 7. Notify knapp
    - man kan få push varsler på kommende nyheter om en aksje.
@@ -44,6 +49,13 @@ https://ui.shadcn.com/charts
 
 9. Supply chain
   - Se hva den søkte bedriften er avhegnig av og hvilke bedrifter som er avhengig av den.
+  - Et kart som viser hvor bedrifter har fabrikker, viktige hotspots.
+    - Hvilke trading ruter som bedriften vanligvis benytter seg av.
+    - Potensielle bottlenecks
+    - værfilter på/av
+    - Sourcemap api?
+
+
 
 
 10. Backtesting
