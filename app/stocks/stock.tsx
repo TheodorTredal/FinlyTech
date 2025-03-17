@@ -3,6 +3,9 @@ import { useState } from "react";
 import StockGraph from "./components/graph/graph";
 import KeyInfo from "./components/keyInfo/keyInfo";
 import BarChart from "./components/BarChart";
+import { StarStock } from "./star";
+
+import { Insiders } from "./components/Insiders/Insiders";
 
 
 // Supply Chain
@@ -12,6 +15,7 @@ import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 // TestData
 import BarChartData from "../testdata/BarChartData";
 import NettoInntektData from "../testdata/BarchartNetIncomeData";
+
 
 
 // Definer en enum for aktive komponenter
@@ -24,12 +28,13 @@ enum ActiveComponentEnum {
   HistoricalData = "historicalData",
   Algorithms = "algorithms",
   Competitors = "competitors",
+  Insiders = "Insiders",
 }
 
 
 export default function StocksPage() {
 
-  const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.Stock)
+  const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.Stock);
 
   const handleMenuClick = (component: ActiveComponentEnum) => {
     setActiveComponent(component);
@@ -37,19 +42,30 @@ export default function StocksPage() {
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <Menubar className="rounded-xl p-2 flex justify-start">
+      <div className="flex">
+
+
+      <Menubar className="rounded-xl p-2 flex justify-start space-x-4">
         <MenubarMenu>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Stock)}>Stock</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Financials)}>Financials</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.KPI)}>KPI</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.SupplyChain)}>Supply Chain</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.News)}>News</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.HistoricalData)}>Historical Data</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Algorithms)}>Algorithms</MenubarTrigger>
-          <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Competitors)}>Competitors</MenubarTrigger>
+          {Object.values(ActiveComponentEnum).map((component) => (
+            <MenubarTrigger
+              key={component}
+              onClick={() => handleMenuClick(component)}
+              className={`relative px-4 py-2 transition-all duration-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] ${
+              activeComponent === component
+              ? "after:bg-white text-white"
+              : "after:bg-transparent text-gray-400 hover:text-gray-200"
+              }`}
+            >
+          {component.charAt(0).toUpperCase() + component.slice(1)}
+        </MenubarTrigger>
+        ))}
         </MenubarMenu>
       </Menubar>
+  
+        <StarStock></StarStock>
 
+  </div>
 
     {activeComponent === ActiveComponentEnum.Stock && (
       
@@ -95,9 +111,14 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.HistoricalData && (
-      <div className="underline decoration-white">HistoricalData</div>
+      <div></div>
     )}
 
+    {activeComponent === ActiveComponentEnum.Insiders && (
+      <div>
+        <Insiders></Insiders>
+      </div>
+    )}
 
 
 

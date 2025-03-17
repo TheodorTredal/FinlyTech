@@ -10,24 +10,15 @@ SnapTrade eller Finly
         - Brukeranvn O.l
     - Profilbilde
 
-2. Enkel boks som displayer informasjon om en aksje
-   - X Bruk statisk data i begynnelsen
-   - Endre til API data når nettsiden begynner å se bra ut :)
-     - Konverter stock nettsiden til å vise aksjedata fra yahoo finance.
-     - I begynnelsen kan det være lurt å lagre dataen i database for å slippe unødvendige kall til yahoo.
-
 3. Enkel graf som viser prishistorikken til en aksje
-  - Her kan vi vise den samlede prestasjonen til alle aksjene i watchlist.
   - Velge mellom dag, måned, i år, 1 år, 3 år, 5 år, 10 år
   - Skal helst være mulig å spesifisere nøyaktig dato.
   - Skal være mulig å hovere over grafen og finne ut hvilke nyheter om bedriften skjedde den dagen
     - Dette vil si noe om hvorfor aksjen gikk ned eller opp.
 
-4. Ha en samlet graf som viser linje for vekst i alle selskapene dine målt i prosent. 
+4. Ha en samlet graf som viser linje for vekst i alle selskapene dine målt i prosent.
+  - Eller vise hver enkel aksje som brukeren har spesifisert, skal være mulig å være customizable
 
-4. En søke bar
-   - Trenger ikke mer enn å se pen ut for øyeblikket.
-   - Når man søker opp skal man få opp en nettside med aksje informasjon.
 
 5. En watchlist over aksjer man følger med på.
    - En enkel boks, som skal vise sist kjente aksje kurs.
@@ -40,6 +31,7 @@ SnapTrade eller Finly
   - Har de betalt ut utbytte selv i dårlige tider.
 
 7. Notify knapp
+   - Bruk når man har favorite på en aksje
    - man kan få push varsler på kommende nyheter om en aksje.
    Bruk: https://ui.shadcn.com/docs/components/sonner, den er dritfet.
 
@@ -89,6 +81,9 @@ https://ui.shadcn.com/charts
 
 15. Gjør webapp om til en desktop app
    - Man kan gjøre dette ved bruk av elektron
+
+
+16. Få opp varslinger når en aksje går under / over en viss verdi som brukeren har satt.
 
 
 
