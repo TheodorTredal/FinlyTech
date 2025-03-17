@@ -1,21 +1,17 @@
 "use client";
 import { useState } from "react";
-import StockGraph from "./components/graph";
-import KeyInfo from "./components/keyInfo";
+import StockGraph from "./components/graph/graph";
+import KeyInfo from "./components/keyInfo/keyInfo";
 import BarChart from "./components/BarChart";
 
 
-
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from "@/components/ui/menubar";
+// Supply Chain
+import { SupplyChain } from "./components/supplyChain/SupplyChain";
+import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 
 // TestData
 import BarChartData from "../testdata/BarChartData";
 import NettoInntektData from "../testdata/BarchartNetIncomeData";
-
-
-let ticker = "nvda";
-
-
 
 
 // Definer en enum for aktive komponenter
@@ -53,16 +49,15 @@ export default function StocksPage() {
           <MenubarTrigger onClick={() => handleMenuClick(ActiveComponentEnum.Competitors)}>Competitors</MenubarTrigger>
         </MenubarMenu>
       </Menubar>
-      
+
 
     {activeComponent === ActiveComponentEnum.Stock && (
       
       <div>
 
         <div className="flex justify-start space-x-2">
-          <StockGraph ticker={ticker}>
-          </StockGraph>
-          <KeyInfo></KeyInfo>
+          <StockGraph />
+          <KeyInfo />
         </div>
 
         <div className="flex space-x-2 py-2">
@@ -82,7 +77,9 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.SupplyChain && (
-      <div>SupplyChain</div>
+      <div className="w-full h-full">
+        <SupplyChain />
+      </div>
     )}
 
     {activeComponent === ActiveComponentEnum.News && (
@@ -98,8 +95,10 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.HistoricalData && (
-      <div>HistoricalData</div>
+      <div className="underline decoration-white">HistoricalData</div>
     )}
+
+
 
 
 

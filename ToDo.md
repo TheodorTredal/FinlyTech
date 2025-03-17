@@ -4,7 +4,7 @@ SnapTrade eller Finly
   - X Sidebar
   - Header
     - X Settings
-      - Endre til darkmode
+      - X Endre til darkmode
       - displaye: 
         - personinfo
         - Brukeranvn O.l
@@ -50,6 +50,14 @@ https://ui.shadcn.com/charts
 9. Supply chain
   - Se hva den søkte bedriften er avhegnig av og hvilke bedrifter som er avhengig av den.
   - Et kart som viser hvor bedrifter har fabrikker, viktige hotspots.
+    - Verdenskart som viser lokasjonene til bedrifter som bedriften er avhenging av.
+      - Må gjøre litt research for å se om jeg finner et API som gir meg dataen jeg trenger.
+
+      - Ha en dropdown med en liste over alle supplierene til bedriften, det skal være mulig å filtrere vekk ting man ikke vil se
+      - Finn en måte å mappe stedsnavn til faktiske geografiske lokasjoner (stedsnavn står i denne lenken: https://www.apple.com/nz/supplier-responsibility/pdf/Apple-Supplier-List.pdf)
+      - Leaflet.js
+
+
     - Hvilke trading ruter som bedriften vanligvis benytter seg av.
     - Potensielle bottlenecks
     - værfilter på/av
@@ -74,6 +82,13 @@ https://ui.shadcn.com/charts
   - Hadde vært kult med et kart som viste hele globen.
 
 13. Live kart over shipping og fly.
+
+14. selskapsstruktur
+    - Denne er viktig for å finne ut som selskapet har en optimal struktur.
+
+
+15. Gjør webapp om til en desktop app
+   - Man kan gjøre dette ved bruk av elektron
 
 
 

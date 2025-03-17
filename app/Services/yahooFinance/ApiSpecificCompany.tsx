@@ -18,7 +18,7 @@ export const fetchStockChart = async (symbol: string, dateInterval: string) => {
                     backgroundColor: "rgba(75, 192, 192, 0.2)",
                     borderWidth: 2,
                     pointRadius: 0,
-                    fill: true,
+                    fill: false,
                 },
                 {
                     label: `Volum (${symbol})`,
@@ -32,6 +32,28 @@ export const fetchStockChart = async (symbol: string, dateInterval: string) => {
             growthPercentage,
         };
     } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+
+export const fetchBasicFinancials = async (symbol: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/financialInformation/${symbol}/`)
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        return {
+            peRatio: data.pe_Ratio,
+            marketCap: data.market_cap,
+            eps: data.eps,
+            roe: data.roe,
+            roa: data.roa,
+            debtToEquity: data.debt_to_equity,
+            dividendYield: data.dividend_yield
+        };
+
+    } catch (error: any){
         throw new Error(error.message);
     }
 };

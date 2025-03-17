@@ -1,15 +1,16 @@
 "use client";
 import { ShowBasicStockInformation } from "../Components/ShowBasicStockInformation";
 import LineChart from "../Components/Charts/SimpleLineChart";
-import PieChart from "../Components/Charts/SimplePieChart";
 import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from "@/components/ui/menubar";
 
 // test data
 import { stock_prices } from "../testdata/BasicPrices";
 import { NvidiaTestData } from "../testdata/nvidiatestdata";
-import { osebx_stock_prices } from "../testdata/BasicPrisesOSEBX";
-import { PortfolioTestData } from "../testdata/yourPortfolio";
-import { ExposureTestData } from "../testdata/Exposure";
+
+
+// import SkeletonGraph from "../stocks/components/graph/SkeletonGraph";
+import { SkeletonKeyInfo } from "../stocks/components/keyInfo/SkeletonKeyInfo";
+
 
 // app/_app.tsx
 import "../globals.css";
@@ -65,9 +66,10 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex space-x-2 px-2 justify-start w-full"> {/* Redusert padding her også */}
-                        <PieChart data={PortfolioTestData} name={"Your Portfolio"} />
+                        {/* <PieChart data={PortfolioTestData} name={"Your Portfolio"} />
                         <PieChart data={ExposureTestData} name={"Market Exposure"} />
-                        <ShowBasicStockInformation stocksPrices={osebx_stock_prices} />
+                        <ShowBasicStockInformation stocksPrices={osebx_stock_prices} /> */}
+                        <SkeletonKeyInfo></SkeletonKeyInfo>
                     </div>
                 </div>
             )}

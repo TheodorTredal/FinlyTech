@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
-// import { ChartData } from "chart.js";
 import { Menubar, MenubarMenu, MenubarTrigger} from "@/components/ui/menubar";
+import { useSearch } from "@/app/context/SearchContext";
+import SkeletonGraph from "./SkeletonGraph";
 
 // Registrer nødvendige komponenter fra Chart.js
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
@@ -12,11 +13,14 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 import { fetchStockChart } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 
 interface LineChartProps {
-    ticker: string;
+    searchQuery: string;
 }
 
+import { ChartOptions } from "chart.js";
 
-const options = {
+
+
+const options: ChartOptions<"line"> = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -25,35 +29,23 @@ const options = {
   scales: {
     x: {
       type: "category",
-      display: false, // Skru av datoene på x-aksen
-    },
-    y1: {
-      beginAtZero: true,
-      position: "left",
-      ticks: {
-        display: true,
-      },
-      grid: {
-        display: true,
-      },
+      display: false,
     },
     
-    y2: {
-      type: "linear",
+    y: {
+      display: true, // Dette skjuler hele Y-aksen, inkludert tall og grid-linjer
       position: "right",
-      grid: {
-        drawOnChartArea: false, // Ikke tegn rutenett på sekundær y-akse
-        display: false,  // Skru av gridlinjene på høyre y-akse
-      },
-      ticks: {
-        display: true,  // Skru av visning av tallene på høyre y-akse (volum)
-      },
+    },
+    y1: {
+      display: false, // Dette skjuler hele Y-aksen, inkludert tall og grid-linjer
+    },
+    y2: {
+      display: true, // Dette skjuler hele Y-aksen, inkludert tall og grid-linjer
     },
   },
   elements: {
-    bar: {
-      borderRadius: 4, // Rundere kanter på barene
-      barThickness: 4,  // Redusert tykkelse på barene
+    point: {
+      radius: 3,
     },
   },
 };
@@ -61,12 +53,16 @@ const options = {
 
 
 
-const StockGraph: React.FC<LineChartProps> = ({ticker}) => {
+const StockGraph = () => {
   
   const [chartData, setChartData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [dateInterval, setDateInterval] = useState<string>("1y");
   const [selectedDateInterval, setSelectedDateInterval] = useState<string>("1y");
+
+
+  const { searchQuery } = useSearch();
+
 
   const handleDateChange = (date: string) => {
     setDateInterval(date);
@@ -103,19 +99,35 @@ const StockGraph: React.FC<LineChartProps> = ({ticker}) => {
                   className={selectedDateInterval === "1y" ? "border-[0.5px] border-white" : ""}>
                 1 yr
                 </MenubarTrigger>
+                <MenubarTrigger onClick={() => handleDateChange("3y")}
+                  className={selectedDateInterval === "3y" ? "border-[0.5px] border-white" : ""}>
+                3 yr
+                </MenubarTrigger>
+                <MenubarTrigger onClick={() => handleDateChange("5y")}
+                  className={selectedDateInterval === "5y" ? "border-[0.5px] border-white" : ""}>
+                5 yr
+                </MenubarTrigger>
+                <MenubarTrigger onClick={() => handleDateChange("max")}
+                  className={selectedDateInterval === "max" ? "border-[0.5px] border-white" : ""}>
+                max
+                </MenubarTrigger>
             </MenubarMenu>
         </Menubar>
     )
 }
   
-  useEffect(() => {
-      fetchStockChart(ticker, dateInterval)
-      .then(setChartData)
-      .catch((err) => {
-          console.error("Failed", err);
-          setError(err.message)
-      })
-  }, [ticker, dateInterval])
+useEffect(() => {
+  if (!searchQuery) return;
+
+  setError(null);
+
+  fetchStockChart(searchQuery, dateInterval)
+    .then(setChartData)
+    .catch((err) => {
+      console.error("Failed", err);
+      setError(err.message);
+    })
+}, [searchQuery, dateInterval]); // Lukker arrayen riktig
 
 
 
@@ -124,7 +136,7 @@ const StockGraph: React.FC<LineChartProps> = ({ticker}) => {
   }
 
   if (!chartData) {
-      return <p>Fetching chart data from {ticker}</p>;
+      return <SkeletonGraph></SkeletonGraph>;
   }
 
 
@@ -132,7 +144,7 @@ const StockGraph: React.FC<LineChartProps> = ({ticker}) => {
       <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-[300px]">
         <h2 className="flex text-2xl justify-around font-semibold mb-4">
           <div className="flex w-1/4 justify-between">
-          {ticker.toUpperCase()} 
+          {searchQuery.toUpperCase()} 
         <p
         className={`${
           parseFloat(chartData.growthPercentage.replace('%', '')) < 0
@@ -146,9 +158,8 @@ const StockGraph: React.FC<LineChartProps> = ({ticker}) => {
 
         <DateComponent></DateComponent>
         </h2>
-        {/* <div className="h-[calc(100%-2.5rem)]">  Justerer for overskriften */}
         <div className="h-[calc(100%-2.5rem)]"> {/* Justerer for overskriften */}
-          <Line data={chartData} options={options} />
+          <Line data={chartData} options={options}/>
         </div>
       </div>
     );
