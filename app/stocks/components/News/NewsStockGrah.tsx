@@ -2,44 +2,112 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Filler } from "chart.js";
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
+import annotationPlugin from "chartjs-plugin-annotation"; // Nytt plugin for linjer
 import { useSearch } from "@/app/context/SearchContext";
 import SkeletonGraph from "../graph/SkeletonGraph";
 import { fetchStockChartNews } from "@/app/Services/yahooFinance/ApiSpecificCompany";
+import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 
-// Registrer nødvendige komponenter fra Chart.js
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Filler);
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Filler, annotationPlugin); // Registrer plugin
 
+const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
+  const [chartData, setChartData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [dateInterval, setDateInterval] = useState<string>("1mo");
+  const { searchQuery } = useSearch();
+  const [selectedDateInterval, setSelectedDateInterval] = useState<string>("1y");
 
-interface LineChartProps {
-    searchQuery: string;
-}
+  const handleDateChange = (date: string) => {
+    setDateInterval(date);
+    setSelectedDateInterval(date);
+  };
 
-import { ChartOptions } from "chart.js";
+  console.log("Raw articleDate:", articleDate);
 
+  useEffect(() => {
+    if (!searchQuery) return;
 
-const options: ChartOptions<"line"> = {
+    setError(null);
+
+    fetchStockChartNews(searchQuery, dateInterval)
+      .then(setChartData)
+      .catch((err) => {
+        console.error("Failed", err);
+        setError(err.message);
+      });
+  }, [searchQuery, dateInterval]);
+
+  if (error) {
+    return <p className="text-red-500">Failed: {error}</p>;
+  }
+
+  if (!chartData) {
+    return <SkeletonGraph />;
+  }
+
+  // ✅ **Konvertering av dato**
+  const parseArticleDate = (dateStr: string) => {
+    const match = dateStr.match(/(\d{4})(\d{2})(\d{2})T/); // Trekker ut YYYYMMDD
+    return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
+  };
+
+  const formattedDate = parseArticleDate(articleDate) || "";
+  console.log("Formatted articleDate:", formattedDate);
+
+  // ✅ **Finn indeks for `articleDate` i dataene**
+  const verticalLineIndex = chartData.labels.findIndex((date: string) => {
+    const parsedDate = new Date(date).toISOString().split("T")[0]; // Konverter til YYYY-MM-DD
+    return parsedDate === formattedDate;
+  });
+
+  // Finn prisen på aksjen på denne datoen
+  const verticalLinePrice = verticalLineIndex !== -1 ? chartData.datasets[0].data[verticalLineIndex] : null;
+
+  // ✅ **Legg til vertikal og horisontal linje i `options`**
+  const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false},
-      tooltip: {
-        enabled: true,
-        mode: "nearest",
-        intersect: false,
-        position: "nearest",
-        callbacks: {
-          label: function (tooltipItem: any) {
-            return `Price: ${tooltipItem.raw}`;
+      legend: { display: false },
+      tooltip: { enabled: false},
+      annotation: {
+        annotations: verticalLineIndex !== -1 ? {
+          // Vertikal linje
+          line1: {
+            type: "line",
+            xMin: verticalLineIndex,
+            xMax: verticalLineIndex,
+            borderColor: "red",
+            borderWidth: 2,
+            borderDash: [5, 5],
+            label: {
+              content: "News",
+              enabled: true,
+              position: "top",
+            },
           },
-        },
+          // Horisontal linje (den prisen ved den vertikale linjen)
+          line2: {
+            type: "line",
+            yMin: verticalLinePrice,
+            yMax: verticalLinePrice,
+            borderColor: "#3730a3",
+            borderWidth: 2,
+            borderDash: [5, 5],
+            label: {
+              content: `Price: ${verticalLinePrice}`,
+              enabled: true,
+              position: "right",
+            },
+          },
+        } : {},
       },
     },
     interaction: {
-      mode: "nearest",
-      intersect: false,
-      axis: "xy",
-    },
+        mode: "nearest",
+        intersect: false,
+        axis: "xy",
+      },
     scales: {
       x: {
         type: "category",
@@ -48,15 +116,9 @@ const options: ChartOptions<"line"> = {
       y: {
         display: true,
       },
-      y1: {
-        display: false,
-      },
-      y2: {
-        display: false,
-      },
     },
   };
-  
+
   // Custom plugin for crosshair lines
   const crosshairPlugin = {
     id: "crosshair",
@@ -91,27 +153,8 @@ const options: ChartOptions<"line"> = {
   
   // Registrer tilpasset plugin
   ChartJS.register(crosshairPlugin);
-  
 
 
-
-const NewsStockGraph = ({ articleDate }: {articleDate: string}) => {
-
-  const [chartData, setChartData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [dateInterval, setDateInterval] = useState<string>("1y");
-  const [selectedDateInterval, setSelectedDateInterval] = useState<string>("1y");
-  const { searchQuery } = useSearch();
-
-  const [clickedDate, setClickedDate] = useState<number | null>(null)
-
-
-
-
-  const handleDateChange = (date: string) => {
-    setDateInterval(date);
-    setSelectedDateInterval(date);
-  };
 
   const DateComponent = () => {
     return (
@@ -158,50 +201,31 @@ const NewsStockGraph = ({ articleDate }: {articleDate: string}) => {
     );
   };
 
-  useEffect(() => {
-    if (!searchQuery) return;
 
-    setError(null);
-
-    fetchStockChartNews(searchQuery, dateInterval)
-      .then(setChartData)
-      .catch((err) => {
-        console.error("Failed", err);
-        setError(err.message);
-      });
-  }, [searchQuery, dateInterval]);
-
-  if (error) {
-    return <p className="text-red-500">Failed: {error}</p>;
-  }
-
-  if (!chartData) {
-    return <SkeletonGraph></SkeletonGraph>;
-  }
 
   return (
     <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-[20rem]">
-      <h2 className="flex text-2xl justify-around font-semibold mb-4">
-        <div className="flex w-1/4 justify-between">
-          {searchQuery.toUpperCase()}
-          <p
-            className={`${
-              parseFloat(chartData.growthPercentage.replace('%', '')) < 0
-                ? 'text-red-500'
-                : 'text-green-500'
-            }`}
-          >
-            {chartData.growthPercentage}
-          </p>
-        </div>
+        <h2 className="flex text-2xl justify-around font-semibold mb-4">
+          <div className="flex w-1/4 justify-between">
+          {searchQuery.toUpperCase()} 
+        <p
+        className={`${
+          parseFloat(chartData.growthPercentage.replace('%', '')) < 0
+          ? 'text-red-500'
+          : 'text-green-500'
+        }`}
+        >
+        {chartData.growthPercentage}
+      </p>
+          </div>  
 
         <DateComponent></DateComponent>
-      </h2>
-      <div className="h-[15rem]">
-        <Line data={chartData} options={options} />
+        </h2>
+        <div className="h-[calc(100%-2.5rem)]"> {/* Justerer for overskriften */}
+          <Line data={chartData} options={options}/>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default NewsStockGraph;
