@@ -4,8 +4,8 @@ import StockGraph from "./components/graph/graph";
 import KeyInfo from "./components/keyInfo/keyInfo";
 import BarChart from "./components/BarChart";
 import { StarStock } from "./star";
-
 import { Insiders } from "./components/Insiders/Insiders";
+import { StockNews } from "./components/News/News";
 
 
 // Supply Chain
@@ -99,7 +99,9 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.News && (
-      <div>News</div>
+      <div>
+        <StockNews />
+      </div>
     )}
 
     {activeComponent === ActiveComponentEnum.Algorithms && (

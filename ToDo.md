@@ -100,5 +100,42 @@ https://ui.shadcn.com/charts
    - de største bevegelsene.
 
 
+Historiske data målt over tid
+  - Ev/Ebidta de siste 5 årene
+  - P/E de siste 5 årene
 
 På Sikt så har jeg lyst til å implementere flere strategi metoder. sånn som 50 day avg også videre. Bruk Quantnet for algoritmer.
+
+
+17. Redline sandbox
+  - Lage en komponent som lar brukeren legge inn hvilke data som er viktig for den. Sånn at brukeren enkelt kan se de røde linjene mellom tallene i en bedrift.
+
+
+18. Nyheter
+  - For spesifikk aksje
+  - Komponenten skal være delt i to vertikalt. På den ene siden så skal de nyeste nyhetene komme opp. På den andre siden så skal aksjens graf vises. På grafen så skal det være markert hvilke nyheter som er forbundet med et fall eller en økning i prisen. Dette vil si noe om hva som beveger aksjen.
+
+5 features som er hovedessensen i applikasjonen
+
+Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale på enklest og kjappest mulig måte. Det finnes flere strategier for finne disse selskapene. Det er forventet at et finansielt produkt skal klare å levere på bredde og dybde, så 5 enkelt features er ikke nok. Derav Her dette fem hoved features med sub-features.
+
+1. Spesifik Aksjeanalyse
+  - Enkel graf over aksjene
+  - Historiske data
+  - KPI
+  - Supply chain
+  - Innsider data, Hvem eier hva og hva heter de, hvilke andre bedrifter eier innsidere som kan skape synergier mellom selskaper?
+  - Selskapstruktur
+  - Analytiker side, hva sier konsensus om bedriften?
+
+2. Algoritmer
+  - Forskjellige algoritmer som kan indikere om en aksje skal opp eller ned
+  - Backtesting med bruk av KI?
+  - Bedriftens fair value
+
+3. Watchlist
+  - Ha en oversikt over alle aksjene som er interesant for brukeren
+
+4. Sektor data
+
+5. Nettsiden skal være customizable. Brukeren skal få velge hva den vil se på dashboardet.
