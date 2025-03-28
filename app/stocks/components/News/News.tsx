@@ -25,6 +25,7 @@ const formatDate = (dateString: string) => {
     return formattedDate; // Format: YYYY MM DD
 };
 
+
 const Article = ({ text, date, onClick }: { text: string; date: string; onClick: (date: string) => void }) => {
     const formattedDate = formatDate(date); // Formatere datoen før bruk
     

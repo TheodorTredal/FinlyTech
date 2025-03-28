@@ -18,6 +18,8 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const [clickedPrice, setClickedPrice] = useState<number | null>(null);
 
+
+  // Hente ut aksje data fra API'et
   useEffect(() => {
     if (!searchQuery) return;
 
@@ -31,42 +33,45 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
   }, [searchQuery, dateInterval]);
 
 
-  // Når man trykker på nyhetene så endrer grafen seg tilsvarende
+//   // Når man trykker på nyhetene så endrer grafen seg tilsvarende
   useEffect(() => {
     if (!chartData || !chartData.labels) return;
 
+    const formattedDate = parseArticleDate(articleDate) || "";
+    const adjustedDate = adjustToNearestFriday(formattedDate);
+
     const verticalLineIndex = chartData.labels.findIndex((date: string) => {
         const parsedDate = new Date(date).toISOString().split("T")[0];
-        return parsedDate === formattedDate;
+        
+
+        return parsedDate === adjustedDate;
       });
 
     const verticalLinePrice = verticalLineIndex !== -1 ? chartData.datasets[0].data[verticalLineIndex] : null;
     setClickedIndex(verticalLineIndex);
     setClickedPrice(verticalLinePrice);
 
-}, [articleDate])
+    }, [articleDate, dateInterval])
 
 
+    // Check if a date is weekend
+    const adjustToNearestFriday = (CurrentDate: string) => {
 
-  if (error) {
-    return <p className="text-red-500">Failed: {error}</p>;
-  }
+        const date = new Date(CurrentDate);
+        const dayOfWeek = date.getDay();
 
-  if (!chartData) {
-    return <SkeletonGraph />;
-  }
+        // Hvis det er lørdag
+        if (dayOfWeek === 6) {
+            date.setDate(date.getDate() - 1);
+        }
 
-  // **Konverter artikkeldato til riktig format**
-  const parseArticleDate = (dateStr: string) => {
-    const match = dateStr.match(/(\d{4})(\d{2})(\d{2})T/);
-    return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
-  };
+        if (dayOfWeek === 0) {
+            date.setDate(date.getDate() - 2);
+        }
 
-  const formattedDate = parseArticleDate(articleDate) || "";
-  console.log("Formatted articleDate:", formattedDate);
+        return date.toISOString().split("T")[0];
 
-  // **Finn indeks for artikkeldatoen**
-
+    } 
 
 
   // **Håndter klikk på grafen**
@@ -82,6 +87,26 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
       console.log("Klikket på grafen, men ikke på et datapunkt.");
     }
   };
+
+
+  // **Konverter artikkeldato til riktig format**
+  const parseArticleDate = (dateStr: string) => {
+    const match = dateStr.match(/(\d{4})(\d{2})(\d{2})T/);
+    return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
+  };
+
+
+
+
+  // Error handling
+  if (error) {
+    return <p className="text-red-500">Failed: {error}</p>;
+  }
+
+  if (!chartData) {
+    return <SkeletonGraph />;
+  }
+
 
   const options = {
     responsive: true,
