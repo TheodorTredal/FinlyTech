@@ -1,3 +1,4 @@
+import { parseArticleDate } from "@/app/stocks/components/News/HelperFunctions";
 
 
 export const fetchStockChart = async (symbol: string, dateInterval: string) => {

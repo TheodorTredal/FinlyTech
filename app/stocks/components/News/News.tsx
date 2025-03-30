@@ -2,41 +2,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import NewsStockGraph from "./NewsStockGrah";
-
+import { DisplayNewsFromDate } from "./displayNewsOnDate";
 import { fetchCompanyNews } from "@/app/Services/yahooFinance/ApiSpecificCompany"
 import { useSearch } from "@/app/context/SearchContext";
+import { Article } from "./Article";
 
-
-
-const formatDate = (dateString: string) => {
-    const year = parseInt(dateString.substring(0, 4), 10);
-    const month = parseInt(dateString.substring(4, 6), 10) - 1;  // Må trekke fra 1 fordi JavaScript-måneder starter fra 0
-    const day = parseInt(dateString.substring(6, 8), 10);
-
-
-    // Liste over månedsnavnene
-    const months = [
-        "January", "February", "March", "April", "May", "June", 
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    const formattedDate = `${day} ${months[month]} ${year}`;
-    
-    return formattedDate; // Format: YYYY MM DD
-};
-
-
-const Article = ({ text, date, onClick }: { text: string; date: string; onClick: (date: string) => void }) => {
-    const formattedDate = formatDate(date); // Formatere datoen før bruk
-    
-    return (
-        <div className="border-b p-4 " onClick={() => onClick(date)}>
-            {/* Vis den formaterte datoen direkte */}
-            <div className="text-gray-500 text-sm">{formattedDate}</div>
-            <div className="text-lg font-semibold">{text}</div>
-        </div>
-    );
-};
 
 const NewsBox = ({ articles, setArticleDate }: { articles: any[] | null; setArticleDate: (date: string) => void }) => {
     
@@ -77,13 +47,17 @@ export const StockNews = () => {
                 console.error("Error fetching the news");
             }
         }
+    
         getNews();
+
+
     }, [searchQuery]);
 
     return (
-        <div className="flex">
+        <div className="flex flex-row">
             <NewsBox articles={companyNews} setArticleDate={setArticleDate}></NewsBox>
-            <NewsStockGraph articleDate={articleDate}></NewsStockGraph>
+
+            <NewsStockGraph articleDate={articleDate} articles={companyNews}></NewsStockGraph>
         </div>
     )
 }

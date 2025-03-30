@@ -7,16 +7,29 @@ import { useSearch } from "@/app/context/SearchContext";
 import SkeletonGraph from "../graph/SkeletonGraph";
 import { fetchStockChartNews } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { DateComponent } from "@/app/Components/StockGraphDates";
+import { DisplayNewsFromDate } from "./displayNewsOnDate";
+import { parseArticleDate, adjustToNearestFriday, filterNewsBasedOnDate  } from "./HelperFunctions";
+
+
+/**
+ * Sender ned alle artiklene, når grafen blir klikket på så sjekker vi om datoene er fra den datoen man klikket på
+ * Deretter sender vi det ned i dlikkedNewsFromDate
+ */
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Filler, annotationPlugin);
 
-const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
+const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articles: any[] }) => {
   const [chartData, setChartData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { searchQuery } = useSearch();
   const [dateInterval, setDateInterval] = useState<string>("1mo");
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const [clickedPrice, setClickedPrice] = useState<number | null>(null);
+
+  const [newsFromDate, setNewsFromDate] = useState<string[] | null>(null);
+
+  const [hoverX, setHoverX] = useState<number | null>(null);
+  const [hoverY, setHoverY] = useState<number | null>(null);
 
 
   // Hente ut aksje data fra API'et
@@ -30,10 +43,11 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
         console.error("Failed", err);
         setError(err.message);
       });
+
   }, [searchQuery, dateInterval]);
 
 
-//   // Når man trykker på nyhetene så endrer grafen seg tilsvarende
+  // Når man trykker på nyhetene så endrer grafen seg tilsvarende
   useEffect(() => {
     if (!chartData || !chartData.labels) return;
 
@@ -43,35 +57,13 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
     const verticalLineIndex = chartData.labels.findIndex((date: string) => {
         const parsedDate = new Date(date).toISOString().split("T")[0];
         
-
         return parsedDate === adjustedDate;
       });
 
     const verticalLinePrice = verticalLineIndex !== -1 ? chartData.datasets[0].data[verticalLineIndex] : null;
     setClickedIndex(verticalLineIndex);
     setClickedPrice(verticalLinePrice);
-
-    }, [articleDate, dateInterval])
-
-
-    // Check if a date is weekend
-    const adjustToNearestFriday = (CurrentDate: string) => {
-
-        const date = new Date(CurrentDate);
-        const dayOfWeek = date.getDay();
-
-        // Hvis det er lørdag
-        if (dayOfWeek === 6) {
-            date.setDate(date.getDate() - 1);
-        }
-
-        if (dayOfWeek === 0) {
-            date.setDate(date.getDate() - 2);
-        }
-
-        return date.toISOString().split("T")[0];
-
-    } 
+    }, [articleDate])
 
 
   // **Håndter klikk på grafen**
@@ -80,23 +72,29 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
       const dataIndex = elements[0].index;
       setClickedIndex(dataIndex);
       setClickedPrice(chartData.datasets[0].data[dataIndex]); // Henter Y-verdi
-
+  
+      
       const clickedLabel = chartData.labels[dataIndex];
+      setNewsFromDate(filterNewsBasedOnDate(articles, clickedLabel));
       console.log(`Klikket på punkt: Label: ${clickedLabel}, Verdi: ${chartData.datasets[0].data[dataIndex]}`);
     } else {
       console.log("Klikket på grafen, men ikke på et datapunkt.");
     }
   };
 
-
-  // **Konverter artikkeldato til riktig format**
-  const parseArticleDate = (dateStr: string) => {
-    const match = dateStr.match(/(\d{4})(\d{2})(\d{2})T/);
-    return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
+  const handleGraphHover = (event: any, elements: any) => {
+    if (elements.length > 0) {
+      const dataIndex = elements[0].index;
+      const hoveredPrice = chartData.datasets[0].data[dataIndex];
+  
+      setHoverX(dataIndex);
+      setHoverY(hoveredPrice);
+    } else {
+      setHoverX(null);
+      setHoverY(null);
+    }
   };
-
-
-
+  
 
   // Error handling
   if (error) {
@@ -107,17 +105,46 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
     return <SkeletonGraph />;
   }
 
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     onClick: handleGraphClick,
+    onHover: handleGraphHover,
+    onLeave: () => { // Fjerner hover-linjene når musen forlater grafen
+      setHoverX(null);
+      setHoverY(null);
+    },
+    animation: {
+      duration: 0,
+    },
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
       annotation: {
+        animations: {
+          numbers: { duration: 300 },
+          colors: { duration: 0 },
+        },
         annotations: {
-          // **Rød linje der brukeren klikker**
+          ...(hoverX !== null &&
+            hoverY !== null && {
+              hoverLineX: {
+                type: "line" as const,
+                xMin: hoverX,
+                xMax: hoverX,
+                borderColor: "#6b7280",
+                borderWidth: 2,
+                borderDash: [5, 5],
+              },
+              hoverLineY: {
+                type: "line" as const,
+                yMin: hoverY,
+                yMax: hoverY,
+                borderColor: "#6b7280",
+                borderWidth: 2,
+                borderDash: [5, 5],
+              },
+            }),
           ...(clickedIndex !== null && {
             clickedLine: {
               type: "line" as const,
@@ -126,11 +153,7 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
               borderColor: "#b91c1c",
               borderWidth: 2,
               borderDash: [5, 5],
-              label: {
-                content: "Clicked",
-                enabled: true,
-                position: "top",
-              },
+              animation: { duration: 500 },
             },
             clickedPriceLine: {
               type: "line" as const,
@@ -139,31 +162,24 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
               borderColor: "#3730a3",
               borderWidth: 2,
               borderDash: [5, 5],
-              label: {
-                content: `Price: ${clickedPrice}`,
-                enabled: true,
-                position: "right",
-              },
+              animation: { duration: 500 },
             },
           }),
         },
       },
     },
     interaction: {
-      mode: "nearest",
+      mode: "index",
       intersect: false,
       axis: "xy",
     },
     scales: {
-      x: {
-        type: "category",
-        display: true,
-      },
-      y: {
-        display: true,
-      },
+      x: { type: "category", display: true },
+      y: { display: true },
     },
   } as const;
+  
+  
 
   return (
     <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-[20rem]">
@@ -180,9 +196,15 @@ const NewsStockGraph = ({ articleDate }: { articleDate: string }) => {
         </div>  
         <DateComponent setDateInterval={setDateInterval} />
       </h2>
+      
       <div className="h-[calc(100%-2.5rem)]">
         <Line data={chartData} options={options}/>
       </div>
+      
+          <div className="mt-6 h-[calc(100%+50px)]">
+      <DisplayNewsFromDate news={newsFromDate}>clicked news</DisplayNewsFromDate>
+
+          </div>
     </div>
   );
 };
