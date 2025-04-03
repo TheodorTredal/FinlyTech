@@ -11,6 +11,12 @@ import { DisplayNewsFromDate } from "./displayNewsOnDate";
 import { parseArticleDate, adjustToNearestFriday, filterNewsBasedOnDate  } from "./HelperFunctions";
 
 
+
+interface NewsArticle {
+  date: string;
+  Summary: string;
+}
+
 /**
  * Sender ned alle artiklene, når grafen blir klikket på så sjekker vi om datoene er fra den datoen man klikket på
  * Deretter sender vi det ned i dlikkedNewsFromDate
@@ -26,7 +32,7 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const [clickedPrice, setClickedPrice] = useState<number | null>(null);
 
-  const [newsFromDate, setNewsFromDate] = useState<string[] | null>(null);
+  const [newsFromDate, setNewsFromDate] = useState<NewsArticle[] | null>(null);
 
   const [hoverX, setHoverX] = useState<number | null>(null);
   const [hoverY, setHoverY] = useState<number | null>(null);
@@ -183,18 +189,20 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
 
   return (
     <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-[20rem]">
-      <h2 className="flex text-2xl justify-around font-semibold mb-4">
-        <div className="flex w-1/4 justify-between">
+      <h2 className="flex justify-around font-semibold mb-4">
+        <div className="flex w-1/4 justify-between mr-auto text-xl">
           {searchQuery.toUpperCase()} 
-          <p className={`${
+          <p className={`mr-auto pl-4 ${
             parseFloat(chartData.growthPercentage.replace('%', '')) < 0
-              ? 'text-red-500'
-              : 'text-green-500'
+            ? 'text-red-500'
+            : 'text-green-500'
           }`}>
             {chartData.growthPercentage}
           </p>
-        </div>  
-        <DateComponent setDateInterval={setDateInterval} />
+        </div>
+        
+      
+            <DateComponent setDateInterval={setDateInterval} />
       </h2>
       
       <div className="h-[calc(100%-2.5rem)]">
@@ -202,7 +210,7 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
       </div>
       
           <div className="mt-6 h-[calc(100%+50px)]">
-      <DisplayNewsFromDate news={newsFromDate}>clicked news</DisplayNewsFromDate>
+      <DisplayNewsFromDate news={newsFromDate}></DisplayNewsFromDate>
 
           </div>
     </div>

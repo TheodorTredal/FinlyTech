@@ -13,7 +13,7 @@ export const DisplayNewsFromDate = ({ news }: { news: NewsArticle[] | null }) =>
 
     if (!Array.isArray(news)) {
         return (
-            <div className="w-full h-full border border-red-700 p-4">
+            <div className="w-full h-full p-4">
                 <h3 className="text-lg font-semibold mb-2">Nyheter fra valgt dato:</h3>
                 <p className="text-gray-500">Ingen gyldige nyheter tilgjengelig.</p>
             </div>

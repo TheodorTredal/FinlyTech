@@ -15,7 +15,7 @@ const NewsBox = ({ articles, setArticleDate }: { articles: any[] | null; setArti
     }
     
     return (
-        <div className="w-1/2 h-full p-4 overflow-y-scroll" style={{ height: '80vh' }}>
+        <div className="w-1/3 h-full p-4 overflow-y-scroll" style={{ height: '80vh' }}>
             <h2 className="text-xl font-bold mb-2">Nyheter</h2>
             {articles && articles.length > 0 ? (
                 articles.map((article, index) => (
