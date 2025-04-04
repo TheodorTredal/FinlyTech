@@ -11,7 +11,6 @@ import { DisplayNewsFromDate } from "./displayNewsOnDate";
 import { parseArticleDate, adjustToNearestFriday, filterNewsBasedOnDate  } from "./HelperFunctions";
 
 
-
 interface NewsArticle {
   date: string;
   Summary: string;
@@ -28,7 +27,7 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
   const [chartData, setChartData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { searchQuery } = useSearch();
-  const [dateInterval, setDateInterval] = useState<string>("1mo");
+  const [dateInterval, setDateInterval] = useState<string>("1y");
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const [clickedPrice, setClickedPrice] = useState<number | null>(null);
 
@@ -69,37 +68,34 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
     const verticalLinePrice = verticalLineIndex !== -1 ? chartData.datasets[0].data[verticalLineIndex] : null;
     setClickedIndex(verticalLineIndex);
     setClickedPrice(verticalLinePrice);
+
     }, [articleDate])
 
 
-  // **Håndter klikk på grafen**
-  const handleGraphClick = (event: any, elements: any) => {
-    if (elements.length > 0) {
-      const dataIndex = elements[0].index;
-      setClickedIndex(dataIndex);
-      setClickedPrice(chartData.datasets[0].data[dataIndex]); // Henter Y-verdi
-  
+    const handleGraphClick = (event: any, elements: any) => {
+      if (elements.length > 0) {
+        const dataIndex = elements[0].index;
+        setClickedIndex(dataIndex);
+        setClickedPrice(chartData.datasets[0].data[dataIndex]); // Henter Y-verdi
       
-      const clickedLabel = chartData.labels[dataIndex];
-      setNewsFromDate(filterNewsBasedOnDate(articles, clickedLabel));
-      console.log(`Klikket på punkt: Label: ${clickedLabel}, Verdi: ${chartData.datasets[0].data[dataIndex]}`);
-    } else {
-      console.log("Klikket på grafen, men ikke på et datapunkt.");
-    }
-  };
+        const clickedLabel = chartData.labels[dataIndex];
+        setNewsFromDate(filterNewsBasedOnDate(articles, clickedLabel));
+      }
+    };
+    
+    
 
   const handleGraphHover = (event: any, elements: any) => {
+    console.log("elements.length", elements.length);
     if (elements.length > 0) {
       const dataIndex = elements[0].index;
       const hoveredPrice = chartData.datasets[0].data[dataIndex];
   
       setHoverX(dataIndex);
       setHoverY(hoveredPrice);
-    } else {
-      setHoverX(null);
-      setHoverY(null);
-    }
+    } 
   };
+  
   
 
   // Error handling
@@ -110,85 +106,83 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
   if (!chartData) {
     return <SkeletonGraph />;
   }
+  
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    onClick: handleGraphClick,
-    onHover: handleGraphHover,
-    onLeave: () => { // Fjerner hover-linjene når musen forlater grafen
-      setHoverX(null);
-      setHoverY(null);
-    },
-    animation: {
-      duration: 0,
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false },
-      annotation: {
-        animations: {
-          numbers: { duration: 300 },
-          colors: { duration: 0 },
-        },
-        annotations: {
-          ...(hoverX !== null &&
-            hoverY !== null && {
-              hoverLineX: {
-                type: "line" as const,
-                xMin: hoverX,
-                xMax: hoverX,
-                borderColor: "#6b7280",
-                borderWidth: 2,
-                borderDash: [5, 5],
-              },
-              hoverLineY: {
-                type: "line" as const,
-                yMin: hoverY,
-                yMax: hoverY,
-                borderColor: "#6b7280",
-                borderWidth: 2,
-                borderDash: [5, 5],
-              },
-            }),
-          ...(clickedIndex !== null && {
-            clickedLine: {
-              type: "line" as const,
-              xMin: clickedIndex,
-              xMax: clickedIndex,
-              borderColor: "#b91c1c",
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  onClick: handleGraphClick,
+  onHover: handleGraphHover,
+  animation: {
+    duration: 0,
+  },
+  plugins: {
+    legend: { display: false },
+    tooltip: { enabled: false },
+    annotation: {
+      animations: {
+        numbers: { duration: 0 },
+        colors: { duration: 0 },
+      },
+      annotations: {
+        ...(hoverX !== null &&
+          hoverY !== null && {
+            hoverLineX: {
+              type: "line",
+              xMin: hoverX,
+              xMax: hoverX,
+              borderColor: "#6b7280",
               borderWidth: 2,
               borderDash: [5, 5],
-              animation: { duration: 500 },
             },
-            clickedPriceLine: {
-              type: "line" as const,
-              yMin: clickedPrice,
-              yMax: clickedPrice,
-              borderColor: "#3730a3",
+            hoverLineY: {
+              type: "line",
+              yMin: hoverY,
+              yMax: hoverY,
+              borderColor: "#6b7280",
               borderWidth: 2,
               borderDash: [5, 5],
-              animation: { duration: 500 },
             },
           }),
-        },
+        ...(clickedIndex !== null && {
+          clickedLine: {
+            type: "line",
+            xMin: clickedIndex,
+            xMax: clickedIndex,
+            borderColor: "#b91c1c",
+            borderWidth: 2,
+            borderDash: [5, 5],
+            animation: { duration: 0 },
+          },
+          clickedPriceLine: {
+            type: "line",
+            yMin: clickedPrice,
+            yMax: clickedPrice,
+            borderColor: "#3730a3",
+            borderWidth: 2,
+            borderDash: [5, 5],
+            animation: { duration: 0 },
+          },
+        }),
       },
     },
-    interaction: {
-      mode: "index",
-      intersect: false,
-      axis: "xy",
-    },
-    scales: {
-      x: { type: "category", display: true },
-      y: { display: true },
-    },
-  } as const;
+  },
+  interaction: {
+    mode: "index",
+    intersect: false,
+    axis: "xy",
+  },
+  scales: {
+    x: { type: "category", display: true },
+    y: { display: true },
+  },
+};
+
   
   
 
   return (
-    <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-[20rem]">
+    <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-[20rem] ml-auto">
       <h2 className="flex justify-around font-semibold mb-4">
         <div className="flex w-1/4 justify-between mr-auto text-xl">
           {searchQuery.toUpperCase()} 
@@ -200,14 +194,20 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
             {chartData.growthPercentage}
           </p>
         </div>
-        
-      
             <DateComponent setDateInterval={setDateInterval} />
       </h2>
       
-      <div className="h-[calc(100%-2.5rem)]">
-        <Line data={chartData} options={options}/>
+      <div
+        className="h-[calc(100%-2.5rem)]"
+        onMouseLeave={() => {
+          setHoverX(null);
+          setHoverY(null);
+        }}
+      >
+        <Line data={chartData} options={options} />
       </div>
+
+
       
           <div className="mt-6 h-[calc(100%+50px)]">
       <DisplayNewsFromDate news={newsFromDate}></DisplayNewsFromDate>

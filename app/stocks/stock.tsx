@@ -2,7 +2,7 @@
 import { useState } from "react";
 import StockGraph from "./components/graph/graph";
 import KeyInfo from "./components/keyInfo/keyInfo";
-import BarChart from "./components/BarChart";
+import BarChart from "./components/barCharts/BarChart";
 import { StarStock } from "./star";
 import { Insiders } from "./components/Insiders/Insiders";
 import { StockNews } from "./components/News/News";
@@ -69,14 +69,13 @@ export default function StocksPage() {
 
     {activeComponent === ActiveComponentEnum.Stock && (
       
-      <div>
-
-        <div className="flex justify-start space-x-2">
+      <div className="w-full">
+        <div className="flex justify-start space-x-2 w-full">
           <StockGraph />
           <KeyInfo />
         </div>
 
-        <div className="flex space-x-2 py-2">
+        <div className="flex space-x-2 py-2 w-full">
         <BarChart data={BarChartData} name="income"></BarChart>
         <BarChart data={NettoInntektData} name="Net income"></BarChart>
         <BarChart data={BarChartData} name="Units Sold"></BarChart>

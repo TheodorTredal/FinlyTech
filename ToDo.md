@@ -16,7 +16,7 @@ SnapTrade eller Finly
   - Skal være mulig å hovere over grafen og finne ut hvilke nyheter om bedriften skjedde den dagen
     - Dette vil si noe om hvorfor aksjen gikk ned eller opp.
 
-4. Ha en samlet graf som viser linje for vekst i alle selskapene dine målt i prosent.
+4. Portefølje: Ha en samlet graf som viser linje for vekst i alle selskapene dine målt i prosent.
   - Eller vise hver enkel aksje som brukeren har spesifisert, skal være mulig å være customizable
 
 
@@ -117,7 +117,7 @@ På Sikt så har jeg lyst til å implementere flere strategi metoder. sånn som 
 
 5 features som er hovedessensen i applikasjonen
 
-Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale på enklest og kjappest mulig måte. Det finnes flere strategier for finne disse selskapene. Det er forventet at et finansielt produkt skal klare å levere på bredde og dybde, så 5 enkelt features er ikke nok. Derav Her dette fem hoved features med sub-features.
+Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale på enklest og kjappest mulig måte. Det finnes flere strategier for finne disse selskapene. Det er forventet at et finansielt produkt skal klare å levere på bredde og dybde, så 5 enkelt features er ikke nok. men her dette fem hoved features med sub-features vi skal være best på.
 
 1. Spesifik Aksjeanalyse
   - Enkel graf over aksjene
@@ -139,3 +139,19 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
 4. Sektor data
 
 5. Nettsiden skal være customizable. Brukeren skal få velge hva den vil se på dashboardet.
+
+
+
+
+
+Neste tingene som blir gjort:
+  - Bli ferdig med dashboardet for aksjer få det til å se pent ut.
+    - Add to portfolio knapp
+  - Begynn på porteføljen
+    - Begynn med react komponentene
+      - Innkjøpspris
+      - Antall aksjer
+      - enkel database
+      - Watchlist stjernen er ikke det samme som add to portfolio
+      
+

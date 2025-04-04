@@ -2,13 +2,18 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, BarElement, Tooltip, Legend, CategoryScale, LinearScale, ChartData } from "chart.js";
-ChartJS.register(BarElement, Tooltip, Legend, CategoryScale, LinearScale);
+import { BarChartDropDown } from "./Dropdown";
 
+
+ChartJS.register(BarElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 interface BarChartProps {
   data: ChartData<"bar">; // Bruk ChartData for korrekt typing
   name: string;
 }
+
+
+
 
 const BarChart: React.FC<BarChartProps> = ({ data, name}) => {
 
@@ -28,10 +33,16 @@ const BarChart: React.FC<BarChartProps> = ({ data, name}) => {
   };
 
   return (
-    <div className="p-6 bg-sidebar shadow-lg rounded-lg w-1/3 h-[350px]">
-      <h2 className="text-2xl font-semibold text-center mb-4">{name}</h2>
-      <Bar data={data} options={options} />
-    </div>
+<div className="p-4 bg-sidebar shadow-lg rounded-lg flex-1 min-w-[280px] max-w-[400px] h-[350px]">
+  <div className="flex items-center justify-between mb-2">
+    <h2 className="text-xl font-semibold">{name}</h2>
+    <BarChartDropDown />
+  </div>
+  <div className="relative h-[93%]">
+    <Bar data={data} options={options} />
+  </div>
+</div>
+
   );
 };
 
