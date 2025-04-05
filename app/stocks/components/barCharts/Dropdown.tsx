@@ -1,3 +1,10 @@
+/**
+ * Hente ut API'ene revenue og expenses, når man klikker på revenue eller expenses så skal
+ * barchart reflektere det man har klikket på.
+ */
+
+
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,8 +20,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import React from "react"
 
-export function BarChartDropDown() {
+interface BarChartDropDownProps {
+    setState: (value: string) => void;
+  }
+
+export const BarChartDropDown: React.FC<BarChartDropDownProps> = ({ setState }) => {
+
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,10 +40,10 @@ export function BarChartDropDown() {
             Select time interval
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setState("income")}>
             Income
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setState("expenses")}>
             Expenses
           </DropdownMenuItem>
           <DropdownMenuSeparator />

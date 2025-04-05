@@ -114,3 +114,52 @@ export const fetchCompanyNews = async (symbol: string) => {
         throw new Error(error.message);
     }
 }
+
+
+
+export const get_companyIncome = async ( ticker: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/companyIncome/${ticker}/`);
+        const data = await response.json();
+        return {
+            labels: data.map((entry: any) => entry.accounting_end_date),
+            datasets: [
+                {
+                    label: "Inntekter",
+                    data: data.map((entry: any) => entry.revenue),
+                    backgroundColor: "#0284c7",
+                }
+            ]
+        }
+    } catch (error) {
+        console.error("Feil ved henting av inntektsdata:", error);
+        return {
+          labels: [],
+          datasets: [],
+        };
+    }
+}
+
+
+export const get_companyExpenses = async ( ticker: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/companyTotalExpenses/${ticker}/`);
+        const data = await response.json();
+        return {
+            labels: data.map((entry: any) => entry.accounting_end_date),
+            datasets: [
+                {
+                    label: "Inntekter",
+                    data: data.map((entry: any) => entry.revenue),
+                    backgroundColor: "#b91c1c",
+                }
+            ]
+        }
+    } catch (error) {
+        console.error("Feil ved henting av inntektsdata:", error);
+        return {
+          labels: [],
+          datasets: [],
+        };
+    }
+}

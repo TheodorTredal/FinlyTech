@@ -76,8 +76,8 @@ export default function StocksPage() {
         </div>
 
         <div className="flex space-x-2 py-2 w-full">
-        <BarChart data={BarChartData} name="income"></BarChart>
-        <BarChart data={NettoInntektData} name="Net income"></BarChart>
+        {/* <BarChart data={BarChartData} name="income"></BarChart>
+        <BarChart data={NettoInntektData} name="Net income"></BarChart> */}
         <BarChart data={BarChartData} name="Units Sold"></BarChart>
         </div>
       </div>
