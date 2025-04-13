@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Calendar, Home, Inbox, Search, Settings, Factory, Landmark } from "lucide-react";
+import { Calendar, Home, Inbox, Search, Settings, Factory, Layers, ChartNoAxesCombined } from "lucide-react";
 import { SettingsBox } from "./SettingsBox";
+import Link from "next/link";
+
 
 import {
   Sidebar,
@@ -20,9 +22,9 @@ const items = [
   { title: "Search", url: "#", icon: Search },
   { title: "Inbox", url: "#", icon: Inbox },
   { title: "Sector", url: "#", icon: Factory },
-  { title: "Portfolio", url: "#", icon: Landmark },
+  { title: "Portfolio", url: "http://localhost:3000/portfolio", icon: Layers },
   { title: "Calendar", url: "#", icon: Calendar },
-  { title: "NVIDIA STOCK TMP", url: "http://localhost:3000/stocks", icon: Calendar },
+  { title: "Stocks", url: "http://localhost:3000/stocks", icon: ChartNoAxesCombined },
 ];
 
 export function AppSidebar() {
@@ -39,10 +41,10 @@ export function AppSidebar() {
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>
+                      <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

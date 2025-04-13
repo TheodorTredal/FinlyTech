@@ -12,9 +12,6 @@ import { StockNews } from "./components/News/News";
 import { SupplyChain } from "./components/supplyChain/SupplyChain";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 
-// TestData
-import BarChartData from "../testdata/BarChartData";
-import NettoInntektData from "../testdata/BarchartNetIncomeData";
 
 
 
@@ -67,21 +64,19 @@ export default function StocksPage() {
 
   </div>
 
-    {activeComponent === ActiveComponentEnum.Stock && (
-      
-      <div className="w-full">
+  <div className={activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"}>
         <div className="flex justify-start space-x-2 w-full">
           <StockGraph />
           <KeyInfo />
         </div>
 
         <div className="flex space-x-2 py-2 w-full">
-        {/* <BarChart data={BarChartData} name="income"></BarChart>
-        <BarChart data={NettoInntektData} name="Net income"></BarChart> */}
-        <BarChart data={BarChartData} name="Units Sold"></BarChart>
+        <BarChart></BarChart>
+        <BarChart></BarChart>
+        <BarChart></BarChart>
         </div>
       </div>
-    )}
+    
 
     {activeComponent === ActiveComponentEnum.Financials && (
       <div>Financials</div>
@@ -97,11 +92,11 @@ export default function StocksPage() {
       </div>
     )}
 
-    {activeComponent === ActiveComponentEnum.News && (
+    <div className={activeComponent === ActiveComponentEnum.News ? "block" : "hidden"}>
       <div>
         <StockNews />
       </div>
-    )}
+    </div>
 
     {activeComponent === ActiveComponentEnum.Algorithms && (
       <div>Algorithms</div>

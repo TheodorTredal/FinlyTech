@@ -1,5 +1,8 @@
 SnapTrade eller Finly
 
+Get good with Finly
+  - For the intelligent investor
+
 1. Få opp et fint skall på nettsiden
   - X Sidebar
   - Header

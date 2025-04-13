@@ -116,18 +116,49 @@ export const fetchCompanyNews = async (symbol: string) => {
 }
 
 
-
-export const get_companyIncome = async ( ticker: string) => {
+export const get_companyIncome = async (ticker: string) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/stock/companyIncome/${ticker}/`);
+      const response = await fetch(`http://127.0.0.1:8000/stock/companyIncome/${ticker}/`);
+      const data = await response.json();
+  
+      return {
+        labels: data.map((entry: any) => entry.accounting_end_date),
+        datasets: [
+          {
+            label: "Inntekter",
+            data: data.map((entry: any) => {
+              const value = Number(entry.revenue);
+              return isNaN(value) ? 0 : value;
+            }),
+            backgroundColor: "#0284c7",
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Feil ved henting av inntektsdata:", error);
+      return {
+        labels: [],
+        datasets: [],
+      };
+    }
+  };
+  
+
+
+export const get_companyExpenses = async ( ticker: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/companyTotalExpenses/${ticker}/`);
         const data = await response.json();
         return {
             labels: data.map((entry: any) => entry.accounting_end_date),
             datasets: [
                 {
                     label: "Inntekter",
-                    data: data.map((entry: any) => entry.revenue),
-                    backgroundColor: "#0284c7",
+                    data: data.map((entry: any) => {
+                        const value = Number(entry.revenue);
+                        return isNaN(value) ? 0 : value;
+                        }),
+                    backgroundColor: "#b91c1c",
                 }
             ]
         }
@@ -141,17 +172,20 @@ export const get_companyIncome = async ( ticker: string) => {
 }
 
 
-export const get_companyExpenses = async ( ticker: string) => {
+
+
+
+export const get_companyEbitda = async ( ticker: string) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/stock/companyTotalExpenses/${ticker}/`);
+        const response = await fetch(`http://127.0.0.1:8000/stock/companyEbitda/${ticker}/`);
         const data = await response.json();
         return {
             labels: data.map((entry: any) => entry.accounting_end_date),
             datasets: [
                 {
-                    label: "Inntekter",
-                    data: data.map((entry: any) => entry.revenue),
-                    backgroundColor: "#b91c1c",
+                    label: "Ebitda",
+                    data: data.map((entry: any) => entry.ebitda),
+                    backgroundColor: "#15803d",
                 }
             ]
         }
@@ -161,5 +195,76 @@ export const get_companyExpenses = async ( ticker: string) => {
           labels: [],
           datasets: [],
         };
+    }
+}
+
+export const get_companyNetIncome = async (ticker: string) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/stock/companyNetIncome/${ticker}/`);
+      const data = await response.json();
+  
+      return {
+        labels: data.map((entry: any) => entry.accounting_end_date),
+        datasets: [
+          {
+            label: "net_income",
+            data: data.map((entry: any) => {
+              const value = Number(entry.net_income);
+              return isNaN(value) ? 0 : value;
+            }),
+            backgroundColor: "#15803d",
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Feil ved henting av inntektsdata:", error);
+      return {
+        labels: [],
+        datasets: [],
+      };
+    }
+  };
+  
+
+export const get_companyGrossProfit = async ( ticker: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/companyGrossProfit/${ticker}/`);
+        const data = await response.json();
+        return {
+            labels: data.map((entry: any) => entry.accounting_end_date),
+            datasets: [
+                {
+                    label: "net-income",
+                    data: data.map((entry: any) => {
+                        const value = Number(entry.gross_profit);
+                        return isNaN(value) ? 0 : value;
+                    }),
+                    backgroundColor: "#15803d",
+                }
+            ]
+        }
+    } catch (error) {
+        console.error("Feil ved henting av inntektsdata:", error);
+        return {
+          labels: [],
+          datasets: [],
+        };
+    }
+}
+
+
+export const get_checkCompanyTicker = async ( ticker: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/checkValidCompanyTicker/${ticker}/`);
+        const data = await response.json();
+        return {
+            isValidTicker: data.isValidTicker
+        }
+
+    } catch (error) {
+        console.log("Feil ved sjekking om ticker finnes", error);
+        return {
+            isValidTicker: false
+        }
     }
 }
