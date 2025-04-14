@@ -4,7 +4,8 @@ export interface stockPortfolioInterface {
     price: number;
     volum: number; 
     prosentØkning: string; 
-    currentPrice: number;    
+    currentPrice: number;
+    setShowOptions: any;
 }
 
 export interface portfolioEntryInterface {

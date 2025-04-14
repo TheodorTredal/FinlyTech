@@ -1,3 +1,5 @@
+import { isValidElement } from "react";
+
 export const fetchStockChart = async (symbol: string, dateInterval: string) => {
     try {
         const response = await fetch(`http://127.0.0.1:8000/stock/chart/${symbol}/${dateInterval}/`);
@@ -265,6 +267,22 @@ export const get_checkCompanyTicker = async ( ticker: string) => {
         console.log("Feil ved sjekking om ticker finnes", error);
         return {
             isValidTicker: false
+        }
+    }
+}
+
+export const get_companyLastPrice = async ( ticker: string ) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/fetchCompanyLatestPrice/${ticker}/`);
+        const data = await response.json();
+        return {
+            lastPrice: data.last_price
+        }
+
+    } catch (error) {
+        console.log(`Feil ved henting av ${ticker} sin siste pris`);
+        return {
+            lastPrice: -1
         }
     }
 }

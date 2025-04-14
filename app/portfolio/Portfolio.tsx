@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { stockPortfolioInterface } from "./interfaces/stockPortfolioInterface";
 import { AddToPortfolio } from "./components/addToPortfolio";
-import { Button } from "@/components/ui/button";
+
 
 
 enum ActiveComponentEnum {
@@ -43,21 +43,14 @@ const Portfolio = () => {
           {component.charAt(0).toUpperCase() + component.slice(1)}
         </MenubarTrigger>
         ))}
-        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="ml-auto">+</MenubarTrigger>
+        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="ml-auto"> + </MenubarTrigger>
 
         </MenubarMenu>
       </Menubar>
 
         {showAddToPortfolio && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                {/* <div className="bg-sidebar text-black rounded-xl p-8 w-1/3"> */}
                     <AddToPortfolio setcloseWindow={setShowAddToPortfolio} setPortfolioList={setPortfolioList}></AddToPortfolio>
-
-                {/* <Button className="mr-auto mt-4 px-4 bg-gray-800 text-white rounded hover:bg-slate-400" onClick={() => setShowAddToPortfolio(false)}>Lukk</Button> */}
-
-                {/* </div> */}
-
-
             </div>
         )}
 
