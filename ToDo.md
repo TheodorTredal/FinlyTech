@@ -156,5 +156,19 @@ Neste tingene som blir gjort:
       - Antall aksjer
       - enkel database
       - Watchlist stjernen er ikke det samme som add to portfolio
+
+
+
+
+
+DCF ANALYSE
+
+
+1. Hvor mye er EPS og hvor mye forventer man at det skal øke de neste årene, la oss si de neste 3-5 årene?
+2. Finne ut nåverdien
+  - Nåverdi = Fremtidig inntjening / (1-r)^n
+
+3. Legge til terminalverdi
+  - Terminalverdi = inntjeningsår6 / r-g
       
 

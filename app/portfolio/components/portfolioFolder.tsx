@@ -1,19 +1,16 @@
+import { PortfolioEntry } from "./portfolioEntry";
+import { portfolioFolderInterface } from "../interfaces/stockPortfolioInterface";
 
-export const PortfolioFolder = () => {
 
-    const testFolders = [
-        "America",
-        "Dividend",
-        "growth",
-        "Nordic",
-        "European",
-    ]
-
+export const PortfolioFolder = ({ folder }: { folder: portfolioFolderInterface }) => {
     return (
-        
-        <div className="w-5/6 max-h-52 border border-red-500">
-            America
+      <div>
+        <h2 className="text-xl font-bold">{folder.name}</h2>
+        <div className="flex flex-col gap-2">
+          {folder.stocks.map((stock, j) => (
+            <PortfolioEntry key={j} portfolioEntry={stock} />
+          ))}
         </div>
-    )
-
-}   
+      </div>
+    );
+  };

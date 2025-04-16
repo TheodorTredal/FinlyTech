@@ -4,21 +4,57 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { portfolioEntryInterface } from "../interfaces/stockPortfolioInterface";
 import { get_checkCompanyTicker } from "@/app/Services/yahooFinance/ApiSpecificCompany";
-
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
+import { portfolioFolderInterface } from "../interfaces/stockPortfolioInterface";
+   
 interface AddToPortfolioProps {
     setcloseWindow: (state: boolean) => void;
     setPortfolioList: (prev: any) => void;
-}
+    portfolioList: portfolioFolderInterface[];
+  }
 
-export const AddToPortfolio = ({ setcloseWindow, setPortfolioList }: AddToPortfolioProps) => {
+    
+const SelectPortfolio = ({ portfolioList, setPortFolio }: { portfolioList: portfolioFolderInterface[]; setPortFolio: (val: string) => void; }) => {
+    return (
+      <Select onValueChange={setPortFolio}>
+        <SelectTrigger className="w-full text-gray-400">
+          <SelectValue placeholder="Velg en portefølje" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Porteføljer</SelectLabel>
+            {portfolioList.map((portfolio) => (
+              <SelectItem key={portfolio.name} value={portfolio.name}>
+                {portfolio.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    );
+  };
+
+
+
+export const AddToPortfolio = ({ setcloseWindow, setPortfolioList, portfolioList }: AddToPortfolioProps) => {
     const [ticker, setTicker] = useState<string>("");
     const [isValidTicker, setIsValidTicker] = useState<boolean | null>(null);
     const [isValidPrice, setIsValidPrice] = useState<boolean | null>(null);
     const [isValidVolum, setIsValidVolum] = useState<boolean | null>(null);
 
+
     const [price, setPrice] = useState<number | null>(null);
     const [volum, setVolum] = useState<number | null>(null);
     const [note, setNote] = useState<string | null>(null);
+    const [selectedPortfolio, setSelectedPortfolio] = useState<string | null>(null);
 
     const addToPortfolio = async () => {
         if (!ticker) {
@@ -45,18 +81,32 @@ export const AddToPortfolio = ({ setcloseWindow, setPortfolioList }: AddToPortfo
             setIsValidVolum(true);
         }
 
-        const newStock: portfolioEntryInterface = { ticker, price, volum };
-        setPortfolioList((prev: any) => [...prev, newStock]);
+        if (selectedPortfolio === null ) {
+            return
+        }
 
+        const newStock: portfolioEntryInterface = { ticker, price, volum };
+        
+        setPortfolioList((prev: portfolioFolderInterface[]) =>
+            prev.map((folder) =>
+              folder.name === selectedPortfolio
+                ? { ...folder, stocks: [...folder.stocks, newStock] }
+                : folder
+            )
+          );
+
+          
         setTicker("");
         setPrice(null);
         setVolum(null);
         setNote(null);
         setIsValidTicker(null);
+        setSelectedPortfolio(null);
     };
 
     return (
         <div className="w-full max-w-xl mx-auto mt-6 p-6 bg-[#1e1e1e] rounded-lg border border-gray-700 space-y-5">
+            <p>Legg til ny aksje</p>
             <div className="space-y-1">
                 <Input
                     placeholder="Ticker"
@@ -93,6 +143,7 @@ export const AddToPortfolio = ({ setcloseWindow, setPortfolioList }: AddToPortfo
                 )}
             </div>
 
+
             <div>
                 <Input
                     placeholder="Notat (valgfritt)"
@@ -100,6 +151,10 @@ export const AddToPortfolio = ({ setcloseWindow, setPortfolioList }: AddToPortfo
                     onChange={(e) => setNote(e.target.value)}
                     className="text-white placeholder:text-gray-400"
                 />
+            </div>
+
+            <div>
+                <SelectPortfolio portfolioList={portfolioList} setPortFolio={setSelectedPortfolio}></SelectPortfolio>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">

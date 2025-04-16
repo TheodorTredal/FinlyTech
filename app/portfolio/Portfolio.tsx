@@ -1,10 +1,11 @@
 "use client";
 import { StockPortfolio } from "./components/stockPortfolio";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-import { useState } from "react";
-
-import { stockPortfolioInterface } from "./interfaces/stockPortfolioInterface";
+import { useEffect, useState } from "react";
 import { AddToPortfolio } from "./components/addToPortfolio";
+import { Button } from "@/components/ui/button";
+
+import { portfolioFolderInterface } from "./interfaces/stockPortfolioInterface";
 
 
 
@@ -15,12 +16,42 @@ enum ActiveComponentEnum {
   }
 
 
+
+
+  export const portfolioData: portfolioFolderInterface[] = [
+    {
+      name: "Dividend",
+      stocks: [
+        { ticker: "O", price: 60, volum: 10 },
+        { ticker: "T", price: 15, volum: 20 },
+      ],
+    },
+    {
+      name: "Growth",
+      stocks: [
+        { ticker: "TSLA", price: 200, volum: 5 },
+        { ticker: "AAPL", price: 150, volum: 8 },
+      ],
+    },
+    {
+      name: "Nordic",
+      stocks: [
+        { ticker: "EQNR.OL", price: 300, volum: 15 },
+      ],
+    },
+  ];
+  
+
 const Portfolio = () => {
 
     const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.portefølje);
-    const [portfolioList, setPortfolioList] = useState<stockPortfolioInterface[]>([]);
+    const [portfolioList, setPortfolioList] = useState<portfolioFolderInterface[]>([]);
     const [showAddToPortfolio, setShowAddToPortfolio] = useState<boolean>(false);
 
+
+    useEffect(() => {
+      setPortfolioList(portfolioData);
+    }, [])
 
     const handleMenuClick = (component: ActiveComponentEnum) => {
         setActiveComponent(component);
@@ -50,12 +81,12 @@ const Portfolio = () => {
 
         {showAddToPortfolio && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <AddToPortfolio setcloseWindow={setShowAddToPortfolio} setPortfolioList={setPortfolioList}></AddToPortfolio>
+                    <AddToPortfolio setcloseWindow={setShowAddToPortfolio} setPortfolioList={setPortfolioList} portfolioList={portfolioList}></AddToPortfolio>
             </div>
         )}
 
         {activeComponent === ActiveComponentEnum.portefølje && (
-            <StockPortfolio portfolioEntries={portfolioList}></StockPortfolio>
+            <StockPortfolio folders={portfolioList} setPortfolio={setPortfolioList}></StockPortfolio>
         )}
 
         {activeComponent === ActiveComponentEnum.utvikling && (
@@ -66,7 +97,6 @@ const Portfolio = () => {
         {activeComponent === ActiveComponentEnum.likteAksjer && (
             <div>Likte aksjer</div>
         )}
-        
         
         </div>
 

@@ -11,6 +11,18 @@ import { DisplayNewsFromDate } from "./displayNewsOnDate";
 import { parseArticleDate, adjustToNearestFriday, filterNewsBasedOnDate  } from "./HelperFunctions";
 
 
+import {
+  ChartOptions,
+  CoreChartOptions,
+  ElementChartOptions,
+  PluginChartOptions,
+  DatasetChartOptions,
+  ScaleChartOptions,
+  LineControllerChartOptions,
+} from "chart.js";
+
+
+
 interface NewsArticle {
   date: string;
   Summary: string;
@@ -107,7 +119,7 @@ const NewsStockGraph = ({ articleDate, articles }: { articleDate: string, articl
     return <SkeletonGraph />;
   }
   
-
+  
 const options = {
   responsive: true,
   maintainAspectRatio: false,

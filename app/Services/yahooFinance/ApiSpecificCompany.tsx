@@ -1,5 +1,3 @@
-import { isValidElement } from "react";
-
 export const fetchStockChart = async (symbol: string, dateInterval: string) => {
     try {
         const response = await fetch(`http://127.0.0.1:8000/stock/chart/${symbol}/${dateInterval}/`);
@@ -14,7 +12,7 @@ export const fetchStockChart = async (symbol: string, dateInterval: string) => {
             labels: data.chart.map((entry: any) => entry.date), // X-akse datoer
             datasets: [
                 {
-                    label: `Aksjekurs (${symbol})`,
+                    label: `Pris (${symbol})`,
                     data: data.chart.map((entry: any) => entry.close), // Lukkekurs
                     borderColor: "rgba(75, 192, 192, 1)",
                     backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -24,7 +22,7 @@ export const fetchStockChart = async (symbol: string, dateInterval: string) => {
                 },
                 {
                     label: `Volum (${symbol})`,
-                    data: data.chart.map((entry: any) => entry.volume), // Volum
+                    data: data.chart.map((entry: any) => entry.volume / 1000), // Volum
                     backgroundColor: "rgba(255, 99, 132, 0.6)",  // Farge for bar chart volumet
                     borderWidth: 0,
                     yAxisID: 'y2',  // For volumet

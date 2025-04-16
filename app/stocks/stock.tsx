@@ -6,7 +6,7 @@ import BarChart from "./components/barCharts/BarChart";
 import { StarStock } from "./star";
 import { Insiders } from "./components/Insiders/Insiders";
 import { StockNews } from "./components/News/News";
-
+import { useSearch } from "@/app/context/SearchContext";
 
 // Supply Chain
 import { SupplyChain } from "./components/supplyChain/SupplyChain";
@@ -32,6 +32,7 @@ enum ActiveComponentEnum {
 export default function StocksPage() {
 
   const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.Stock);
+  const { searchQuery } = useSearch();
 
   const handleMenuClick = (component: ActiveComponentEnum) => {
     setActiveComponent(component);
@@ -39,8 +40,11 @@ export default function StocksPage() {
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <div className="flex">
-
+      <div className="flex space-x-5">
+ 
+      <p className="text-2xl w-40">
+      {searchQuery}
+      </p>
 
       <Menubar className="rounded-xl p-2 flex justify-start space-x-4">
         <MenubarMenu>
@@ -115,10 +119,6 @@ export default function StocksPage() {
         <Insiders></Insiders>
       </div>
     )}
-
-
-
-
     </div>
   );
 }
