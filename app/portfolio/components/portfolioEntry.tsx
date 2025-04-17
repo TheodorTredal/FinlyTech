@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { stockPortfolioInterface } from "../interfaces/stockPortfolioInterface";
 import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { PortfolioEntryOptions } from "./portfolioEntryOptions";
-import { Ellipsis } from "lucide-react";
+import { NotebookPen } from "lucide-react";
+import { DeleteStockAlert } from "./deleteStockFromPortfolio";
 
 
 
-export const PortfolioEntry = ({ portfolioEntry }: { portfolioEntry: stockPortfolioInterface }) => {
+export const PortfolioEntry = ({ portfolioEntry, setPortfolio, folderName }: { portfolioEntry: stockPortfolioInterface; setPortfolio: (prev: any) => void; folderName: string; }) => {
     const [latestStockPrice, setLatestStockPrice] = useState<number | null>(null);
     const [showOptions, setShowOptions] = useState<boolean>(false);
 
@@ -79,11 +80,13 @@ export const PortfolioEntry = ({ portfolioEntry }: { portfolioEntry: stockPortfo
           </div>
         </div>
 
-        <Ellipsis size={20} onClick={() => setShowOptions(true)}></Ellipsis>
+        <NotebookPen size={20} onClick={() => setShowOptions(true)}></NotebookPen>
       
         {showOptions && (
             <PortfolioEntryOptions setShowOptions={setShowOptions}></PortfolioEntryOptions>
             )}
+
+        <DeleteStockAlert setPortfolio={setPortfolio} folderName={folderName} ticker={portfolioEntry.ticker}></DeleteStockAlert>
 
       
       </div>

@@ -3,8 +3,8 @@ import { StockPortfolio } from "./components/stockPortfolio";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { useEffect, useState } from "react";
 import { AddToPortfolio } from "./components/addToPortfolio";
-import { Button } from "@/components/ui/button";
-
+import PortfolioGraph from "./components/PortfolioGraph/portfolioGraph";
+import { SelectPortfolio } from "./components/portfolioSelector";
 import { portfolioFolderInterface } from "./interfaces/stockPortfolioInterface";
 
 
@@ -16,6 +16,14 @@ enum ActiveComponentEnum {
   }
 
 
+  const portfolioData2: portfolioFolderInterface = {
+    name: "Dividend",
+    stocks: [
+      { ticker: "O", price: 60, volum: 10 },
+      { ticker: "T", price: 15, volum: 20 },
+      { ticker: "gme", price: 1000, volum: 100 },
+    ],
+  }
 
 
   export const portfolioData: portfolioFolderInterface[] = [
@@ -44,9 +52,10 @@ enum ActiveComponentEnum {
 
 const Portfolio = () => {
 
-    const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.portefølje);
+    const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.utvikling);
     const [portfolioList, setPortfolioList] = useState<portfolioFolderInterface[]>([]);
     const [showAddToPortfolio, setShowAddToPortfolio] = useState<boolean>(false);
+    const [currentPortfolio, setCurrentPortfolio] = useState<string>("");
 
 
     useEffect(() => {
@@ -74,7 +83,7 @@ const Portfolio = () => {
           {component.charAt(0).toUpperCase() + component.slice(1)}
         </MenubarTrigger>
         ))}
-        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="ml-auto"> + </MenubarTrigger>
+        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="mr-auto border-2"> Add stock + </MenubarTrigger>
 
         </MenubarMenu>
       </Menubar>
@@ -90,7 +99,18 @@ const Portfolio = () => {
         )}
 
         {activeComponent === ActiveComponentEnum.utvikling && (
-            <div>Utvikling</div>
+            // <div>Utvikling</div>
+          <div className="flex justify-center h-[80vh] overflow-hidden py-4">
+
+            <div className="flex mr-auto">
+
+              <SelectPortfolio portfolioList={portfolioList} setPortFolio={setCurrentPortfolio}></SelectPortfolio>
+            </div>
+
+            <PortfolioGraph
+              portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
+            />
+          </div>
             
         )}
 

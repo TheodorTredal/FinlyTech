@@ -6,13 +6,13 @@ export interface stockPortfolioInterface {
     volum: number; 
     // prosentØkning: string; 
     // currentPrice: number;
-    setShowOptions: any;
+    // setShowOptions: any;
 }
 
 export interface portfolioEntryInterface {
     ticker: string; 
-    price: number | null;
-    volum: number | null; 
+    price: number;
+    volum: number; 
 }
 
 

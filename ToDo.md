@@ -160,8 +160,27 @@ Neste tingene som blir gjort:
 
 
 
+Sidemeny som viser det mest kritiske for en bruker, den skal være tilgjengelig over hele nettsiden, bruker skal få se det som er viktigst for den, om det er nyheter, tapere, vinnere, mest omsatt (volum) eller sine egne aksjer  / watchlist.
+
+
+
+Portefølje graf
+
+
+1. Trenger å sette opp dataen. Vi har antall aksjer og nåverdien av aksjer.
+2. Vi må finne vektet gjennomsnitt av alle aksjene i en portefølje.
+3. Vi må vise denne justerte vektet dataen som en graf. Bruk den historiske prisdataen.
+
+4. Det blir 2 forskjellige datastrukturer. den ene blir bare tickeren og prisen. Den andre blir volum og
+5. Vi må ha meta data om porteføljen
+   - Når den ble opprettet
+
+
+
+
 
 DCF ANALYSE
+
 
 
 1. Hvor mye er EPS og hvor mye forventer man at det skal øke de neste årene, la oss si de neste 3-5 årene?

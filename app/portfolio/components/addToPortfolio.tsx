@@ -4,15 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { portfolioEntryInterface } from "../interfaces/stockPortfolioInterface";
 import { get_checkCompanyTicker } from "@/app/Services/yahooFinance/ApiSpecificCompany";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
+import { SelectPortfolio } from "./portfolioSelector";
+
 import { portfolioFolderInterface } from "../interfaces/stockPortfolioInterface";
    
 interface AddToPortfolioProps {
@@ -21,26 +14,6 @@ interface AddToPortfolioProps {
     portfolioList: portfolioFolderInterface[];
   }
 
-    
-const SelectPortfolio = ({ portfolioList, setPortFolio }: { portfolioList: portfolioFolderInterface[]; setPortFolio: (val: string) => void; }) => {
-    return (
-      <Select onValueChange={setPortFolio}>
-        <SelectTrigger className="w-full text-gray-400">
-          <SelectValue placeholder="Velg en portefølje" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Porteføljer</SelectLabel>
-            {portfolioList.map((portfolio) => (
-              <SelectItem key={portfolio.name} value={portfolio.name}>
-                {portfolio.name}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    );
-  };
 
 
 

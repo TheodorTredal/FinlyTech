@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { useState } from "react";
 
-export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolderInterface[]; setPortfolio: (prev: any) => any;}) => {
+export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolderInterface[]; setPortfolio: (prev: any) => void;}) => {
 
   const [showAddPortfolio, setShowAddPortfolio] = useState<boolean>(false);  
   const [newPortfolioName, setNewPortfolioName] = useState<string | null>(null);
@@ -14,7 +14,9 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
     setShowAddPortfolio(true);
   }
 
-  
+  const handleAbort = () => {
+    setShowAddPortfolio(false);
+  }
   
   const handleConfirmAdd = () => {
     
@@ -33,7 +35,7 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
       return;
     }
 
-    setPortfolio(prev => [
+    setPortfolio((prev: portfolioFolderInterface[])=> [
       ...prev,
       {name: newPortfolioName?.trim(), stocks: []}
     ])
@@ -50,8 +52,12 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
             <Input
             placeholder="Ny portefølje..."
             onChange={(e) => setNewPortfolioName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleConfirmAdd();
+            }}
             />
             <Button onClick={handleConfirmAdd} className="bg-green-600 hover:bg-green-700 text-white px-6">Opprett</Button>
+            <Button onClick={handleAbort} variant={"ghost"} className="text-red-700">Avbryt</Button>
           </div>
           )}
       </div>
@@ -60,11 +66,10 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
 
 export const StockPortfolio = ({ folders, setPortfolio }: { folders: portfolioFolderInterface[]; setPortfolio: (prev: any) => void;}) => {
 
-
   return (
     <div className="flex flex-col gap-6">
       {folders.map((folder, i) => (
-        <PortfolioFolder key={i} folder={folder} />
+        <PortfolioFolder key={i} folder={folder} setPortfolio={setPortfolio}/>
       ))}
       <AddPortfolio folders={folders} setPortfolio={setPortfolio}></AddPortfolio>
     </div>
