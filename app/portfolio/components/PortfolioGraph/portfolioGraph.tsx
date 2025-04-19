@@ -9,21 +9,6 @@ import { portfolioFolderInterface } from "../../interfaces/stockPortfolioInterfa
 import { fetchStockChart } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 
 
-// Mock historisk prisdata for hver aksje
-// const historicalData: { [ticker: string]: number[] } = {
-//     "O": [58, 59, 60, 61, 62, 61, 60, 59, 58, 57, 56, 55],
-//     "T": [14, 14.5, 15, 15.5, 16, 16.5, 16, 15.5, 15, 14.5, 14, 13.5],
-//   };
-
-  export const portfolioData: portfolioFolderInterface =
-    {
-      name: "Dividend",
-      stocks: [
-        { ticker: "O", price: 60, volum: 10 },
-        { ticker: "T", price: 15, volum: 20 },
-      ],
-    };
-
 
 
 const fetchAllHistoricalData = async (portfolio: portfolioFolderInterface, dateInterval: string) => {
@@ -199,7 +184,7 @@ const options = {
   
 
   return (
-    <div className="p-6 bg-sidebar shadow-lg rounded-lg w-2/3 h-1/2">
+    <div className="p-6 bg-sidebar shadow-lg rounded-lg w-full h-1/2">
       <h2 className="flex justify-around font-semibold mb-4">
         <div className="flex w-1/4 justify-between mr-auto text-xl">
           {/* <p className={`mr-auto pl-4 ${

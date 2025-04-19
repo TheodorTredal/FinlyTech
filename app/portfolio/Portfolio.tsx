@@ -6,13 +6,16 @@ import { AddToPortfolio } from "./components/addToPortfolio";
 import PortfolioGraph from "./components/PortfolioGraph/portfolioGraph";
 import { SelectPortfolio } from "./components/portfolioSelector";
 import { portfolioFolderInterface } from "./interfaces/stockPortfolioInterface";
+import { PortfolioPieChart } from "./components/PortfolioGraph/PortfolioPieChart";
 
 
 
 enum ActiveComponentEnum {
     portefølje = "portefølje",
     utvikling = "utvikling",
-    likteAksjer = "likteAksjer",
+    likteAksjer = "likteAksjer", // skal kanksje ikke være en del av porteføljen
+    targets = "targets"
+    health = "health"
   }
 
 
@@ -32,6 +35,8 @@ enum ActiveComponentEnum {
       stocks: [
         { ticker: "O", price: 60, volum: 10 },
         { ticker: "T", price: 15, volum: 20 },
+        { ticker: "TSLA", price: 200, volum: 5 },
+        { ticker: "AAPL", price: 150, volum: 8 },
       ],
     },
     {
@@ -98,17 +103,39 @@ const Portfolio = () => {
             <StockPortfolio folders={portfolioList} setPortfolio={setPortfolioList}></StockPortfolio>
         )}
 
+
+
+
+
+
         {activeComponent === ActiveComponentEnum.utvikling && (
           <div className="flex justify-center h-[80vh] overflow-hidden py-4">
 
-            <div className="flex mr-auto">
-
+            <div className="flex mr-auto broder-10 border-red-400 w-[13%] h-[5%] ">
               <SelectPortfolio portfolioList={portfolioList} setPortFolio={setCurrentPortfolio}></SelectPortfolio>
             </div>
 
-            <PortfolioGraph
+
+            <div className="flex flex-col w-[80%] h-full space-y-2">
+              <PortfolioGraph
+                portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
+                />
+
+
+              <div className="flex space-z-2">
+
+
+              <PortfolioPieChart 
               portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
-            />
+              />
+
+              <PortfolioPieChart 
+              portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
+              />
+
+              </div>
+
+            </div>
           </div>
             
         )}

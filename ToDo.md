@@ -165,15 +165,23 @@ Sidemeny som viser det mest kritiske for en bruker, den skal være tilgjengelig 
 
 
 Portefølje graf
-
-
-1. Trenger å sette opp dataen. Vi har antall aksjer og nåverdien av aksjer.
-2. Vi må finne vektet gjennomsnitt av alle aksjene i en portefølje.
-3. Vi må vise denne justerte vektet dataen som en graf. Bruk den historiske prisdataen.
-
-4. Det blir 2 forskjellige datastrukturer. den ene blir bare tickeren og prisen. Den andre blir volum og
-5. Vi må ha meta data om porteføljen
+1. Vi må ha meta data om porteføljen
    - Når den ble opprettet
+
+2. Targets. Om enkelt aksjer i porteføljen har nådd sitt target, fremtidige prognoser, er den fortsatt en hold / sell når målet er nådd?
+  - Dette kan gjøres når screenere / filtere har kommet opp på plass ;)
+  - Filtere kommer til å bli drit enkelt å lage, jeezus.
+
+
+3. Filtere
+   - Ha en liste over flere aksjer, dette kan evt. gjøres i sektor siden av nettsiden.
+   - Ha oppe alle filterene som brukeren kan ønske
+   - Brukeren skriver inn sine kriterier til hva de har lyst til å filtrere på, listen blir mindre basert på hva brukerene filtrer på...
+   P/E
+   EV/Ebidta
+   EV/Ebit
+   osv osv... er bare drømmene som setter grensene egentlig.
+
 
 
 Må få inn hvor mye vekting hver enkel aksje har grafisk, tenker da på en "pie-chart - Donut with Text for eksempel"
