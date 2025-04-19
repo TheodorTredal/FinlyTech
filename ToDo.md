@@ -176,6 +176,10 @@ Portefølje graf
    - Når den ble opprettet
 
 
+Må få inn hvor mye vekting hver enkel aksje har grafisk, tenker da på en "pie-chart - Donut with Text for eksempel"
+
+
+
 
 
 

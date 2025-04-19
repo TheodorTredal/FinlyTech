@@ -91,19 +91,33 @@ const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) =>
         const { result, labels } = await fetchAllHistoricalData(portfolio, dateInterval);
         const weightedAverages = calculateHistoricalWeightedAverage(result, portfolio);
   
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        
+        let gradient: CanvasGradient | string = "#0369a1";
+
+        
+        if (ctx) {
+          gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, "rgba(3, 105, 161, 0.6)");  // mørk blå top
+          gradient.addColorStop(1, "rgba(3, 105, 161, 0)");    // transparent bunn
+        }
+        
         setChartData({
           labels,
           datasets: [
             {
               label: "Vektet porteføljeverdi",
               data: weightedAverages,
-              borderColor: "rgb(34,197,94)",
-              backgroundColor: "rgba(34,197,94,0.2)",
+              borderColor: "rgb(3, 105, 161)",
+              backgroundColor: gradient,
               fill: true,
               tension: 0.4,
+              pointRadius: 0,
             },
           ],
         });
+        
       } catch (error) {
         console.error("Feil ved generering av grafdata:", error);
         setError("Kunne ikke laste inn data.");

@@ -55,7 +55,7 @@ const Portfolio = () => {
     const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.utvikling);
     const [portfolioList, setPortfolioList] = useState<portfolioFolderInterface[]>([]);
     const [showAddToPortfolio, setShowAddToPortfolio] = useState<boolean>(false);
-    const [currentPortfolio, setCurrentPortfolio] = useState<string>("");
+    const [currentPortfolio, setCurrentPortfolio] = useState<string>("Dividend");
 
 
     useEffect(() => {
@@ -99,7 +99,6 @@ const Portfolio = () => {
         )}
 
         {activeComponent === ActiveComponentEnum.utvikling && (
-            // <div>Utvikling</div>
           <div className="flex justify-center h-[80vh] overflow-hidden py-4">
 
             <div className="flex mr-auto">
