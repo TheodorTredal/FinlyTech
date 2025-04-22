@@ -11,6 +11,9 @@ import { fetchStockChart } from "@/app/Services/yahooFinance/ApiSpecificCompany"
 
 
 
+
+
+
 const fetchAllHistoricalData = async (portfolio: portfolioFolderInterface, dateInterval: string) => {
 
     const result: { [ticker: string]: number[] } = {};
@@ -67,6 +70,8 @@ const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) =>
 
   const [hoverX, setHoverX] = useState<number | null>(null);
   const [hoverY, setHoverY] = useState<number | null>(null);
+
+
 
 
 

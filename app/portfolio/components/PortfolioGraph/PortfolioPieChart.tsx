@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a4de6c", "#d0ed57"];
 
-export const PortfolioPieChart = ({ portfolio }: { portfolio: portfolioFolderInterface }) => {
+export const PortfolioPieChart = ({ portfolio, name, symbol }: { portfolio: portfolioFolderInterface; name: string; symbol: string}) => {
   if (!portfolio || !portfolio.stocks || portfolio.stocks.length === 0) {
     return (
       <Card className="p-4 bg-muted text-muted-foreground rounded-xl shadow-inner">
@@ -22,7 +22,7 @@ export const PortfolioPieChart = ({ portfolio }: { portfolio: portfolioFolderInt
     <Card className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-[500px] h-[400px] flex flex-col">
       {/* Overskrift på toppen */}
       <h3 className="text-xl font-semibold text-center text-gray-800 dark:text-white mb-4">
-        Markedsverdi
+        {name}
       </h3>
   
       {/* Pie Chart Container */}
@@ -36,7 +36,7 @@ export const PortfolioPieChart = ({ portfolio }: { portfolio: portfolioFolderInt
               cx="50%"
               cy="50%"
               outerRadius={100}
-              label
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}${symbol}`}
             >
               {pieData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

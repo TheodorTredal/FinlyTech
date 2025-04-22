@@ -3,10 +3,8 @@ import { StockPortfolio } from "./components/stockPortfolio";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { useEffect, useState } from "react";
 import { AddToPortfolio } from "./components/addToPortfolio";
-import PortfolioGraph from "./components/PortfolioGraph/portfolioGraph";
-import { SelectPortfolio } from "./components/portfolioSelector";
 import { portfolioFolderInterface } from "./interfaces/stockPortfolioInterface";
-import { PortfolioPieChart } from "./components/PortfolioGraph/PortfolioPieChart";
+import { PortfolioDevelopment } from "./components/portfolioDevelopment";
 
 
 
@@ -14,8 +12,8 @@ enum ActiveComponentEnum {
     portefølje = "portefølje",
     utvikling = "utvikling",
     likteAksjer = "likteAksjer", // skal kanksje ikke være en del av porteføljen
-    targets = "targets"
-    health = "health"
+    targets = "targets",
+    health = "health",
   }
 
 
@@ -37,6 +35,9 @@ enum ActiveComponentEnum {
         { ticker: "T", price: 15, volum: 20 },
         { ticker: "TSLA", price: 200, volum: 5 },
         { ticker: "AAPL", price: 150, volum: 8 },
+        { ticker: "NVDA", price: 150, volum: 8 },
+        { ticker: "INTC", price: 150, volum: 8 },
+        { ticker: "AMD", price: 150, volum: 8 },
       ],
     },
     {
@@ -95,50 +96,28 @@ const Portfolio = () => {
 
         {showAddToPortfolio && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <AddToPortfolio setcloseWindow={setShowAddToPortfolio} setPortfolioList={setPortfolioList} portfolioList={portfolioList}></AddToPortfolio>
+                    <AddToPortfolio 
+                        setcloseWindow={setShowAddToPortfolio} 
+                        setPortfolioList={setPortfolioList} 
+                        portfolioList={portfolioList} />
             </div>
         )}
 
         {activeComponent === ActiveComponentEnum.portefølje && (
-            <StockPortfolio folders={portfolioList} setPortfolio={setPortfolioList}></StockPortfolio>
+            <StockPortfolio 
+                folders={portfolioList} 
+                setPortfolio={setPortfolioList} />
         )}
-
-
-
 
 
 
         {activeComponent === ActiveComponentEnum.utvikling && (
-          <div className="flex justify-center h-[80vh] overflow-hidden py-4">
-
-            <div className="flex mr-auto broder-10 border-red-400 w-[13%] h-[5%] ">
-              <SelectPortfolio portfolioList={portfolioList} setPortFolio={setCurrentPortfolio}></SelectPortfolio>
-            </div>
-
-
-            <div className="flex flex-col w-[80%] h-full space-y-2">
-              <PortfolioGraph
-                portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
-                />
-
-
-              <div className="flex space-z-2">
-
-
-              <PortfolioPieChart 
-              portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
-              />
-
-              <PortfolioPieChart 
-              portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
-              />
-
-              </div>
-
-            </div>
-          </div>
-            
+          <PortfolioDevelopment 
+              currentPortfolio={currentPortfolio} 
+              portfolioList={portfolioList} 
+              setCurrentPortfolio={setCurrentPortfolio} />            
         )}
+
 
         {activeComponent === ActiveComponentEnum.likteAksjer && (
             <div>Likte aksjer</div>

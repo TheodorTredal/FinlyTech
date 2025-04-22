@@ -284,3 +284,18 @@ export const get_companyLastPrice = async ( ticker: string ) => {
         }
     }
 }
+
+
+export const get_companyInfo = async ( ticker: string ) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stock/fetchCompanyInfo/${ticker}/`);
+        const data = await response.json();
+        return {
+            industry: data.industry,
+            sector: data.sector
+        }
+
+    } catch (error) {
+        console.log(`Feil ved henting av indsustry / sektor informasjon for ${ticker}`, error);
+    }
+}
