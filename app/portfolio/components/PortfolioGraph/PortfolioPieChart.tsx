@@ -19,38 +19,39 @@ export const PortfolioPieChart = ({ portfolio, name, symbol }: { portfolio: port
   }));
 
   return (
-    <Card className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-[500px] h-[400px] flex flex-col">
-      {/* Overskrift på toppen */}
-      <h3 className="text-xl font-semibold text-center text-gray-800 dark:text-white mb-4">
-        {name}
-      </h3>
-  
-      {/* Pie Chart Container */}
-      <div className="flex-1 flex items-center justify-center">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={pieData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}${symbol}`}
-            >
-              {pieData.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{ backgroundColor: "#f9fafb", borderColor: "#e5e7eb" }}
-              labelStyle={{ fontWeight: "bold" }}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-    </Card>
+   <Card className="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[90vw] sm:max-w-[500px] h-[300px] sm:h-[400px] flex flex-col">
+  {/* Overskrift på toppen */}
+  <h3 className="text-lg sm:text-xl font-semibold text-center text-gray-800 dark:text-white mb-2 sm:mb-4">
+    {name}
+  </h3>
+
+  {/* Pie Chart Container */}
+  <div className="flex-1 flex items-center justify-center">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={pieData}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={80} // Kan evt. justeres basert på skjermstørrelse
+          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}${symbol}`}
+        >
+          {pieData.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{ backgroundColor: "#f9fafb", borderColor: "#e5e7eb" }}
+          labelStyle={{ fontWeight: "bold" }}
+        />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+</Card>
+
   );
   
 };

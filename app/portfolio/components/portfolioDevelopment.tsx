@@ -6,6 +6,8 @@ import { get_companyInfo } from "@/app/Services/yahooFinance/ApiSpecificCompany"
 import { useEffect, useState } from "react";
 
 
+type ExposureType = "sector" | "industry";
+
 const convertSectorExposure = (
   sectorExposure: { [sector: string]: number }
 ): portfolioFolderInterface => {
@@ -31,32 +33,34 @@ const convertSectorExposure = (
 
 const calculateSectorExposure = (
   portfolio: portfolioFolderInterface,
-  sectorMap: { [ticker: string]: { sector: string; industry: string } }
+  sectorMap: { [ticker: string]: { sector: string; industry: string } },
+  input: ExposureType
 ) => {
-  const sectorExposure: { [sector: string]: number } = {};
+  const exposure: { [key: string]: number } = {};
   let totalValue = 0;
 
   for (const stock of portfolio.stocks) {
     const info = sectorMap[stock.ticker];
-    if (!info || !info.sector) continue;
+    if (!info || !info[input]) continue;
 
+    const key = info[input]; // enten sektor eller industri
     const value = stock.price * stock.volum;
     totalValue += value;
 
-    if (!sectorExposure[info.sector]) {
-      sectorExposure[info.sector] = 0;
+    if (!exposure[key]) {
+      exposure[key] = 0;
     }
 
-    sectorExposure[info.sector] += value;
+    exposure[key] += value;
   }
 
   // Konverter til prosent
-  for (const sector in sectorExposure) {
-    sectorExposure[sector] = (sectorExposure[sector] / totalValue) * 100;
+  for (const key in exposure) {
+    exposure[key] = (exposure[key] / totalValue) * 100;
   }
- 
-  console.log(sectorExposure);
-  return sectorExposure;
+
+  console.log(exposure);
+  return exposure;
 };
 
 
@@ -81,8 +85,24 @@ const fetchCompanyInfo = async (portfolio: portfolioFolderInterface) => {
   return result;
 };
 
+
+const calculateMarkedValue = (portfolio: portfolioFolderInterface) => {
+
+  // portfolio.stocks.map(stock)
+
+
+}
+
 export const PortfolioDevelopment = ({ currentPortfolio, portfolioList, setCurrentPortfolio }: {currentPortfolio: string; portfolioList: portfolioFolderInterface[]; setCurrentPortfolio: (val: string) => void}) => {
-  const [markedExposure, setMarkedExposure] = useState<any>(null);
+  const [sectorExposure, setSectorExposure] = useState<any>(null);
+  const [industryExposure, setIndustryExposure] = useState<any>(null);
+  const [markedValue, setMarkedValue] = useState<number | null>(null);
+
+
+    useEffect(() => {
+
+
+    }, [])
 
     useEffect(() => {
       
@@ -91,7 +111,8 @@ export const PortfolioDevelopment = ({ currentPortfolio, portfolioList, setCurre
       
       const fetchAndCalculate = async () => { 
         const portfolioCompaniesInfo = await fetchCompanyInfo(p);
-        setMarkedExposure(calculateSectorExposure(p, portfolioCompaniesInfo))
+        setSectorExposure(calculateSectorExposure(p, portfolioCompaniesInfo, "sector"))
+        setIndustryExposure(calculateSectorExposure(p, portfolioCompaniesInfo, "industry"))
       }
   
       fetchAndCalculate();
@@ -119,13 +140,18 @@ export const PortfolioDevelopment = ({ currentPortfolio, portfolioList, setCurre
 
           
                 <PortfolioPieChart
-                name="Markedsverdi"
+                name="Markedsverd"
                 portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
                 symbol=""
                 />
   
-                <PortfolioPieChart name="Eksponering"
-                portfolio={convertSectorExposure(markedExposure)}
+                <PortfolioPieChart name="Sektor"
+                portfolio={convertSectorExposure(sectorExposure)}
+                symbol=" %"
+                />
+  
+                <PortfolioPieChart name="Industrier"
+                portfolio={convertSectorExposure(industryExposure)}
                 symbol=" %"
                 />
   

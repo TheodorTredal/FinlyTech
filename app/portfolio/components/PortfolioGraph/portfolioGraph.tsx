@@ -7,6 +7,7 @@ import SkeletonGraph from "@/app/stocks/components/graph/SkeletonGraph";
 import { DateComponent } from "@/app/Components/StockGraphDates";
 import { portfolioFolderInterface } from "../../interfaces/stockPortfolioInterface";
 import { fetchStockChart } from "@/app/Services/yahooFinance/ApiSpecificCompany";
+import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 
 
 
@@ -61,6 +62,10 @@ const calculateHistoricalWeightedAverage = ( historicalData: { [ticker: string]:
 };
 
 
+
+
+
+
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Filler, annotationPlugin);
 
 const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) => {
@@ -68,11 +73,28 @@ const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) =>
   const [error, setError] = useState<string | null>(null);
   const [dateInterval, setDateInterval] = useState<string>("1y");
 
+  const [markedValue, setMarkedValue] = useState<number | null>(null);
+
   const [hoverX, setHoverX] = useState<number | null>(null);
   const [hoverY, setHoverY] = useState<number | null>(null);
 
+  useEffect(() => {
 
+    const calculatePortfolioValue = async (portfolio: portfolioFolderInterface) => {
 
+      let volumTimesPrice = 0
+    
+      for (const stock of portfolio.stocks) { 
+        const response = await get_companyLastPrice(stock.ticker);
+        if (response?.lastPrice !== undefined && response.lastPrice !== -1) {
+          volumTimesPrice += response.lastPrice * stock.volum;
+        }
+      }
+      console.log("total portefølje verdi: ", volumTimesPrice);
+      setMarkedValue(volumTimesPrice);
+    }
+    calculatePortfolioValue(portfolio);
+  }, [portfolio])
 
 
   useEffect(() => {
@@ -192,6 +214,7 @@ const options = {
     <div className="p-6 bg-sidebar shadow-lg rounded-lg w-full h-1/2">
       <h2 className="flex justify-around font-semibold mb-4">
         <div className="flex w-1/4 justify-between mr-auto text-xl">
+        <h2 className="ml-auto">Marked value:  {(markedValue * 100) / 100} </h2>
           {/* <p className={`mr-auto pl-4 ${
             parseFloat(chartData.growthPercentage.replace('%', '')) < 0
             ? 'text-red-500'
@@ -200,6 +223,7 @@ const options = {
             {chartData.growthPercentage}
           </p> */}
         </div>
+            
             <DateComponent setDateInterval={setDateInterval} />
       </h2>
       
