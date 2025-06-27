@@ -11,10 +11,6 @@ import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCom
 
 
 
-
-
-
-
 const fetchAllHistoricalData = async (portfolio: portfolioFolderInterface, dateInterval: string) => {
 
     const result: { [ticker: string]: number[] } = {};

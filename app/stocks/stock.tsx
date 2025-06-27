@@ -7,6 +7,7 @@ import { StarStock } from "./star";
 import { Insiders } from "./components/Insiders/Insiders";
 import { StockNews } from "./components/News/News";
 import { useSearch } from "@/app/context/SearchContext";
+import MyChart from "./components/graph/rechartTest";
 
 // Supply Chain
 import { SupplyChain } from "./components/supplyChain/SupplyChain";
@@ -98,7 +99,7 @@ export default function StocksPage() {
 
     <div className={activeComponent === ActiveComponentEnum.News ? "block" : "hidden"}>
       <div>
-        <StockNews />
+        {/* <StockNews /> */}
       </div>
     </div>
 
@@ -111,7 +112,9 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.HistoricalData && (
-      <div></div>
+      <div>
+        <MyChart></MyChart>
+      </div>
     )}
 
     {activeComponent === ActiveComponentEnum.Insiders && (

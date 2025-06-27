@@ -1,8 +1,35 @@
+
+const prod = 0;
+
+
+export const fetchStockChart2 = async(symbol: string, dateInterval: string ) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/stockPriceChartData/${symbol}/${prod}/${dateInterval}/`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status ${response.status}`)
+        }
+
+        const data = await response.json();
+
+        if (!data.chart) {
+            throw new Error("Data mangler chart")
+        }
+
+        return data.chart
+
+    } catch( error: any) {
+        console.error("Data mangler 'chart'");
+    }
+}
+
 export const fetchStockChart = async (symbol: string, dateInterval: string) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/stock/chart/${symbol}/${dateInterval}/`);
+        // const response = await fetch(`http://127.0.0.1:8000/stock/chart/${symbol}/${dateInterval}/`);
+        const response = await fetch(`http://127.0.0.1:8000/stockPriceChartData/${symbol}/${prod}/${dateInterval}/`);
         const data = await response.json();
   
+
         if (data.error) throw new Error(data.error);
   
         // Hent vekstprosenten
@@ -72,19 +99,20 @@ export const fetchStockChartNews = async (symbol: string, dateInterval: string) 
 
 export const fetchBasicFinancials = async (symbol: string) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/stock/financialInformation/${symbol}/`)
+        const response = await fetch(`http://127.0.0.1:8000/basicFinancials/${symbol}/${0}/`)
         const data = await response.json();
         if (data.error) throw new Error(data.error);
 
         return {
-            peRatio: data.pe_Ratio,
-            marketCap: data.market_cap,
-            eps: data.eps,
-            roe: data.roe,
-            roa: data.roa,
-            debtToEquity: data.debt_to_equity,
-            dividendYield: data.dividend_yield
+            peRatio: data.PERatio ,
+            marketCap: data.MarketCapitalization,
+            eps: data.EPS,
+            roe: data.ReturnOnEquityTTM,
+            roa: data.ReturnOnAssetsTTM,
+            debtToeEquity: data.Beta,
+            dividendYield: data.DividendYield,
         };
+
 
     } catch (error: any){
         throw new Error(error.message);
