@@ -12,11 +12,11 @@ export const fetchStockChart2 = async(symbol: string, dateInterval: string ) => 
 
         const data = await response.json();
 
-        if (!data.chart) {
-            throw new Error("Data mangler chart")
+        if (!data) {
+            throw new Error("Data mangler")
         }
 
-        return data.chart
+        return data
 
     } catch( error: any) {
         console.error("Data mangler 'chart'");
