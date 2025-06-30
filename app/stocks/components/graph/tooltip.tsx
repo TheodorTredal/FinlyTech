@@ -20,11 +20,11 @@ export const CustomToolTip = ({active, payload, label}: any) => {
                 )}
 
                 {data.volume &&  (
-                    <p className="text-sm text-green-600"> {`Volume Price: $${data.volume.toFixed(2)}`}</p>
+                    <p className="text-sm text-green-600"> {`Volume: $${data.volume.toFixed(2)}`}</p>
                 )}
 
                 {data.trendValue && (
-                    <p style={{color: "#ff6b6b"}} className="text-sm"> {`Trend Line: ${data.trendValue.toFixed(2)}`}</p>
+                    <p style={{color: "#fbbf24"}} className="text-sm"> {`Trend Line: ${data.trendValue.toFixed(2)}`}</p>
                 )}
             </div>
         )
