@@ -62,7 +62,6 @@ const MyChart = () => {
         setGrowthPercentage(response.growth_percentage);
         setSelectedPoints([]);
         setTrendlinePercentage(null);
-        // const lastPrice = data.length > 0 ? data[data.length - 1].close : null
         setLatestPrice(data.length > 0 ? data[data.length - 1].close : null)
       } catch (err) {
         console.error("Kunne ikke hente data", err);
@@ -96,7 +95,7 @@ const MyChart = () => {
         price={latestPrice}
         />
     
-        <ResponsiveContainer width="80%" height={400}>
+        <ResponsiveContainer width="100%" height={400}>
           <LineChart data={calculateTrendLine(data, selectedPoints)} onClick={handleChartClick}>
             <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
             <XAxis dataKey="date" />

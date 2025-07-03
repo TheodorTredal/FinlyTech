@@ -212,3 +212,9 @@ DCF ANALYSE
   - Terminalverdi = inntjeningsår6 / r-g
       
 
+
+
+
+-------
+1. Kommentar boks
+  - Hver aksje skal ha en kommentar boks, brukerens tanker om aksjen, er det en bra aksje? er det en dårlig aksje?

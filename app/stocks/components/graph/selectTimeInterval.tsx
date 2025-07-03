@@ -44,7 +44,7 @@ const SelectTimeInterval: React.FC<SelectTimeIntervalProps> = ({
   }
 
   return (
-    <div className="flex justify-between items-center p-4 w-4/5">
+    <div className="flex justify-between items-center p-4 w-full">
         <div className="flex flex-col w-full text-xl font-semibold">
             <div>
                 <p>{price === null ? "" : price + " $"}</p>

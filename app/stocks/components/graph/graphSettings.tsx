@@ -21,13 +21,10 @@ export const GraphSettings = () => {
     return (
       <Sheet>
         <SheetTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700 hover:text-white hover:border-gray-600 transition-all duration-200"
-          >
-            <Settings className="w-4 h-4" />
+          <Button variant="ghost" size="icon" className="text-muted-foreground">
+            <Settings className="w-5 h-5" />
           </Button>
+
         </SheetTrigger>
         <SheetContent className="bg-gray-900 border-gray-700">
           <SheetHeader>

@@ -17,7 +17,7 @@ export const keyInfoOptions = [
     { key: "EBITDA", label: "EBITDA"},
     { key: "PEGRatio", label: "PEGratio"},
     { key: "BookValue", label: "Book Value"},
-    { key: "DividenPerShare", label: "Dividend per share"},
+    { key: "DividendPerShare", label: "Dividend per share"},
     { key: "EPS", label: "Earnings per share"},
     { key: "RevenuePerShareTTM", label: "Revenue per share (TTM)" },
     { key: "ProfitMargin", label: "Profit margin" },
@@ -90,7 +90,7 @@ export const KeyInfoSettings = ({ selected, setSelected}: KeyInfoSettingsProps) 
                                 }
                               }}
                             />
-                        <Label htmlFor={item.key}>{item.key}</Label>
+                        <Label htmlFor={item.key}>{item.label}</Label>
                         </div>
                     ))}
                 </div>

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { KeyInfoSettings, KeyInfoKey, keyInfoOptions } from "./keyInfoSettings";
-import { fetchBasicFinancials, fetchCompanyOverviewData } from "@/app/Services/yahooFinance/ApiSpecificCompany";
+import { fetchCompanyOverviewData } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { useSearch } from "@/app/context/SearchContext";
 
 export const CompanyKeyInfo = () => {
 
     const [selectedOptions, setSelectedOptions] = useState<KeyInfoKey[]>([]);
-    const [companyInformation, setCompanyInformation] = useState<any>(null); // fiks "any" senere
+    const [companyInformation, setCompanyInformation] = useState<any>([
+    ]); // fiks "any" senere
     const { searchQuery } = useSearch()
 
 

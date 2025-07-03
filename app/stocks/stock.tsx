@@ -112,9 +112,12 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.HistoricalData && (
-      <div className="flex">
-        <MyChart></MyChart>
-        {/* <CompanyKeyInfo></CompanyKeyInfo> */}
+      <div className="flex space-x-6">
+        <div className="w-2/3">
+          <MyChart></MyChart>
+
+        </div>
+          <CompanyKeyInfo></CompanyKeyInfo>
       </div>
     )}
 
