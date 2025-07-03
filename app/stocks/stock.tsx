@@ -12,7 +12,7 @@ import MyChart from "./components/graph/rechartTest";
 // Supply Chain
 import { SupplyChain } from "./components/supplyChain/SupplyChain";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-
+import { CompanyKeyInfo } from "./components/keyInfo2/keyInfo2";
 
 
 
@@ -88,7 +88,7 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.KPI && (
-      <div>KPI</div>
+      <CompanyKeyInfo></CompanyKeyInfo>
     )}
 
     {activeComponent === ActiveComponentEnum.SupplyChain && (
@@ -112,8 +112,9 @@ export default function StocksPage() {
     )}
 
     {activeComponent === ActiveComponentEnum.HistoricalData && (
-      <div>
+      <div className="flex">
         <MyChart></MyChart>
+        {/* <CompanyKeyInfo></CompanyKeyInfo> */}
       </div>
     )}
 

@@ -28,6 +28,7 @@ export interface SelectTimeIntervalProps {
     setCurrentTimeInterval: (interval: TimeInterval) => void;
     growthPercentage: string;
     trendLinePercentage: number | null;
+    price: number | null;
 }
 
 

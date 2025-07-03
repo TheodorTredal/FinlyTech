@@ -35,7 +35,8 @@ const SelectTimeInterval: React.FC<SelectTimeIntervalProps> = ({
         currentTimeInterval, 
         setCurrentTimeInterval,
         growthPercentage,
-        trendLinePercentage
+        trendLinePercentage,
+        price
     }) => {
   
   const handleClick = (input: TimeInterval) => {
@@ -44,14 +45,22 @@ const SelectTimeInterval: React.FC<SelectTimeIntervalProps> = ({
 
   return (
     <div className="flex justify-between items-center p-4 w-4/5">
-        <div className="w-1/5 flex justify-between">
+        <div className="flex flex-col w-full text-xl font-semibold">
+            <div>
+                <p>{price === null ? "" : price + " $"}</p>
 
-        <p className="text-xl font-semibold">
-            {growthPercentage}
-        </p>
-        <p className="text-xl font-semibold">
-            {trendLinePercentage !== null ? `( ${trendLinePercentage.toFixed(2)}% )` : ""}
-        </p>
+            </div>
+
+            <div className="flex justify-items-start w-full">
+
+                <p className="text-xl font-semibold">
+                    {growthPercentage}
+                </p>
+                <p className="text-xl font-semibold px-4">
+                    {trendLinePercentage !== null ? `( ${trendLinePercentage.toFixed(2)}% )` : ""}
+                </p>
+
+            </div>
         </div>
 
         <div className="flex gap-2 ml-auto">        

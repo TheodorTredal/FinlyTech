@@ -27,8 +27,9 @@ const MyChart = () => {
   const [data, setData] = useState<ChartDataPoint[]>([]);
   const [selectedPoints, setSelectedPoints] = useState<ChartDataPoint[]>([]);
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
-  const [growthPercentage, setGrowthPercentage] = useState<string>("")
+  const [growthPercentage, setGrowthPercentage] = useState<string>("");
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
+  const [latestPrice, setLatestPrice] = useState<number | null>(null);
   
 
   const handleChartClick = (event: any) => {
@@ -61,6 +62,8 @@ const MyChart = () => {
         setGrowthPercentage(response.growth_percentage);
         setSelectedPoints([]);
         setTrendlinePercentage(null);
+        // const lastPrice = data.length > 0 ? data[data.length - 1].close : null
+        setLatestPrice(data.length > 0 ? data[data.length - 1].close : null)
       } catch (err) {
         console.error("Kunne ikke hente data", err);
       }
@@ -82,6 +85,7 @@ const MyChart = () => {
   }
 
 
+
   return (
     <div>
         <SelectTimeInterval 
@@ -89,13 +93,16 @@ const MyChart = () => {
         setCurrentTimeInterval={setCurrentTimeInterval} 
         growthPercentage={growthPercentage}
         trendLinePercentage={trendLinePercentage}
+        price={latestPrice}
         />
     
         <ResponsiveContainer width="80%" height={400}>
           <LineChart data={calculateTrendLine(data, selectedPoints)} onClick={handleChartClick}>
             <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
             <XAxis dataKey="date" />
-            <YAxis domain={['dataMin - 10', 'dataMax + 10']} />
+            <YAxis domain={['dataMin - 10', 'dataMax + 10']} 
+            tickFormatter={(value) => value.toFixed(2)}
+            />
             <Tooltip  content={<CustomToolTip />}/>
             <Legend />
 

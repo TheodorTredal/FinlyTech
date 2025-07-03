@@ -23,6 +23,24 @@ export const fetchStockChart2 = async(symbol: string, dateInterval: string ) => 
     }
 }
 
+
+export const fetchCompanyOverviewData = async(symbol: string) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/basicFinancials/${symbol}/${prod}/`);
+        const data = await response.json();
+
+        if (data.error) throw new Error(data.error);
+
+        return data
+    } catch (error) {
+        console.error("Feil ved henting av company overview", error);
+        throw error;
+    }
+
+
+}
+
+
 export const fetchStockChart = async (symbol: string, dateInterval: string) => {
     try {
         // const response = await fetch(`http://127.0.0.1:8000/stock/chart/${symbol}/${dateInterval}/`);

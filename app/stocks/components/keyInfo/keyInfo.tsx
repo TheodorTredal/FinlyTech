@@ -41,7 +41,7 @@ const FinancialStats = () => {
     }
 
     return (
-        <div className="justify-around p-6 bg-sidebar shadow-lg rounded-lg w-1/3 h-[300px]">
+        <div className="justify-around p-6 shadow-lg rounded-lg w-1/3 h-[300px]">
             <h2 className="font-bold text-lg">Key Stats</h2>
 
             <div className="flex justify-around mt-4">
