@@ -4,32 +4,20 @@ import { CompanyKeyInfo } from "../keyInfo2/keyInfo2"
 import { useState } from "react"
 
 export const BluePrintTemplateTest = () => {
-  const [edit, setEdit] = useState<boolean>(false)
-  // Keep position state at parent level
-  const [componentPosition, setComponentPosition] = useState({ x: 500, y: 50 })
+    const [edit, setEdit] = useState<boolean>(false)
+    const [componentPosition, setComponentPosition] = useState({ x: 500, y: 50 })
   
-  return (
-    <div>
-      <EditTemplate edit={edit} setEdit={setEdit}></EditTemplate>
-      
-      {edit === true ? (
+    return (
+      <div>
+        <EditTemplate edit={edit} setEdit={setEdit}></EditTemplate>
         <DraggableWrapper
           initialPosition={componentPosition}
-          className="border-2"
-          onPositionChange={setComponentPosition} // Pass callback to update position
+          className={edit ? "border-2" : ""}
+          onPositionChange={setComponentPosition}
+          draggable={edit} // Add this prop to control dragging
         >
-          <CompanyKeyInfo></CompanyKeyInfo>
+          <CompanyKeyInfo />
         </DraggableWrapper>
-      ) : (
-        <div 
-          style={{
-            position: 'relative',
-            transform: `translate(${componentPosition.x}px, ${componentPosition.y}px)`,
-        }}
-        >
-          <CompanyKeyInfo></CompanyKeyInfo>
-        </div>
-      )}
-    </div>
-  )
-}
+      </div>
+    )
+  }

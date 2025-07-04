@@ -14,6 +14,7 @@ interface DraggableWrapperProps {
     className?: string;
     style?: React.CSSProperties;
     onPositionChange?: (position: PositionProps) => void;
+    draggable: boolean;
 }
 
 
@@ -76,29 +77,30 @@ const useDraggable = (
 }
 
 
-export const DraggableWrapper: React.FC<DraggableWrapperProps> = ({ 
-    children, 
-    initialPosition, 
-    className = "", 
+export const DraggableWrapper: React.FC<DraggableWrapperProps> = ({
+    children,
+    initialPosition,
+    className = "",
     style = {},
-    onPositionChange    
-}) => {
+    onPositionChange,
+    draggable = true
+  }) => {
     const {position, isDragging, dragHandlers} = useDraggable(initialPosition, onPositionChange)
-
+    
     return (
-        <div
-            className={`cursor-move select-none transition-shadow duration-200 ${
-                isDragging ? 'shadow-xl z-10' : 'shadow-lg'
-            } ${className}`}
-            style={{
-                position: 'absolute',
-                transform: `translate(${position.x}px, ${position.y}px)`,
-                ...style
-            }}
-            {...dragHandlers}
-        
-        >
-            {children}
-        </div>
+      <div
+        className={`transition-shadow duration-200 ${
+          isDragging ? 'shadow-xl z-10' : 'shadow-lg'
+        } ${draggable ? 'cursor-move select-none' : ''} ${className}`}
+        style={{
+          position: 'absolute',
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          width: 'max-content',
+          ...style
+        }}
+        {...(draggable ? dragHandlers : {})}
+      >
+        {children}
+      </div>
     );
-};
+  };

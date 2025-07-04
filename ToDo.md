@@ -156,6 +156,9 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   1. Må lagre posisjonen til hver komponent i en state
     - når komponenten beholder sin posisjon etter at man har skrudd av og på. gå videre til 2.
 
+  1.2 Dataen inne i komponenten blir resettet
+    datastrukturen blir nok en liste med dictionaries med alle komponentene >:-D
+
   2. ha en sidemeny der man kan dra inn komponenter inn på siden
 
   3. lag en boundary for komponentene sånn at komponentene ikke går utenfor skjermen

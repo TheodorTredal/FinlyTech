@@ -5,6 +5,10 @@ import { useSearch } from "@/app/context/SearchContext";
 
 interface CompanyKeyInfoProps {
     className?: string;
+    setSelectedOptions?: KeyInfoKey[];
+    selectedOpttions?: KeyInfoKey[];
+    setCompanyInformation?: any;
+    companyInformation?: any;
 }
 
 
