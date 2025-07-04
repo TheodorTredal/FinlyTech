@@ -153,6 +153,20 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - man kan velge templaten man har lyst til å se.
 
 
+  1. Må lagre posisjonen til hver komponent i en state
+    - når komponenten beholder sin posisjon etter at man har skrudd av og på. gå videre til 2.
+
+  2. ha en sidemeny der man kan dra inn komponenter inn på siden
+
+  3. lag en boundary for komponentene sånn at komponentene ikke går utenfor skjermen
+
+  4. lag et gridlock system sånn at komponentene kan plassers fint på skjermen
+
+  5. gjør komponentene resizable
+
+
+
+
 
 
 
@@ -218,3 +232,5 @@ DCF ANALYSE
 -------
 1. Kommentar boks
   - Hver aksje skal ha en kommentar boks, brukerens tanker om aksjen, er det en bra aksje? er det en dårlig aksje?
+
+

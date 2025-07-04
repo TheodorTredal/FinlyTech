@@ -3,7 +3,12 @@ import { KeyInfoSettings, KeyInfoKey, keyInfoOptions } from "./keyInfoSettings";
 import { fetchCompanyOverviewData } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { useSearch } from "@/app/context/SearchContext";
 
-export const CompanyKeyInfo = () => {
+interface CompanyKeyInfoProps {
+    className?: string;
+}
+
+
+export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
 
     const [selectedOptions, setSelectedOptions] = useState<KeyInfoKey[]>([]);
     const [companyInformation, setCompanyInformation] = useState<any>([
@@ -25,7 +30,7 @@ export const CompanyKeyInfo = () => {
     console.log(companyInformation)
 
     return (
-        <div className="w-1/3 h-[300px] space-y-4">
+        <div className={`w-80 h-[300px] space-y-4 ${className}`}>
             <div className="flex justify-between border-b border-stone-400">
                 <h1 className="text-xl font-semibold">Nøkkeltall</h1>
                 <KeyInfoSettings selected={selectedOptions} setSelected={setSelectedOptions} />

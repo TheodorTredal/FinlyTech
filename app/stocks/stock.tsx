@@ -14,6 +14,7 @@ import { SupplyChain } from "./components/supplyChain/SupplyChain";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { CompanyKeyInfo } from "./components/keyInfo2/keyInfo2";
 
+import { BluePrintTemplateTest } from "./components/blueprint/blueprintTest";
 
 
 // Definer en enum for aktive komponenter
@@ -28,6 +29,7 @@ enum ActiveComponentEnum {
   Competitors = "competitors",
   Insiders = "Insiders",
 }
+
 
 
 export default function StocksPage() {
@@ -123,7 +125,7 @@ export default function StocksPage() {
 
     {activeComponent === ActiveComponentEnum.Insiders && (
       <div>
-        <Insiders></Insiders>
+        <BluePrintTemplateTest></BluePrintTemplateTest>
       </div>
     )}
     </div>
