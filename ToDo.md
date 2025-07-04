@@ -159,7 +159,7 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   1.2 Dataen inne i komponenten blir resettet
     datastrukturen blir nok en liste med dictionaries med alle komponentene >:-D
 
-  2. ha en sidemeny der man kan dra inn komponenter inn på siden
+  2. ha en sidemeny der man kan dra inn komponenter inn på siden, <- HER
 
   3. lag en boundary for komponentene sånn at komponentene ikke går utenfor skjermen
 
