@@ -163,7 +163,9 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - Endre plasseringen til add og edit knappen
 
   - Sidememy der man kan dra inn komponentene på skjermen
-    - Må dynamisk lage komponenter med deres posisjon.
+    - Lagre komponentene sine data dynamisk, begynn med å se om eg får logget dataen i listen
+
+    - crud operasjoner
 
 
   - skal være mulig å lagre templaten til brukerne. add new template typ.
