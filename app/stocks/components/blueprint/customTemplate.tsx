@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { EditTemplate } from "./editTemplate"
+import { EditTemplateButton } from "./editTemplateButton"
 import { DraggableWrapper } from "./draggableWrapper"
 import { CompanyKeyInfo } from "../keyInfo/companyKeyInfo"
 import MyChart from "../graph/companyGraph"
@@ -8,8 +8,8 @@ import "./blueprint.css"
 
 export const BluePrintTemplateTest = () => {
   const [edit, setEdit] = useState<boolean>(false)
-  const [componentPosition, setComponentPosition] = useState({ x: 500, y: 50 })
-  const [component2Position, setComponent2Position] = useState({x: 100, y: 100})
+  const [componentPosition, setComponentPosition] = useState({ x: 0, y: 50 })
+  const [component2Position, setComponent2Position] = useState({x: 400, y: 50})
 
   const gridSize = 20;
 
@@ -31,7 +31,7 @@ export const BluePrintTemplateTest = () => {
       />
 
       <BluePrintSidebar></BluePrintSidebar>
-      <EditTemplate edit={edit} setEdit={setEdit}></EditTemplate>
+      <EditTemplateButton edit={edit} setEdit={setEdit}></EditTemplateButton>
 
       <DraggableWrapper
         initialPosition={componentPosition}
@@ -46,7 +46,7 @@ export const BluePrintTemplateTest = () => {
 
       <DraggableWrapper
         initialPosition={component2Position}
-        className={edit ? "animated-border" : ""}
+        className={edit ? "animated-border" : "bg-red-400"}
         onPositionChange={setComponent2Position}
         draggable={edit}
         snapToGrid={edit}
@@ -54,8 +54,6 @@ export const BluePrintTemplateTest = () => {
       >
         <MyChart></MyChart>
       </DraggableWrapper>
-
-      {/* <MyChart></MyChart> */}
     </div>
   )
 }

@@ -34,7 +34,7 @@ export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
     console.log(companyInformation)
 
     return (
-        <div className={`w-80 h-[300px] space-y-4 bg-black ${className}`}>
+        <div className={`w-80 min-h-[200px] space-y-4 bg-black ${className}`}>
             <div className="flex justify-between border-b border-stone-400">
                 <h1 className="text-xl font-semibold">Nøkkeltall</h1>
                 <KeyInfoSettings selected={selectedOptions} setSelected={setSelectedOptions} />
@@ -45,7 +45,7 @@ export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
           )}
     
           {companyInformation && (
-            <div className="space-y-2 overflow-y-auto max-h-[400px] pr-2 bg-black">
+            <div className="space-y-2 pr-2">
               {selectedOptions.map((key) => {
                 const option = keyInfoOptions.find((item) => item.key === key)
                 const label = option?.label || key

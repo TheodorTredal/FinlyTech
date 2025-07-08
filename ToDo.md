@@ -242,7 +242,3 @@ DCF ANALYSE
 
 
 2. BUGS:
-
- - Den gule edit linjen klarer ikke å resize seg rundt CompanykeyInfo
- - gi bedre navn til filer og komponenter
- - Arkiver gamle filer og komponenter som er utdadert (rengjøring)
