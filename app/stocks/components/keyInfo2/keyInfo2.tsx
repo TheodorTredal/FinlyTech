@@ -34,7 +34,7 @@ export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
     console.log(companyInformation)
 
     return (
-        <div className={`w-80 h-[300px] space-y-4 ${className}`}>
+        <div className={`w-80 h-[300px] space-y-4 bg-black ${className}`}>
             <div className="flex justify-between border-b border-stone-400">
                 <h1 className="text-xl font-semibold">Nøkkeltall</h1>
                 <KeyInfoSettings selected={selectedOptions} setSelected={setSelectedOptions} />

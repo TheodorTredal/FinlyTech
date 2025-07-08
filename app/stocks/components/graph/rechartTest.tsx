@@ -86,7 +86,7 @@ const MyChart = () => {
 
 
   return (
-    <div>
+    <div className='bg-black'>
         <SelectTimeInterval 
         currentTimeInterval={currentTimeInterval} 
         setCurrentTimeInterval={setCurrentTimeInterval} 

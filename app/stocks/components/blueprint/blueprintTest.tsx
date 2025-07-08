@@ -4,37 +4,57 @@ import { DraggableWrapper } from "./blueprint"
 import { CompanyKeyInfo } from "../keyInfo2/keyInfo2"
 import MyChart from "../graph/rechartTest"
 import { BluePrintSidebar } from "./sidebarAddComponent"
+import "./blueprint.css"
 
 export const BluePrintTemplateTest = () => {
-    const [edit, setEdit] = useState<boolean>(false)
-    const [componentPosition, setComponentPosition] = useState({ x: 500, y: 50 })
-    const [component2Position, setComponent2Position] = useState({x: 100, y: 100})
+  const [edit, setEdit] = useState<boolean>(false)
+  const [componentPosition, setComponentPosition] = useState({ x: 500, y: 50 })
+  const [component2Position, setComponent2Position] = useState({x: 100, y: 100})
+  
+  const gridSize = 20;
 
-
-    return (
-      <div>
-        <BluePrintSidebar></BluePrintSidebar>
-        <EditTemplate edit={edit} setEdit={setEdit}></EditTemplate>
-        <DraggableWrapper
-          initialPosition={componentPosition}
-          className={edit ? "border-2" : ""}
-          onPositionChange={setComponentPosition}
-          draggable={edit} // Add this prop to control dragging
-        >
-          <CompanyKeyInfo />
-        </DraggableWrapper>
-
-
-        <DraggableWrapper
-          initialPosition={component2Position}
-          className={edit ? "border-2" : ""}
-          onPositionChange={setComponent2Position}
-          draggable={edit} // Add this prop to control dragging
-        >
-          <MyChart></MyChart>
-        </DraggableWrapper>
-
-
-      </div>
-    )
-  }
+  return (
+    <div className="min-h-screen w-full relative">
+      {/* Grid background overlay */}
+      <div
+        className="absolute inset-0 opacity-20 pointer-events-none"
+        style={
+          edit
+            ? {
+                backgroundImage: `
+                  linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+                  linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
+                `,
+                backgroundSize: `${gridSize}px ${gridSize}px`
+              }
+            : {}
+        }
+      />
+      
+      <BluePrintSidebar></BluePrintSidebar>
+      <EditTemplate edit={edit} setEdit={setEdit}></EditTemplate>
+      
+      <DraggableWrapper
+        initialPosition={componentPosition}
+        className={edit ? "animated-border" : ""}
+        onPositionChange={setComponentPosition}
+        draggable={edit}
+        snapToGrid={edit}
+        gridSize={gridSize}
+      >
+        <CompanyKeyInfo />
+      </DraggableWrapper>
+      
+      <DraggableWrapper
+        initialPosition={component2Position}
+        className={edit ? "animated-border" : ""}
+        onPositionChange={setComponent2Position}
+        draggable={edit}
+        snapToGrid={edit}
+        gridSize={gridSize}
+      >
+        <MyChart></MyChart>
+      </DraggableWrapper>
+    </div>
+  )
+}

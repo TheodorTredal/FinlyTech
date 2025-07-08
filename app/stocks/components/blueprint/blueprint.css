@@ -1,0 +1,65 @@
+/* Bevegelig dashede border rundt hele komponenten */
+.animated-border {
+    position: relative;
+    border: 2px dashed transparent; /* Transparent border som placeholder */
+  }
+  
+  .animated-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: 
+      linear-gradient(90deg, #fbbf24 50%, transparent 50%),
+      linear-gradient(90deg, #fbbf24 50%, transparent 50%),
+      linear-gradient(0deg, #fbbf24 50%, transparent 50%),
+      linear-gradient(0deg, #fbbf24 50%, transparent 50%);
+    background-size: 20px 2px, 20px 2px, 2px 20px, 2px 20px;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    animation: border-dash 1s linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes border-dash {
+    0% {
+      background-position: 0 0, 0 100%, 0 0, 100% 0;
+    }
+    100% {
+      background-position: 20px 0, -20px 100%, 0 -20px, 100% 20px;
+    }
+  }
+  
+  /* Alternativ enklere versjon - bare topp og bunn */
+  .animated-border-simple {
+    position: relative;
+    border: 2px dashed #3b82f6;
+  }
+  
+  .animated-border-simple::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: 
+      linear-gradient(90deg, #3b82f6 50%, transparent 50%),
+      linear-gradient(90deg, #3b82f6 50%, transparent 50%);
+    background-size: 10px 2px;
+    background-position: 0 0, 0 100%;
+    background-repeat: repeat-x;
+    animation: border-move 1s linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes border-move {
+    0% {
+      background-position: 0 0, 0 100%;
+    }
+    100% {
+      background-position: 10px 0, -10px 100%;
+    }
+  }

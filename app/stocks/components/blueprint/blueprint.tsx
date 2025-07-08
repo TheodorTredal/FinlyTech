@@ -15,12 +15,22 @@ interface DraggableWrapperProps {
     style?: React.CSSProperties;
     onPositionChange?: (position: PositionProps) => void;
     draggable: boolean;
+    gridSize?: number;
+    snapToGrid?: boolean;
 }
 
+const snapComponentToGrid = (position: PositionProps, gridSize: number) => {
+  return {
+    x: Math.round(position.x / gridSize) * gridSize, 
+    y: Math.round(position.y / gridSize) * gridSize
+  }
+}
 
 const useDraggable = (
     initialPosition = { x:0, y:0 },
-    onPositionChange?: (position: PositionProps) => void
+    onPositionChange?: (position: PositionProps) => void,
+    gridSize: number = 30,
+    snapToGrid: boolean = false
 ) => {
   
     const [position, setPosition] = useState(initialPosition);
@@ -37,14 +47,20 @@ const useDraggable = (
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
-    const newPosition = {
+    
+    let newPosition = {
         x: e.clientX - dragStart.x,
         y: e.clientY - dragStart.y
+    }
+    
+    if (snapToGrid) {
+      newPosition = snapComponentToGrid(newPosition, gridSize)
     }
 
     setPosition(newPosition);
     onPositionChange?.(newPosition);
   }
+
   
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -65,7 +81,7 @@ const useDraggable = (
         document.removeEventListener('mouseup', handleMouseUp);
     }
 
-  }, [isDragging, dragStart])
+  }, [isDragging, dragStart, gridSize, snapToGrid])
 
     return {
         position,
@@ -83,9 +99,16 @@ export const DraggableWrapper: React.FC<DraggableWrapperProps> = ({
     className = "",
     style = {},
     onPositionChange,
-    draggable = true
+    draggable = true,
+    gridSize = 30,
+    snapToGrid = false
   }) => {
-    const {position, isDragging, dragHandlers} = useDraggable(initialPosition, onPositionChange)
+    const {position, isDragging, dragHandlers} = useDraggable(
+      initialPosition, 
+      onPositionChange,
+      gridSize,
+      snapToGrid      
+    )
     
     return (
       <div

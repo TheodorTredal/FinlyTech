@@ -163,9 +163,13 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
 
   3. lag en boundary for komponentene sånn at komponentene ikke går utenfor skjermen
 
-  4. lag et gridlock system sånn at komponentene kan plassers fint på skjermen
+  4. lag et gridlock system sånn at komponentene kan plassers fint på skjermen.
 
   5. gjør komponentene resizable
+
+  6. Edit knappen endrer farge når man er i editing modus.
+    - Borderen rundt komponentene er en stiplet linje som beveger seg.
+    - Grid i bakgrunnen skal vises.
 
 
 
