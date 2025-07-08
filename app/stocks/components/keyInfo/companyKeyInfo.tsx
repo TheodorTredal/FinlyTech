@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { KeyInfoSettings, KeyInfoKey, keyInfoOptions } from "./keyInfoSettings";
+import { KeyInfoSettings, KeyInfoKey, keyInfoOptions } from "./companyKeyInfoSettings";
 import { fetchCompanyOverviewData } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { useSearch } from "@/app/context/SearchContext";
 

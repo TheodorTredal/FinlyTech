@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { EditTemplate } from "./editTemplate"
-import { DraggableWrapper } from "./blueprint"
-import { CompanyKeyInfo } from "../keyInfo2/keyInfo2"
-import MyChart from "../graph/rechartTest"
+import { DraggableWrapper } from "./draggableWrapper"
+import { CompanyKeyInfo } from "../keyInfo/companyKeyInfo"
+import MyChart from "../graph/companyGraph"
 import { BluePrintSidebar } from "./sidebarAddComponent"
 import "./blueprint.css"
 

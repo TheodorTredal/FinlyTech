@@ -2,14 +2,14 @@
 import { useState } from "react";
 import { StarStock } from "./star";
 import { useSearch } from "@/app/context/SearchContext";
-import MyChart from "./components/graph/rechartTest";
+import MyChart from "./components/graph/companyGraph";
 
 // Supply Chain
 import { SupplyChain } from "./components/supplyChain/SupplyChain";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-import { CompanyKeyInfo } from "./components/keyInfo2/keyInfo2";
+import { CompanyKeyInfo } from "./components/keyInfo/companyKeyInfo";
 
-import { BluePrintTemplateTest } from "./components/blueprint/blueprintTest";
+import { BluePrintTemplateTest } from "./components/blueprint/customTemplate";
 
 
 // Definer en enum for aktive komponenter
@@ -67,9 +67,8 @@ export default function StocksPage() {
   </div>
 
   <div className={activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"}>
-        <div className="flex justify-start space-x-2 w-full">
-          hello
-        </div>
+
+  <BluePrintTemplateTest></BluePrintTemplateTest>
       </div>
     
 
@@ -89,7 +88,6 @@ export default function StocksPage() {
 
     <div className={activeComponent === ActiveComponentEnum.News ? "block" : "hidden"}>
       <div>
-        {/* <StockNews /> */}
       </div>
     </div>
 
@@ -113,7 +111,7 @@ export default function StocksPage() {
 
     {activeComponent === ActiveComponentEnum.Insiders && (
       <div>
-        <BluePrintTemplateTest></BluePrintTemplateTest>
+
       </div>
     )}
     </div>
