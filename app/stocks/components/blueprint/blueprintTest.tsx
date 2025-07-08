@@ -10,12 +10,11 @@ export const BluePrintTemplateTest = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [componentPosition, setComponentPosition] = useState({ x: 500, y: 50 })
   const [component2Position, setComponent2Position] = useState({x: 100, y: 100})
-  
+
   const gridSize = 20;
 
   return (
-    <div className="min-h-screen w-full relative">
-      {/* Grid background overlay */}
+    <div className="min-h-screen w-full overflow-hidden fixed">
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"
         style={
@@ -30,10 +29,10 @@ export const BluePrintTemplateTest = () => {
             : {}
         }
       />
-      
+
       <BluePrintSidebar></BluePrintSidebar>
       <EditTemplate edit={edit} setEdit={setEdit}></EditTemplate>
-      
+
       <DraggableWrapper
         initialPosition={componentPosition}
         className={edit ? "animated-border" : ""}
@@ -44,7 +43,7 @@ export const BluePrintTemplateTest = () => {
       >
         <CompanyKeyInfo />
       </DraggableWrapper>
-      
+
       <DraggableWrapper
         initialPosition={component2Position}
         className={edit ? "animated-border" : ""}
@@ -55,6 +54,8 @@ export const BluePrintTemplateTest = () => {
       >
         <MyChart></MyChart>
       </DraggableWrapper>
+
+      {/* <MyChart></MyChart> */}
     </div>
   )
 }

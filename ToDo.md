@@ -153,17 +153,17 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - man kan velge templaten man har lyst til å se.
 
 
-  1. Må lagre posisjonen til hver komponent i en state
+  1. X Må lagre posisjonen til hver komponent i en state
     - når komponenten beholder sin posisjon etter at man har skrudd av og på. gå videre til 2.
 
-  1.2 Dataen inne i komponenten blir resettet
+  1.2? Dataen inne i komponenten blir resettet
     datastrukturen blir nok en liste med dictionaries med alle komponentene >:-D
 
   2. ha en sidemeny der man kan dra inn komponenter inn på siden, <- HER
 
   3. lag en boundary for komponentene sånn at komponentene ikke går utenfor skjermen
 
-  4. lag et gridlock system sånn at komponentene kan plassers fint på skjermen.
+  4. X lag et gridlock system sånn at komponentene kan plassers fint på skjermen.
 
   5. gjør komponentene resizable
 
@@ -241,3 +241,8 @@ DCF ANALYSE
   - Hver aksje skal ha en kommentar boks, brukerens tanker om aksjen, er det en bra aksje? er det en dårlig aksje?
 
 
+2. BUGS:
+
+ - Den gule edit linjen klarer ikke å resize seg rundt CompanykeyInfo
+ - gi bedre navn til filer og komponenter
+ - Arkiver gamle filer og komponenter som er utdadert (rengjøring)

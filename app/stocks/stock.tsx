@@ -1,11 +1,6 @@
 "use client";
 import { useState } from "react";
-import StockGraph from "./components/graph/graph";
-import KeyInfo from "./components/keyInfo/keyInfo";
-import BarChart from "./components/barCharts/BarChart";
 import { StarStock } from "./star";
-import { Insiders } from "./components/Insiders/Insiders";
-import { StockNews } from "./components/News/News";
 import { useSearch } from "@/app/context/SearchContext";
 import MyChart from "./components/graph/rechartTest";
 
@@ -73,14 +68,7 @@ export default function StocksPage() {
 
   <div className={activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"}>
         <div className="flex justify-start space-x-2 w-full">
-          <StockGraph />
-          <KeyInfo />
-        </div>
-
-        <div className="flex space-x-2 py-2 w-full">
-        <BarChart></BarChart>
-        <BarChart></BarChart>
-        <BarChart></BarChart>
+          hello
         </div>
       </div>
     

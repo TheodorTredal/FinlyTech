@@ -36,7 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <SidebarProvider>
               <AppSidebar /> {/* Sidebar på venstre side */}
               <SearchProvider>
-                <div className="flex flex-col flex-1 p-4">
+                <div className="flex flex-col flex-1 p-1">
                   <div className="flex">
                     <SidebarTrigger className="p-4" /> {/* Sidebar-knapp */}
                     <SearchBar />

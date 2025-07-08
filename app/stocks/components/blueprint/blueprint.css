@@ -1,6 +1,7 @@
 /* Bevegelig dashede border rundt hele komponenten */
 .animated-border {
     position: relative;
+    display: block;
     border: 2px dashed transparent; /* Transparent border som placeholder */
   }
   

@@ -45,7 +45,7 @@ export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
           )}
     
           {companyInformation && (
-            <div className="space-y-2 overflow-y-auto max-h-[400px] pr-2">
+            <div className="space-y-2 overflow-y-auto max-h-[400px] pr-2 bg-black">
               {selectedOptions.map((key) => {
                 const option = keyInfoOptions.find((item) => item.key === key)
                 const label = option?.label || key

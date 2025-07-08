@@ -45,7 +45,7 @@ const useDraggable = (
     });
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging) return;
     
     let newPosition = {
@@ -118,7 +118,7 @@ export const DraggableWrapper: React.FC<DraggableWrapperProps> = ({
         style={{
           position: 'absolute',
           transform: `translate(${position.x}px, ${position.y}px)`,
-          width: 'max-content',
+          // width: 'max-content',
           ...style
         }}
         {...(draggable ? dragHandlers : {})}

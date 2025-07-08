@@ -30,6 +30,7 @@ const MyChart = () => {
   const [growthPercentage, setGrowthPercentage] = useState<string>("");
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
+  const [trendLineData, setTrendLineData] = useState<ChartDataPoint[] | null>(null);
   
 
   const handleChartClick = (event: any) => {
@@ -51,6 +52,10 @@ const MyChart = () => {
         const growthPercentage: number = calculateTrendLinePercentage(data, selectedPoints);
         setTrendlinePercentage(growthPercentage)
     }
+
+    const trendline = calculateTrendLine(data, selectedPoints);
+    setTrendLineData(trendline);
+
   }, [selectedPoints])
 
   useEffect(() => {
@@ -86,7 +91,8 @@ const MyChart = () => {
 
 
   return (
-    <div className='bg-black'>
+    // <div className='bg-black'>
+    <div className="bg-black" style={{ width: 700, height: 470 }}>
         <SelectTimeInterval 
         currentTimeInterval={currentTimeInterval} 
         setCurrentTimeInterval={setCurrentTimeInterval} 
@@ -96,7 +102,7 @@ const MyChart = () => {
         />
     
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={calculateTrendLine(data, selectedPoints)} onClick={handleChartClick}>
+          <LineChart data={data} onClick={handleChartClick}>
             <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
             <XAxis dataKey="date" />
             <YAxis domain={['dataMin - 10', 'dataMax + 10']} 
@@ -109,7 +115,6 @@ const MyChart = () => {
             <Line
               type="monotone"
               dataKey="close"
-            //   stroke="#047857"
               stroke={getMainLineColor()}
               dot={false}
               strokeWidth={2}
@@ -120,6 +125,7 @@ const MyChart = () => {
             {selectedPoints.length === 2 && (
               <Line
                 type="linear"
+                data={trendLineData}
                 dataKey="trendValue"
                 stroke="#fbbf24"
                 strokeWidth={3}
