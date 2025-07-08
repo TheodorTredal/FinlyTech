@@ -163,9 +163,9 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - Endre plasseringen til add og edit knappen
 
   - Sidememy der man kan dra inn komponentene på skjermen
-    - Lagre komponentene sine data dynamisk, begynn med å se om eg får logget dataen i listen
-
+    - Lage en ny sidemeny (ShadCN fungerte ikke)
     - crud operasjoner
+    - når add + er aktivert så skal edit modus skrus på.
 
 
   - skal være mulig å lagre templaten til brukerne. add new template typ.

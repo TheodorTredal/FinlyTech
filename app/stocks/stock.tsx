@@ -73,7 +73,7 @@ export default function StocksPage() {
         <div className={`${activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"} flex justify-between space-x-4`} >
 
           <EditTemplateButton edit={edit} setEdit={setEdit}></EditTemplateButton>
-          <BluePrintSidebar></BluePrintSidebar>
+          <BluePrintSidebar setEdit={setEdit}></BluePrintSidebar>
         </div>
 
 
