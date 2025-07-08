@@ -6,8 +6,13 @@ import MyChart from "../graph/companyGraph"
 import { BluePrintSidebar } from "./sidebarAddComponent"
 import "./blueprint.css"
 
-export const BluePrintTemplateTest = () => {
-  const [edit, setEdit] = useState<boolean>(false)
+interface BluePrintTemplateProps {
+  edit: boolean;
+}
+
+
+export const BluePrintTemplateTest = ({edit}: BluePrintTemplateProps ) => {
+
   const [componentPosition, setComponentPosition] = useState({ x: 0, y: 50 })
   const [component2Position, setComponent2Position] = useState({x: 400, y: 50})
 
@@ -30,8 +35,13 @@ export const BluePrintTemplateTest = () => {
         }
       />
 
-      <BluePrintSidebar></BluePrintSidebar>
-      <EditTemplateButton edit={edit} setEdit={setEdit}></EditTemplateButton>
+{/* <div className="absolute top-0 right-0 flex flex-col gap-2 p-4 z-50">
+        <BluePrintSidebar />
+        <EditTemplateButton edit={edit} setEdit={setEdit} />
+      </div> */}
+
+
+      
 
       <DraggableWrapper
         initialPosition={componentPosition}

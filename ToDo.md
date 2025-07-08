@@ -146,9 +146,26 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
 
 5. Nettsiden skal være customizable. Brukeren skal få velge hva den vil se på dashboardet.
   - IKEA Modellen
-  - Skal være en customize knapp, når man trykker på denne knappen så skal det komme opp en grid der man kan sette inn de komponentene som er viktig for brukeren å se. Komponentene skal være resizable, dvs at skalaen på komponentene kan blåses opp og ned. ;)
+  
+  - X Skal være en customize knapp, når man trykker på denne knappen så skal det komme opp en grid der man kan sette inn de komponentene som er viktig for brukeren å se. 
+  
+
+
+
+  - Komponentene skal være resizable, dvs at skalaen på komponentene kan blåses opp og ned.
+
   - Lag 3 komponenter og begynn deretter med sandbox.
-  - Trenger nok en sidemeny som gjør at man kan dra inn de komponentene man vil se.
+    - Graf
+    - Nøkkeltall
+    - Analyst buy, sell, hold
+    - salgsvolum (når man har kjøpt tilgang fra alpha vantage)
+  
+  - Endre plasseringen til add og edit knappen
+
+  - Sidememy der man kan dra inn komponentene på skjermen
+    - Må dynamisk lage komponenter med deres posisjon.
+
+
   - skal være mulig å lagre templaten til brukerne. add new template typ.
   - man kan velge templaten man har lyst til å se.
 

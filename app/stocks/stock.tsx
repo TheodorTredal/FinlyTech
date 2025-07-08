@@ -10,6 +10,9 @@ import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { CompanyKeyInfo } from "./components/keyInfo/companyKeyInfo";
 
 import { BluePrintTemplateTest } from "./components/blueprint/customTemplate";
+import { BluePrintSidebar } from "./components/blueprint/sidebarAddComponent";
+import { EditTemplateButton } from "./components/blueprint/editTemplateButton";
+
 
 
 // Definer en enum for aktive komponenter
@@ -28,6 +31,9 @@ enum ActiveComponentEnum {
 
 
 export default function StocksPage() {
+
+  const [edit, setEdit] = useState<boolean>(false)
+
 
   const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.Stock);
   const { searchQuery } = useSearch();
@@ -64,12 +70,18 @@ export default function StocksPage() {
   
         <StarStock></StarStock>
 
+        <div className={`${activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"} flex justify-between space-x-4`} >
+
+          <EditTemplateButton edit={edit} setEdit={setEdit}></EditTemplateButton>
+          <BluePrintSidebar></BluePrintSidebar>
+        </div>
+
+
   </div>
 
-  <div className={activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"}>
-
-  <BluePrintTemplateTest></BluePrintTemplateTest>
-      </div>
+    <div className={activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"}>
+      <BluePrintTemplateTest edit={edit} />
+    </div>
     
 
     {activeComponent === ActiveComponentEnum.Financials && (
@@ -87,8 +99,6 @@ export default function StocksPage() {
     )}
 
     <div className={activeComponent === ActiveComponentEnum.News ? "block" : "hidden"}>
-      <div>
-      </div>
     </div>
 
     {activeComponent === ActiveComponentEnum.Algorithms && (
