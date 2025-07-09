@@ -31,7 +31,6 @@ export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
             });
     }, [searchQuery]);
 
-    console.log(companyInformation)
 
     return (
         <div className={`w-80 min-h-[200px] space-y-4 bg-black ${className}`}>

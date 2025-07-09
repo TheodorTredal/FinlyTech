@@ -65,7 +65,6 @@ export const BluePrintSidebar = ({ setEdit }: BluePrintSidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDragStart = (e: React.DragEvent, componentType: string) => {
-    console.log("🚀 Drag started:", componentType);
     e.dataTransfer.setData("component-type", componentType);
     e.dataTransfer.effectAllowed = "copy";
     setEdit(isOpen) // skru på edit modus
@@ -93,7 +92,6 @@ export const BluePrintSidebar = ({ setEdit }: BluePrintSidebarProps) => {
                 className="rounded-lg border border-gray-700 bg-gray-800 p-4 cursor-move hover:bg-gray-700 transition"
                 draggable
                 onDragStart={(e) => handleDragStart(e, "chart")}
-                onDragEnd={() => console.log("🏁 Drag ended")}
               >
                 📈 Aksjegraf
               </div>
@@ -101,7 +99,6 @@ export const BluePrintSidebar = ({ setEdit }: BluePrintSidebarProps) => {
                 className="rounded-lg border border-gray-700 bg-gray-800 p-4 cursor-move hover:bg-gray-700 transition"
                 draggable
                 onDragStart={(e) => handleDragStart(e, "keyInfo")}
-                onDragEnd={() => console.log("🏁 Drag ended")}
               >
                 📊 Nøkkeltall
               </div>

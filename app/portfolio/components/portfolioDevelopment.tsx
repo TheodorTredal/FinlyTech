@@ -59,7 +59,6 @@ const calculateSectorExposure = (
     exposure[key] = (exposure[key] / totalValue) * 100;
   }
 
-  console.log(exposure);
   return exposure;
 };
 

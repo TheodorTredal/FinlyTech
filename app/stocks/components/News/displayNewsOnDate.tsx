@@ -8,7 +8,6 @@ interface NewsArticle {
 
 export const DisplayNewsFromDate = ({ news }: { news: NewsArticle[] | null }) => {
     useEffect(() => {
-        console.log("NEWSFROMDATE: ", news);
     }, [news]);
 
     if (!Array.isArray(news)) {

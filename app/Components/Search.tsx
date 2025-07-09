@@ -10,7 +10,6 @@ export const SearchBar = () => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       setSearchQuery(localQuery.toUpperCase()); // Oppdaterer global søkeverdi
-      console.log("Input for ticker:", localQuery.toUpperCase());
     }
   };
 

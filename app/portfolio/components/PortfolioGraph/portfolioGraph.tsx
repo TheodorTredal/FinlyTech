@@ -86,7 +86,6 @@ const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) =>
           volumTimesPrice += response.lastPrice * stock.volum;
         }
       }
-      console.log("total portefølje verdi: ", volumTimesPrice);
       setMarkedValue(volumTimesPrice);
     }
     calculatePortfolioValue(portfolio);
@@ -138,7 +137,6 @@ const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) =>
 
 
   const handleGraphHover = (event: any, elements: any) => {
-    console.log("elements.length", elements.length);
     if (elements.length > 0) {
       const dataIndex = elements[0].index;
       const hoveredPrice = chartData.datasets[0].data[dataIndex];

@@ -27,7 +27,6 @@ export const PortfolioEntry = ({ portfolioEntry, setPortfolio, folderName }: { p
 
         // Set interval (e.g. every 30 seconds)
         intervalId = setInterval(fetchLatestPrice, 30_000);
-        console.log(intervalId);
 
         // Cleanup when unmounting
         return () => clearInterval(intervalId);

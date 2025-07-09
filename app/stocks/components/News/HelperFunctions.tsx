@@ -8,8 +8,6 @@
 export const filterNewsBasedOnDate = (articles: any[], clickedDate: string) => {
 
     const test1 = parseArticleDate(articles[0].date);
-    console.log("articles[2].date: ", test1);
-    console.log("clickedDate", clickedDate);
 
     return articles.filter((article: any) => parseArticleDate(article.date) === clickedDate)
 }

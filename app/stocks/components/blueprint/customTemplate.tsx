@@ -1,5 +1,5 @@
 // BluePrintTemplateTest.tsx
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { DraggableWrapper } from "./draggableWrapper"
 import { CompanyKeyInfo } from "../keyInfo/companyKeyInfo"
 import MyChart from "../graph/companyGraph"
@@ -21,6 +21,7 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
   const [components, setComponents] = useState<ComponentInstance[]>([])
   const [componentPosition, setComponentPosition] = useState({ x: 0, y: 50 })
   const [component2Position, setComponent2Position] = useState({ x: 400, y: 50 })
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const gridSize = 20;
 
   const updateComponentPosition = (componentId: string, newPosition: { x: number, y: number }) => {
@@ -67,10 +68,39 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
   }
 
 
-  // const handleDelete = (component) => {
+  const handleComponentClick = (componentid: string) => {
+    if (edit) {
+
+      setSelectedComponentId(componentid);
+
+    }
+  }
 
 
-  // }
+  useEffect(() => {
+    if (selectedComponentId) {
+      console.log("SELECTEDCOMPONENT ID: ", selectedComponentId);
+    }
+  }, [selectedComponentId])
+
+  useEffect(() => {
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Backspace" && selectedComponentId && edit) {
+        setComponents(prev => prev.filter(c => c.id !== selectedComponentId));
+        setSelectedComponentId(null);
+        console.log("Backspace ble klikket!");
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    }
+
+  }, [selectedComponentId, edit]);
+
 
   const renderComponent = (componentInstance: ComponentInstance) => {
     let ComponentToRender;
@@ -88,16 +118,18 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
 
     return (
       <DraggableWrapper
-        key={componentInstance.id}
-        initialPosition={componentInstance.position}
-        className={edit ? "animated-border" : ""}
-        onPositionChange={(newPosition) => updateComponentPosition(componentInstance.id, newPosition)}
-        draggable={edit}
-        snapToGrid={edit}
-        gridSize={gridSize}
-      >
+      key={componentInstance.id}
+      initialPosition={componentInstance.position}
+      className={edit ? "animated-border" : ""}
+      onPositionChange={(newPosition) => updateComponentPosition(componentInstance.id, newPosition)}
+      draggable={edit}
+      snapToGrid={edit}
+      gridSize={gridSize}
+    >
+      <div onClick={() => handleComponentClick(componentInstance.id)}>
         <ComponentToRender {...(componentInstance.props || {})} />
-      </DraggableWrapper>
+      </div>
+    </DraggableWrapper>
     )
   }
 
@@ -131,28 +163,7 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
           }
         />
         
-        {/* Existing components */}
-        <DraggableWrapper
-          initialPosition={componentPosition}
-          className={edit ? "animated-border" : ""}
-          onPositionChange={setComponentPosition}
-          draggable={edit}
-          snapToGrid={edit}
-          gridSize={gridSize}
-        >
-          <CompanyKeyInfo />
-        </DraggableWrapper>
 
-        <DraggableWrapper
-          initialPosition={component2Position}
-          className={edit ? "animated-border" : ""}
-          onPositionChange={setComponent2Position}
-          draggable={edit}
-          snapToGrid={edit}
-          gridSize={gridSize}
-        >
-          <MyChart />
-        </DraggableWrapper>
 
         {/* Dynamic components */}
         {components.map(renderComponent)}
@@ -167,3 +178,30 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
     </div>
   )
 }
+
+
+
+
+
+        /* Existing components */
+        // <DraggableWrapper
+        //   initialPosition={componentPosition}
+        //   className={edit ? "animated-border" : ""}
+        //   onPositionChange={setComponentPosition}
+        //   draggable={edit}
+        //   snapToGrid={edit}
+        //   gridSize={gridSize}
+        // >
+        //   <CompanyKeyInfo />
+        // </DraggableWrapper>
+
+        // <DraggableWrapper
+        //   initialPosition={component2Position}
+        //   className={edit ? "animated-border" : ""}
+        //   onPositionChange={setComponent2Position}
+        //   draggable={edit}
+        //   snapToGrid={edit}
+        //   gridSize={gridSize}
+        // >
+        //   <MyChart />
+        // </DraggableWrapper>
