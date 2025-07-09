@@ -1,10 +1,15 @@
 // BluePrintTemplateTest.tsx
 import React, { useEffect, useState } from "react"
 import { DraggableWrapper } from "./draggableWrapper"
-import { CompanyKeyInfo } from "../keyInfo/companyKeyInfo"
-import MyChart from "../graph/companyGraph"
-import { BluePrintSidebar } from "./sidebarAddComponent"
 import "./blueprint.css"
+
+// Komponenter
+import MyChart from "../graph/companyGraph"
+import { CompanyKeyInfo } from "../keyInfo/companyKeyInfo"
+import { SalesVolume } from "../salesVolume/salesVolume"
+
+
+
 
 interface BluePrintTemplateProps {
   edit: boolean;
@@ -19,8 +24,6 @@ interface ComponentInstance {
 
 export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
   const [components, setComponents] = useState<ComponentInstance[]>([])
-  const [componentPosition, setComponentPosition] = useState({ x: 0, y: 50 })
-  const [component2Position, setComponent2Position] = useState({ x: 400, y: 50 })
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const gridSize = 20;
 
@@ -112,6 +115,9 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
       case "keyInfo":
         ComponentToRender = CompanyKeyInfo;
         break;
+      case "salesVolume":
+        ComponentToRender = SalesVolume;
+        break;
       default:
         return null;
     }
@@ -157,9 +163,14 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
                     linear-gradient(to right, #e5e7eb 1px, transparent 1px),
                     linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
                   `,
-                  backgroundSize: `${gridSize}px ${gridSize}px`
+                  backgroundSize: `${gridSize}px ${gridSize}px`,
+                  width: 'calc(100vw - 2.7vw)',
+                  height: 'calc(100vw - 52.7vw'
                 } 
-              : {}
+              : {
+                width: 'calc(100vw - 2.7vw)',
+                height: 'calc(100vw - 52.7vw'
+              }
           }
         />
         
@@ -178,30 +189,3 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
     </div>
   )
 }
-
-
-
-
-
-        /* Existing components */
-        // <DraggableWrapper
-        //   initialPosition={componentPosition}
-        //   className={edit ? "animated-border" : ""}
-        //   onPositionChange={setComponentPosition}
-        //   draggable={edit}
-        //   snapToGrid={edit}
-        //   gridSize={gridSize}
-        // >
-        //   <CompanyKeyInfo />
-        // </DraggableWrapper>
-
-        // <DraggableWrapper
-        //   initialPosition={component2Position}
-        //   className={edit ? "animated-border" : ""}
-        //   onPositionChange={setComponent2Position}
-        //   draggable={edit}
-        //   snapToGrid={edit}
-        //   gridSize={gridSize}
-        // >
-        //   <MyChart />
-        // </DraggableWrapper>

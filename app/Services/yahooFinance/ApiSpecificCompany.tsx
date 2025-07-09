@@ -36,8 +36,22 @@ export const fetchCompanyOverviewData = async(symbol: string) => {
         console.error("Feil ved henting av company overview", error);
         throw error;
     }
+}
 
 
+export const get_companyTimeSeries = async (ticker: string, prod=0) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/timeSeries/${ticker}/${prod}/`);
+        const data = await response.json();
+
+        if (data.error) throw new Error(data.error);
+
+        return data
+
+    } catch (error) {
+        console.error("Feil ved henting av company Time Series", error);
+        throw error
+    }
 }
 
 
@@ -345,3 +359,4 @@ export const get_companyInfo = async ( ticker: string ) => {
         console.log(`Feil ved henting av indsustry / sektor informasjon for ${ticker}`, error);
     }
 }
+

@@ -155,21 +155,15 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - Komponentene skal være resizable, dvs at skalaen på komponentene kan blåses opp og ned.
 
   - Lag 3 komponenter og begynn deretter med sandbox.
-    - Graf
-    - Nøkkeltall
-    - Analyst buy, sell, hold
     - salgsvolum (når man har kjøpt tilgang fra alpha vantage)
-  
-  - Endre plasseringen til add og edit knappen
-
-  - Sidememy der man kan dra inn komponentene på skjermen
-    - Lage en ny sidemeny (ShadCN fungerte ikke)
-    - crud operasjoner
-    - når add + er aktivert så skal edit modus skrus på.
+      - lyst til å få til farge, hvis tallet er lavere enn det forrige tallet, så skal det være rødt, grått hvis det er likt og grønt hvis det er høyere
+      
+    - Få tilbake søylediagrammene.
 
 
   - skal være mulig å lagre templaten til brukerne. add new template typ.
-  - man kan velge templaten man har lyst til å se.
+
+  - man kan velge templaten man har lyst til å se, ha noen presets klare for demo liksom, eller for å komme kjapt i gang.
 
 
   1. X Må lagre posisjonen til hver komponent i en state

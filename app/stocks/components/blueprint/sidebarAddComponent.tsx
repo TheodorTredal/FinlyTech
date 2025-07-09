@@ -45,14 +45,14 @@ export const BluePrintSidebar = ({ setEdit, setIsOpen, isOpen }: BluePrintSideba
   style={{ willChange: "transform" }}
 >
 <Button
-  className="absolute right-4 top-4 bg-black/60 border border-2 border-stone-500 text-stone-300 rounded-md hover:bg-black/80 transition w-6 h-6 p-0 flex items-center justify-center"
+  className="absolute right-4 top-4 bg-black/60 border-2 border-stone-500 text-stone-300 rounded-md hover:bg-black/80 transition w-6 h-6 p-0 flex items-center justify-center"
   onClick={() => setIsOpen(false)}
 >
   <X className="h-3 w-3" />
 </Button>
 
   <div className="p-6 pt-16">
-    <h3 className="text-lg font-semibold mb-6 text-white">➕ Legg til komponent</h3>
+    <h3 className="text-lg font-semibold mb-6 text-white">➕ Legg til komponenter</h3>
 
     <div className="space-y-4">
       <div
@@ -69,8 +69,17 @@ export const BluePrintSidebar = ({ setEdit, setIsOpen, isOpen }: BluePrintSideba
         draggable
         onDragStart={(e) => handleDragStart(e, "keyInfo")}
       >
-        <span className="text-2xl">📊</span>
+        <span className="text-2xl">🧾</span>
         <span className="text-sm font-medium">Nøkkeltall</span>
+      </div>
+
+      <div
+        className="flex items-center gap-3 rounded-xl border border-gray-700 bg-gray-900/70 p-4 cursor-move hover:bg-gray-800 transition duration-200"
+        draggable
+        onDragStart={(e) => handleDragStart(e, "salesVolume")}
+      >
+        <span className="text-2xl">📊</span>
+        <span className="text-sm font-medium">Volum</span>
       </div>
     </div>
   </div>

@@ -15,6 +15,8 @@ import { EditTemplateButton } from "./components/blueprint/editTemplateButton";
 import { SidebarAddComponentButton } from "./components/blueprint/addComponentButton";
 
 
+import { SalesVolume } from "./components/salesVolume/salesVolume";
+
 
 // Definer en enum for aktive komponenter
 enum ActiveComponentEnum {
@@ -87,9 +89,11 @@ export default function StocksPage() {
     </div>
     
 
-    {activeComponent === ActiveComponentEnum.Financials && (
-      <div>Financials</div>
-    )}
+    <div className={`${activeComponent === ActiveComponentEnum.Financials  ? "block" : "hidden" }`} >
+
+      <SalesVolume></SalesVolume>
+    </div>
+    
 
     {activeComponent === ActiveComponentEnum.KPI && (
       <CompanyKeyInfo></CompanyKeyInfo>
