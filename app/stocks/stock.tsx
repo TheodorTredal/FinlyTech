@@ -12,6 +12,7 @@ import { CompanyKeyInfo } from "./components/keyInfo/companyKeyInfo";
 import { BluePrintTemplateTest } from "./components/blueprint/customTemplate";
 import { BluePrintSidebar } from "./components/blueprint/sidebarAddComponent";
 import { EditTemplateButton } from "./components/blueprint/editTemplateButton";
+import { SidebarAddComponentButton } from "./components/blueprint/addComponentButton";
 
 
 
@@ -32,7 +33,8 @@ enum ActiveComponentEnum {
 
 export default function StocksPage() {
 
-  const [edit, setEdit] = useState<boolean>(false)
+  const [edit, setEdit] = useState<boolean>(false);
+  const [SidebarIsOpen, setSidebarIsOpen] = useState<boolean>(false);
 
 
   const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.Stock);
@@ -70,10 +72,11 @@ export default function StocksPage() {
   
         <StarStock></StarStock>
 
-        <div className={`${activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"} flex justify-between space-x-4`} >
+        <div className={`${activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"} relative flex justify-between space-x-4`} >
 
           <EditTemplateButton edit={edit} setEdit={setEdit}></EditTemplateButton>
-          <BluePrintSidebar setEdit={setEdit}></BluePrintSidebar>
+          <SidebarAddComponentButton setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></SidebarAddComponentButton>
+          <BluePrintSidebar setEdit={setEdit} setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></BluePrintSidebar>
         </div>
 
 
