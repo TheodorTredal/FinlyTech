@@ -13,6 +13,7 @@ import { BluePrintTemplateTest } from "./components/blueprint/customTemplate";
 import { BluePrintSidebar } from "./components/blueprint/sidebarAddComponent";
 import { EditTemplateButton } from "./components/blueprint/editTemplateButton";
 import { SidebarAddComponentButton } from "./components/blueprint/addComponentButton";
+import { CompanyAboutInformation } from "./components/keyInfo/companyAboutInformation";
 
 
 import { SalesVolume } from "./components/salesVolume/salesVolume";
@@ -91,7 +92,7 @@ export default function StocksPage() {
 
     <div className={`${activeComponent === ActiveComponentEnum.Financials  ? "block" : "hidden" }`} >
 
-      <SalesVolume></SalesVolume>
+      <CompanyAboutInformation></CompanyAboutInformation>
     </div>
     
 

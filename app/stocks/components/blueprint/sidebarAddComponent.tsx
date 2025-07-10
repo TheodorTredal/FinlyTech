@@ -52,7 +52,7 @@ export const BluePrintSidebar = ({ setEdit, setIsOpen, isOpen }: BluePrintSideba
 </Button>
 
   <div className="p-6 pt-16">
-    <h3 className="text-lg font-semibold mb-6 text-white">➕ Legg til komponenter</h3>
+    <h4 className="font-semibold mb-6 text-white font-mono">➕ Legg til komponenter</h4>
 
     <div className="space-y-4">
       <div
@@ -80,6 +80,15 @@ export const BluePrintSidebar = ({ setEdit, setIsOpen, isOpen }: BluePrintSideba
       >
         <span className="text-2xl">📊</span>
         <span className="text-sm font-medium">Volum</span>
+      </div>
+
+      <div
+        className="flex items-center gap-3 rounded-xl border border-gray-700 bg-gray-900/70 p-4 cursor-move hover:bg-gray-800 transition duration-200"
+        draggable
+        onDragStart={(e) => handleDragStart(e, "aboutCompany")}
+      >
+        <span className="text-2xl">📄</span>
+        <span className="text-sm font-medium">Om selskapet</span>
       </div>
     </div>
   </div>

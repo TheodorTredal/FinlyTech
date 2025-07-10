@@ -157,8 +157,14 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - Lag 3 komponenter og begynn deretter med sandbox.
     - salgsvolum (når man har kjøpt tilgang fra alpha vantage)
       - lyst til å få til farge, hvis tallet er lavere enn det forrige tallet, så skal det være rødt, grått hvis det er likt og grønt hvis det er høyere
-      
+
     - Få tilbake søylediagrammene.
+    - informasjon om aksjen, dette kommer i key info.
+      - En tekstboks komponent.
+      - sektor / industri
+
+    - Innsiders, hvem som har de største beholdningene i selskapet osv.
+
 
 
   - skal være mulig å lagre templaten til brukerne. add new template typ.

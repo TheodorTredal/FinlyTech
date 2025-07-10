@@ -7,6 +7,7 @@ import "./blueprint.css"
 import MyChart from "../graph/companyGraph"
 import { CompanyKeyInfo } from "../keyInfo/companyKeyInfo"
 import { SalesVolume } from "../salesVolume/salesVolume"
+import { CompanyAboutInformation } from "../keyInfo/companyAboutInformation"
 
 
 
@@ -117,6 +118,9 @@ export const BluePrintTemplateTest = ({ edit }: BluePrintTemplateProps) => {
         break;
       case "salesVolume":
         ComponentToRender = SalesVolume;
+        break;
+      case "aboutCompany":
+        ComponentToRender = CompanyAboutInformation;
         break;
       default:
         return null;
