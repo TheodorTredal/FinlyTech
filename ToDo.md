@@ -71,12 +71,6 @@ https://ui.shadcn.com/charts
     Altså store hendelser som skal skje frem i tid.
   - Ha et kart som viser hvilke aksjemarkeder som er åpne.
 
-12. Et vær kart. været kan påvirke shipping. Naturkatastorfer kan påvirke bedrifter.
-  - Hadde vært kult værapp som viser globale stormer, lokale stormer, og om det er noen påventende værkatastrofer i nær fremtid.
-  - Ha en enable knapp som bruker kan skru av og på, hvis de vil se om været påvirker noen av de satte filtrene
-  - Hadde vært kult med et kart som viste hele globen.
-
-13. Live kart over shipping og fly.
 
 14. selskapsstruktur
     - Denne er viktig for å finne ut som selskapet har en optimal struktur.
@@ -107,11 +101,7 @@ Historiske data målt over tid
   - Ev/Ebidta de siste 5 årene
   - P/E de siste 5 årene
 
-På Sikt så har jeg lyst til å implementere flere strategi metoder. sånn som 50 day avg også videre. Bruk Quantnet for algoritmer.
 
-
-17. Redline sandbox
-  - Lage en komponent som lar brukeren legge inn hvilke data som er viktig for den. Sånn at brukeren enkelt kan se de røde linjene mellom tallene i en bedrift.
 
 
 18. Nyheter
@@ -144,7 +134,7 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - marketcap
   - nyheter
 
-5. Nettsiden skal være customizable. Brukeren skal få velge hva den vil se på dashboardet.
+1. Nettsiden skal være customizable. Brukeren skal få velge hva den vil se på dashboardet.
   - IKEA Modellen
   
   - X Skal være en customize knapp, når man trykker på denne knappen så skal det komme opp en grid der man kan sette inn de komponentene som er viktig for brukeren å se. 
@@ -172,50 +162,13 @@ Hovedmålet til applikasjonen er å finne de aksjene med størst vekstpotensiale
   - man kan velge templaten man har lyst til å se, ha noen presets klare for demo liksom, eller for å komme kjapt i gang.
 
 
-  1. X Må lagre posisjonen til hver komponent i en state
-    - når komponenten beholder sin posisjon etter at man har skrudd av og på. gå videre til 2.
 
-  1.2? Dataen inne i komponenten blir resettet
-    datastrukturen blir nok en liste med dictionaries med alle komponentene >:-D
 
-  2. ha en sidemeny der man kan dra inn komponenter inn på siden, <- HER
 
-  3. lag en boundary for komponentene sånn at komponentene ikke går utenfor skjermen
 
-  4. X lag et gridlock system sånn at komponentene kan plassers fint på skjermen.
 
   5. gjør komponentene resizable
 
-  6. Edit knappen endrer farge når man er i editing modus.
-    - Borderen rundt komponentene er en stiplet linje som beveger seg.
-    - Grid i bakgrunnen skal vises.
-
-
-
-
-
-
-
-Neste tingene som blir gjort:
-  - Bli ferdig med dashboardet for aksjer få det til å se pent ut.
-    - Add to portfolio knapp
-  - Begynn på porteføljen
-    - Begynn med react komponentene
-      - Innkjøpspris
-      - Antall aksjer
-      - enkel database
-      - Watchlist stjernen er ikke det samme som add to portfolio
-
-
-
-
-Sidemeny som viser det mest kritiske for en bruker, den skal være tilgjengelig over hele nettsiden, bruker skal få se det som er viktigst for den, om det er nyheter, tapere, vinnere, mest omsatt (volum) eller sine egne aksjer  / watchlist.
-
-
-
-Portefølje graf
-1. Vi må ha meta data om porteføljen
-   - Når den ble opprettet
 
 2. Targets. Om enkelt aksjer i porteføljen har nådd sitt target, fremtidige prognoser, er den fortsatt en hold / sell når målet er nådd?
   - Dette kan gjøres når screenere / filtere har kommet opp på plass ;)
@@ -260,4 +213,47 @@ DCF ANALYSE
   - Hver aksje skal ha en kommentar boks, brukerens tanker om aksjen, er det en bra aksje? er det en dårlig aksje?
 
 
-2. BUGS:
+
+
+NYE MÅL:
+
+1. - appen skal være customizable, brukeren skal selv få lov til å velge hvilke, hvor og hvor mye plass hver enkel komponent skal ta.
+   - Brukeren skal få lov til å lagre templates som den selv har laget.
+   - Skal komme standard templates sånn at brukeren kan komme raskt i gang.
+
+2. GRAF
+  - Må få inn valgmuligheter når det kommer til grafen
+    - Moving averages 200, 50 osv..
+
+3. Filtre
+  - Filtrere på:
+    - Sektor
+    - industri
+    - price prediction
+    - P/E
+    - EPS
+    - alt som egentlig står inne i companyKeyInfo for å si det enkelt.
+
+    - 3.1 Begynn med 3 - 5 Filter knapper, prøv å få en liste av firmaer tilbake basert på input verdiene. 
+    - Trenger kanskje ikke en søk knapp, "menyen" endrer seg med en gang et filter har blitt lagt til, kanskje?
+
+    Hovedmålet er at brukeren skal få tilbake alle aksjene som passer deres filtre.
+
+4. Portefølje
+    - Kan ha flere porteføljer, dette skal vises som en mappe av filer i sidemenyen.
+    - Avkastning
+    - Price target på aksjer
+    - Risiko score på porteføljen
+    - portefølje VS børs / index
+
+5. Marked
+  - Dagens vinnere / dagens tapere
+  - Mest omsatt
+
+
+
+
+
+NIKE
+META
+PLTR

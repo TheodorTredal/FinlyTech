@@ -1,6 +1,16 @@
 "use client";
 import { useState } from "react";
-import { Calendar, Home, Inbox, Search, Settings, Factory, Layers, ChartNoAxesCombined } from "lucide-react";
+import { 
+  Calendar, 
+  Home, 
+  Inbox, 
+  Search, 
+  Settings, 
+  Factory, 
+  Layers, 
+  ChartNoAxesCombined,
+  SlidersHorizontal,
+ } from "lucide-react";
 import { SettingsBox } from "./SettingsBox";
 import Link from "next/link";
 
@@ -21,7 +31,7 @@ const items = [
   { title: "Home", url: "http://localhost:3000/Dashboard", icon: Home },
   { title: "Search", url: "#", icon: Search },
   { title: "Inbox", url: "#", icon: Inbox },
-  { title: "Sector", url: "#", icon: Factory },
+  { title: "Filter", url: "http://localhost:3000/filter", icon: SlidersHorizontal },
   { title: "Portfolio", url: "http://localhost:3000/portfolio", icon: Layers },
   { title: "Calendar", url: "#", icon: Calendar },
   { title: "Stocks", url: "http://localhost:3000/stocks", icon: ChartNoAxesCombined },

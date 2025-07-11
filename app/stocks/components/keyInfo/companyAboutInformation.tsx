@@ -24,7 +24,6 @@ export const CompanyAboutInformation = () => {
             .catch((err) => {
                 console.log("Failed", err);
             })
-
         }
 
         getData();
