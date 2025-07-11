@@ -3,57 +3,91 @@ import { Input } from "@/components/ui/input"
 import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { get_filteredCompanies } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 
 
-
-const Filter = () => {
-    const [clicked, setClicked] = useState<number>(0);
+const Filter = ({ filterType = "PERatio" }: {filterType: string}) => {
+    const [clicked, setClicked] = useState<string>("between");
+    const [range, setRange] = useState<string>("");
+    const [filterNumber1, setfilterNumber1] = useState<number | null>(null);
+    const [filterNumber2, setfilterNumber2] = useState<number | null>(null);
+    const [testgetCompany, setGetTestCompany] = useState<string[]>([]); // Denne må egentlig sendes inn fra en høyere komponent
   
-    const handleOnClick = (id: number) => {
-      setClicked(id);
+    const handleOnClick = (clickedrange: string) => {
+      setClicked(clickedrange);
     };
   
-    const isActive = (id: number) =>
-      clicked === id
+    const isActive = (clickedrange: string) =>
+      clicked === clickedrange
         ? "bg-white text-black border-stone-700 font-bold"
         : "bg-black text-white opacity-80 hover:opacity-100";
   
+
+        useEffect(() => {
+            if (!clicked || filterNumber1 === null) return;
+          
+            const rangeToUse = clicked;
+          
+            if (clicked === "between" && filterNumber2 === null) return;
+          
+            get_filteredCompanies(rangeToUse, filterType, filterNumber1, filterNumber2 || 0)
+              .then(setGetTestCompany)
+              .catch((err) => {
+                console.error("API-feil:", err);
+              });
+          }, [clicked, filterType, filterNumber1, filterNumber2]);
+
+
+          useEffect(() => {
+            console.log(testgetCompany)
+          }, [testgetCompany])
+
+
+
+
     return (
-      <div className="w-[20vw] border-2 border-stone-500 rounded-xl p-4 bg-stone-900 shadow-xl flex flex-col justify-between h-fit space-y-4">
+        <div className="w-[20vw] border-x-2 border-b-2 border-stone-500 rounded-b-xl bg-stone-900 shadow-xl p-4 flex flex-col justify-between h-fit space-y-4">
+             <div className="w-[10.05vw] border-t-2 border-stone-500 rounded-tl-xl -mt-4 mb-2 ml-auto -mr-[1.1vw]" />
         {/* Filter type buttons */}
         <div className="flex flex-col space-y-2">
           <Button
-            onClick={() => handleOnClick(0)}
+            onClick={() => handleOnClick("lessThan")}
             variant="outline"
             size="sm"
-            className={`font-mono border ${isActive(0)}`}
+            onChange={(e) => setfilterNumber1(Number(e.target.value))}
+            className={`font-mono border ${isActive("lessThan")}`}
           >
             Less than
           </Button>
           <Button
-            onClick={() => handleOnClick(1)}
+            onClick={() => handleOnClick("between")}
             variant="outline"
             size="sm"
-            className={`font-mono border ${isActive(1)}`}
+            className={`font-mono border ${isActive("between")}`}
+            // onChange={(e) => set} // gjør denne senere
           >
             Between
           </Button>
           <Button
-            onClick={() => handleOnClick(2)}
+            onClick={() => handleOnClick("moreThan")}
             variant="outline"
             size="sm"
-            className={`font-mono border ${isActive(2)}`}
+            onChange={(e) => setfilterNumber1(Number(e.target.value))}
+            className={`font-mono border ${isActive("moreThan")}`}
           >
             Greater than
           </Button>
         </div>
   
         {/* Input fields */}
-        {clicked !== 1 ? (
-          <Input
-            placeholder="Enter value"
-            className="placeholder:font-mono border-stone-500 bg-stone-800 text-white placeholder:text-white/50"
-          />
+        {clicked !== "between" ? (
+            <Input
+                type="number"
+                placeholder="Enter value"
+                value={filterNumber1 ?? ""}
+                onChange={(e) => setfilterNumber1(Number(e.target.value))}
+                className="placeholder:font-mono border-stone-500 bg-stone-800 text-white placeholder:text-white/50"
+            />
         ) : (
           <div className="flex items-center justify-between space-x-2">
             <Input
@@ -72,7 +106,7 @@ const Filter = () => {
   };
 
 
-export const FilterButton = () => {
+export const FilterButton = ({ text }: {text: string}) => {
 
     const [open, setIsOpen] = useState<boolean>(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -107,10 +141,11 @@ export const FilterButton = () => {
     return (
         <div ref={containerRef}>
             <div
-                className="flex items-center w-[10vw] h-[3vw] bg-stone-900 text-white border-2 border-stone-500 rounded-xl px-2"
+                className={`flex items-center w-[10vw] h-[3vw] bg-stone-900 text-white border-2 border-stone-500 px-2
+                    ${open ? 'rounded-t-xl border-b-0' :'rounded-xl ' }`}
                 onClick={() => handleOnClick()}
             >
-            <span className="whitespace-nowrap font-mono text-sm mr-2">P/E:</span>
+            <span className="whitespace-nowrap font-mono text-sm mr-2">{text ?? ""}</span>
             <input
               type="text"
               className="flex-1 bg-transparent text-white placeholder:text-white/60 outline-none"
@@ -120,7 +155,7 @@ export const FilterButton = () => {
 
           {open && 
             <div className="absolute">
-                <Filter />
+                <Filter filterType="PERatio" />
             </div>
             }
         </div>

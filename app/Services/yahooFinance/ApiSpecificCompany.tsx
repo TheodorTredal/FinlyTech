@@ -54,6 +54,29 @@ export const get_companyTimeSeries = async (ticker: string, prod=0) => {
     }
 }
 
+/**
+ * 
+ * @param range "lessThan", "moreThan", "between"
+ * @param filterType "PERatio"
+ * @param filterNumber1 
+ * @param filterNumber2 
+ * @returns 
+ */
+ export const get_filteredCompanies = async (range: string, filterType: string, filterNumber1: number, filterNumber2: number = 0) => { 
+
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/screener/${range}/${filterType}/${filterNumber1}/${filterNumber2}/`)
+        const data = await response.json();
+
+        if (data.error) throw new Error(data.error);
+
+        return data.tickers
+    } catch (error) {
+        console.error("Feil ved henting av filtered companies, sjekk om filterer er riktig");
+        throw error
+    }
+}
+
 
 export const fetchStockChart = async (symbol: string, dateInterval: string) => {
     try {
