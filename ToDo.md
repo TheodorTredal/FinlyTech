@@ -235,7 +235,11 @@ NYE MÅL:
     - alt som egentlig står inne i companyKeyInfo for å si det enkelt.
 
     - 3.1 Begynn med 3 - 5 Filter knapper, prøv å få en liste av firmaer tilbake basert på input verdiene. 
-    - Trenger kanskje ikke en søk knapp, "menyen" endrer seg med en gang et filter har blitt lagt til, kanskje?
+    - Trenger kanskje ikke en søk knapp, "menyen" endrer seg med en gang et filter har blitt lagt til, kanskje? Kan søke når bruker enten har klikket enter, eller klikket seg vekk fra komponenten.
+
+    3.2 Må lage en liste over alle gyldige filtere, dette baseres på alt som ligger inne i keyInfo fra alpha vantage.
+    3.3 Displaye tickers basert på outputen av filteret.
+    3.4 flere filtere samtidig logikk må implementeres senere.
 
     Hovedmålet er at brukeren skal få tilbake alle aksjene som passer deres filtre.
 

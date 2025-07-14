@@ -21,15 +21,17 @@ const Filter = ({ filterType = "PERatio" }: {filterType: string}) => {
       clicked === clickedrange
         ? "bg-white text-black border-stone-700 font-bold"
         : "bg-black text-white opacity-80 hover:opacity-100";
-  
+
 
         useEffect(() => {
             if (!clicked || filterNumber1 === null) return;
           
             const rangeToUse = clicked;
           
-            if (clicked === "between" && filterNumber2 === null) return;
-          
+            if (clicked === "between") {
+              if (filterNumber2 === null || filterNumber2 <= filterNumber1) return;
+            }
+
             get_filteredCompanies(rangeToUse, filterType, filterNumber1, filterNumber2 || 0)
               .then(setGetTestCompany)
               .catch((err) => {
@@ -54,7 +56,6 @@ const Filter = ({ filterType = "PERatio" }: {filterType: string}) => {
             onClick={() => handleOnClick("lessThan")}
             variant="outline"
             size="sm"
-            onChange={(e) => setfilterNumber1(Number(e.target.value))}
             className={`font-mono border ${isActive("lessThan")}`}
           >
             Less than
@@ -64,7 +65,6 @@ const Filter = ({ filterType = "PERatio" }: {filterType: string}) => {
             variant="outline"
             size="sm"
             className={`font-mono border ${isActive("between")}`}
-            // onChange={(e) => set} // gjør denne senere
           >
             Between
           </Button>
@@ -72,7 +72,6 @@ const Filter = ({ filterType = "PERatio" }: {filterType: string}) => {
             onClick={() => handleOnClick("moreThan")}
             variant="outline"
             size="sm"
-            onChange={(e) => setfilterNumber1(Number(e.target.value))}
             className={`font-mono border ${isActive("moreThan")}`}
           >
             Greater than
@@ -84,20 +83,21 @@ const Filter = ({ filterType = "PERatio" }: {filterType: string}) => {
             <Input
                 type="number"
                 placeholder="Enter value"
-                value={filterNumber1 ?? ""}
                 onChange={(e) => setfilterNumber1(Number(e.target.value))}
-                className="placeholder:font-mono border-stone-500 bg-stone-800 text-white placeholder:text-white/50"
+                className="appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:font-mono border-stone-500 bg-stone-800 text-white placeholder:text-white/50"
             />
         ) : (
           <div className="flex items-center justify-between space-x-2">
             <Input
               placeholder="Min"
               className="placeholder:font-mono border-stone-500 bg-stone-800 text-white placeholder:text-white/50"
+              onChange={(e) => setfilterNumber1(Number(e.target.value))}
             />
             <span className="text-white font-mono text-lg">–</span>
             <Input
               placeholder="Max"
               className="placeholder:font-mono border-stone-500 bg-stone-800 text-white placeholder:text-white/50"
+              onChange={(e) => setfilterNumber2(Number(e.target.value))}
             />
           </div>
         )}
@@ -139,16 +139,17 @@ export const FilterButton = ({ text }: {text: string}) => {
 
 
     return (
-        <div ref={containerRef}>
+        <div className="" ref={containerRef}>
+          
             <div
                 className={`flex items-center w-[10vw] h-[3vw] bg-stone-900 text-white border-2 border-stone-500 px-2
                     ${open ? 'rounded-t-xl border-b-0' :'rounded-xl ' }`}
                 onClick={() => handleOnClick()}
             >
-            <span className="whitespace-nowrap font-mono text-sm mr-2">{text ?? ""}</span>
+            <span className="whitespace-nowrap font-mono overflow-hidden text-sm mr-2">{text ?? ""}</span>
             <input
               type="text"
-              className="flex-1 bg-transparent text-white placeholder:text-white/60 outline-none"
+              className="flex-1 bg-transparent text-white placeholder:text-white/60 outline-none overflow-x-hidden"
               placeholder="skriv verdi"
             />
             </div>

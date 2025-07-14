@@ -31,7 +31,7 @@ const items = [
   { title: "Home", url: "http://localhost:3000/Dashboard", icon: Home },
   { title: "Search", url: "#", icon: Search },
   { title: "Inbox", url: "#", icon: Inbox },
-  { title: "Filter", url: "http://localhost:3000/filter", icon: SlidersHorizontal },
+  { title: "Screener", url: "http://localhost:3000/screener", icon: SlidersHorizontal },
   { title: "Portfolio", url: "http://localhost:3000/portfolio", icon: Layers },
   { title: "Calendar", url: "#", icon: Calendar },
   { title: "Stocks", url: "http://localhost:3000/stocks", icon: ChartNoAxesCombined },

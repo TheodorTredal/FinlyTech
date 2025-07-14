@@ -3,7 +3,7 @@ import { KeyInfoSettings, KeyInfoKey, keyInfoOptions } from "./companyKeyInfoSet
 import { fetchCompanyOverviewData } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { useSearch } from "@/app/context/SearchContext";
 
-interface CompanyKeyInfoProps {
+export interface CompanyKeyInfoProps {
     className?: string;
     setSelectedOptions?: KeyInfoKey[];
     selectedOpttions?: KeyInfoKey[];

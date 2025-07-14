@@ -62,7 +62,7 @@ export const get_companyTimeSeries = async (ticker: string, prod=0) => {
  * @param filterNumber2 
  * @returns 
  */
- export const get_filteredCompanies = async (range: string, filterType: string, filterNumber1: number, filterNumber2: number = 0) => { 
+ export const get_filteredCompanies = async (range: string, filterType: string, filterNumber1: number, filterNumber2: number) => { 
 
     try {
         const response = await fetch(`http://127.0.0.1:8000/screener/${range}/${filterType}/${filterNumber1}/${filterNumber2}/`)
