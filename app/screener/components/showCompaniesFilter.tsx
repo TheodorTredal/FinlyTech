@@ -10,7 +10,8 @@ import { KeyInfoKey } from "@/app/stocks/components/keyInfo/companyKeyInfoSettin
 const testList = [
   "AAPL",
   "NVDA",
-  "PLTR"
+  "PLTR",
+  "nke"
 ]
 
 // Hjelpefunksjon for å få riktig Tailwind-klasse

@@ -8,15 +8,52 @@ import {
   } from "@/components/ui/sheet"
   import { Settings } from "lucide-react";
   import { Button } from "@/components/ui/button";
-  import { useState } from "react";
-  
+  import { useEffect, useState } from "react";
+  import { ChartDataPoint } from "./graphInterfaces";
+
+  // Indicator functions
+  import { calculate_thirtyDayMa } from "./IndicatorFunctions/thirty_day_mAVG";
+
+
+
+interface graphSettingsInterface {
+  originalChartData: ChartDataPoint[];
+  setIndicatorData: React.Dispatch<React.SetStateAction<ChartDataPoint[]>>; // Setter funksjon som returnerer en liste 
+}
 
 
 // Forbedret GraphSettings komponent
-export const GraphSettings = () => {
+export const GraphSettings = ({originalChartData, setIndicatorData}: graphSettingsInterface) => {
+
     const [showTrendLine, setShowTrendLine] = useState(true);
     const [showDataPoints, setShowDataPoints] = useState(false);
     const [chartType, setChartType] = useState('line');
+    const [show_stock_split, set_show_stock_split] = useState(false);
+
+
+    // Indicators
+    const [show_thirty_day_moving_avg, set_show_thirty_day_moving_avg] = useState(false);
+    const [show_ninethy_day_moving_avg, set_show_ninethy_day_movign_avg] = useState(false);
+    const [show_hundred_80_day_moving_avg, set_show_hundred_80_day_moving_avg] = useState(false);
+    const [show_macd, set_show_macd] = useState(false);
+    const [show_RSI, set_show_RSI] = useState(false);
+
+
+
+  useEffect(() => {
+    if (show_thirty_day_moving_avg) {
+      calculate_thirtyDayMa({
+        originalChartData,
+        setIndicatorData,
+      });
+    } else {
+      setIndicatorData([]);
+    }
+
+
+  }, [show_thirty_day_moving_avg, originalChartData]);
+
+
   
     return (
       <Sheet>
@@ -59,6 +96,18 @@ export const GraphSettings = () => {
                 />
               </div>
             </div>
+
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-300">Show stock splits</label>
+              <input
+                type="checkbox"
+                checked={show_stock_split}
+                onChange={(e) => set_show_stock_split(e.target.checked)}
+                className="rounded border-gray-600 bg-gray-800"
+              >
+              </input>
+
+            </div>
   
             {/* Graf type */}
             <div className="space-y-4">
@@ -80,17 +129,61 @@ export const GraphSettings = () => {
                 </Button>
               </div>
             </div>
-  
-            {/* Fargevalg */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white">Farger</h3>
-              <div className="flex gap-2">
-                <div className="w-6 h-6 bg-blue-500 rounded cursor-pointer border-2 border-white"></div>
-                <div className="w-6 h-6 bg-green-500 rounded cursor-pointer"></div>
-                <div className="w-6 h-6 bg-red-500 rounded cursor-pointer"></div>
-                <div className="w-6 h-6 bg-purple-500 rounded cursor-pointer"></div>
-              </div>
+            <div className="text-xl">
+              Indicators
             </div>
+
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-300">30 day moving avg</label>
+              <input
+              type="checkbox"
+              checked={show_thirty_day_moving_avg} // set en egen true false for denne
+              onChange={(e) => set_show_thirty_day_moving_avg(e.target.checked)}
+              className="rounded border-gray-600 bg-red-800"
+              ></input>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-300">90 day moving avg</label>
+              <input
+              type="checkbox"
+              checked={show_ninethy_day_moving_avg} // set en egen true false for denne
+              onChange={(e) => set_show_ninethy_day_movign_avg(e.target.checked)}
+              className="rounded border-gray-600 bg-red-800"
+              ></input>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-300">180 day moving avg</label>
+              <input
+              type="checkbox"
+              checked={show_hundred_80_day_moving_avg} // set en egen true false for denne
+              onChange={(e) => set_show_hundred_80_day_moving_avg(e.target.checked)}
+              className="rounded border-gray-600 bg-red-800"
+              ></input>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-300">macd</label>
+              <input
+              type="checkbox"
+              checked={show_macd} // set en egen true false for denne
+              onChange={(e) => set_show_macd(e.target.checked)}
+              className="rounded border-gray-600 bg-red-800"
+              ></input>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-300">RSI</label>
+              <input
+              type="checkbox"
+              checked={show_RSI} // set en egen true false for denne
+              onChange={(e) => set_show_RSI(e.target.checked)}
+              className="rounded border-gray-600 bg-red-800"
+              ></input>
+            </div>
+  
+            {/* Fargevalg */} 
           </div>
         </SheetContent>
       </Sheet>

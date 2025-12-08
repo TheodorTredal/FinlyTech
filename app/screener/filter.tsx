@@ -66,15 +66,15 @@ export const Filter = () => {
               <FilterButton text={text} key={key} />
             ))}
           </div>
-        </div>
-        
-        {/* Chevron – plassert halvveis utenfor kanten */}
         <div
           className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 bg-yellow-400 rounded-full p-1 cursor-pointer"
           onClick={toggleFilters}
         >
           <ChevronUp className={`text-white w-6 h-6 transition-transform duration-300 ${!isFiltersOpen ? 'rotate-180' : ''}`} />
         </div>
+        </div>
+        
+        {/* Chevron – plassert halvveis utenfor kanten */}
       </div>
       
       {/* Vis filtrerte selskaper */}

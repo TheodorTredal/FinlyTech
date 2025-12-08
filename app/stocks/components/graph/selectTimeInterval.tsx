@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { TimeInterval, SelectTimeIntervalProps } from "./graphInterfaces";
-import { GraphSettings } from "./graphSettings";
-
 
 // Add onClick prop to the component interface
 const SelectTimeIntervalButton = ({ 
@@ -104,10 +102,6 @@ const SelectTimeInterval: React.FC<SelectTimeIntervalProps> = ({
               text="all" 
               isActive={currentTimeInterval === "all"}
             />
-      </div>
-      <div className="ml-4">
-      <GraphSettings />
-
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearch } from "@/app/context/SearchContext";
+import { GraphSettings } from "./graphSettings";
 import {
   LineChart,
   Line,
@@ -24,14 +25,15 @@ import { CustomToolTip } from './tooltip';
 
 const MyChart = () => {
   const { searchQuery } = useSearch();
-  const [data, setData] = useState<ChartDataPoint[]>([]);
+  const [indicatorsData, setIndicatorData] = useState<ChartDataPoint[]>([]); // Liste med indikator grafer
+  const [data, setData] = useState<ChartDataPoint[]>([]); // Send denne ned til graph settings
   const [selectedPoints, setSelectedPoints] = useState<ChartDataPoint[]>([]);
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
   const [growthPercentage, setGrowthPercentage] = useState<string>("");
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
   const [trendLineData, setTrendLineData] = useState<ChartDataPoint[] | null>(null);
-  
+
 
   const handleChartClick = (event: any) => {
     if (event && event.activePayload && event.activePayload[0]) {
@@ -46,6 +48,16 @@ const MyChart = () => {
       });
     }
   };
+
+
+  useEffect(() => {
+
+    console.log("Original Data", data);
+    console.log("30 day moving avg", indicatorsData);
+
+
+  }, [indicatorsData]);
+
 
   useEffect(() => {
     if (selectedPoints.length === 2) {
@@ -88,57 +100,87 @@ const MyChart = () => {
     }
   }
 
-
+  // Kombiner data og indikatorer (kun indikatorfelt, ingen dobbel close)
+  const combinedData = data.map(item => {
+    const indicatorItem = indicatorsData.find(ind => ind.date === item.date) || {};
+    return { ...item, ...indicatorItem };
+  });
 
   return (
     <div className="bg-black" style={{ width: 700, height: 470 }}>
+      <div className='flex'>
         <SelectTimeInterval 
-        currentTimeInterval={currentTimeInterval} 
-        setCurrentTimeInterval={setCurrentTimeInterval} 
-        growthPercentage={growthPercentage}
-        trendLinePercentage={trendLinePercentage}
-        price={latestPrice}
+          currentTimeInterval={currentTimeInterval} 
+          setCurrentTimeInterval={setCurrentTimeInterval} 
+          growthPercentage={growthPercentage}
+          trendLinePercentage={trendLinePercentage}
+          price={latestPrice}
         />
-    
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={data} onClick={handleChartClick}>
-            <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
-            <XAxis dataKey="date" />
-            <YAxis domain={['dataMin - 10', 'dataMax + 10']} 
-            tickFormatter={(value) => value.toFixed(2)}
-            />
-            <Tooltip  content={<CustomToolTip />}/>
-            <Legend />
+        <div className="ml-4 pt-4 pr-4">
+          <GraphSettings originalChartData={data} setIndicatorData={setIndicatorData}/>
+        </div>
+      </div>
 
-            {/* Main stock price line */}
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={combinedData} onClick={handleChartClick}>
+          <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
+          <XAxis dataKey="date" />
+          <YAxis
+            domain={[
+              (dataMin: number) => Math.min(...data.map(d => d.close)) - 10,
+              (dataMax: number) => Math.max(...data.map(d => d.close)) + 10
+            ]}
+            tickFormatter={(value) => value.toFixed(2)}
+          />
+          <Tooltip content={<CustomToolTip />} />
+          <Legend />
+
+          {/* Hovedstock linje */}
+          <Line
+            type="monotone"
+            dataKey="close"
+            stroke={getMainLineColor()}
+            dot={false}
+            strokeWidth={2}
+            isAnimationActive={false}
+          />
+
+          {/* Trendline */}
+          {selectedPoints.length === 2 && trendLineData && (
             <Line
-              type="monotone"
-              dataKey="close"
-              stroke={getMainLineColor()}
+              type="linear"
+              data={trendLineData}
+              dataKey="trendValue"
+              stroke="#fbbf24"
+              strokeWidth={3}
+              strokeDasharray="8 4"
               dot={false}
-              strokeWidth={2}
               isAnimationActive={false}
             />
+          )}
 
-            {/* Trend line - no separate data prop! */}
-            {selectedPoints.length === 2 && (
-              <Line
-                type="linear"
-                data={trendLineData}
-                dataKey="trendValue"
-                stroke="#fbbf24"
-                strokeWidth={3}
-                strokeDasharray="8 4"
-                dot={false}
-                isAnimationActive={false}
-                connectNulls={false}>
-              </Line>
-            )}
-          </LineChart>
-        </ResponsiveContainer>
+          {/* Dynamiske indikator-linjer */}
+          {indicatorsData.length > 0 &&
+            Object.keys(indicatorsData[0])
+              .filter(key => key !== "date" && key !== "close" && key !== "index" && key !== "open" && key !== "high" && key !== "low" && key !== "volume")
+              .map(indicatorKey => (
+                <Line
+                  key={indicatorKey}
+                  type="monotone"
+                  dataKey={indicatorKey} // finnes nå i combinedData når date matcher
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+              ))
+            }
 
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
+
 
 export default MyChart;
