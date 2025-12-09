@@ -52,8 +52,7 @@ const MyChart = () => {
 
   useEffect(() => {
 
-    console.log("Original Data", data);
-    console.log("30 day moving avg", indicatorsData);
+    console.log("indicatorsData: ", indicatorsData);
 
 
   }, [indicatorsData]);
@@ -87,6 +86,8 @@ const MyChart = () => {
     getData();
   }, [searchQuery, currentTimeInterval]);
 
+
+  
 
   const getMainLineColor = () => {
     if (growthPercentage === null) return "#047857"

@@ -12,13 +12,15 @@ interface thirtyDayMAProps {
 }
 
 /**
- * Send inn data settet, returner en liste (av riktig format) til 
+ * Gjør API kall mot database for å hente de siste 30 dagene, returner en liste (av riktig format) tilbake.
  */
-export const calculate_thirtyDayMa = ({ originalChartData, setIndicatorData }: thirtyDayMAProps) => {
+export const calculate_thirtyDayMa = ({
+    originalChartData,
+    setIndicatorData
+}: thirtyDayMAProps) => {
 
-    const window = 30;
+    const window = 10;
     const smaData: ChartDataPoint[] = [];
-
 
     for (let i = 0; i < originalChartData.length; i++) {
         if (i < window - 1) {
@@ -37,5 +39,6 @@ export const calculate_thirtyDayMa = ({ originalChartData, setIndicatorData }: t
             sma30: avg,
         });
     }
+
     setIndicatorData(smaData);
-}
+};

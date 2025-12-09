@@ -13,7 +13,8 @@ import {
 
   // Indicator functions
   import { calculate_thirtyDayMa } from "./IndicatorFunctions/thirty_day_mAVG";
-
+import { fetchStockChart2 } from "@/app/Services/yahooFinance/ApiSpecificCompany";
+import { useSearch } from "@/app/context/SearchContext";
 
 
 interface graphSettingsInterface {
@@ -37,24 +38,42 @@ export const GraphSettings = ({originalChartData, setIndicatorData}: graphSettin
     const [show_hundred_80_day_moving_avg, set_show_hundred_80_day_moving_avg] = useState(false);
     const [show_macd, set_show_macd] = useState(false);
     const [show_RSI, set_show_RSI] = useState(false);
+    const { searchQuery } = useSearch();
+
 
 
 
   useEffect(() => {
     if (show_thirty_day_moving_avg) {
-      calculate_thirtyDayMa({
-        originalChartData,
-        setIndicatorData,
-      });
+      // clear the state
+      setIndicatorData([]);
+
+      const handleAddMA30 = async () => {
+        const response = await fetchStockChart2(searchQuery, "1mo");
+      
+        const maSourceData = response.chart.map((item, i) => ({
+          ...item,
+          index: i
+        }));
+        
+        console.log("maSourceData length:", maSourceData.length);
+        calculate_thirtyDayMa({
+          originalChartData: maSourceData,
+          setIndicatorData,
+        });
+      };
+
+    
+      handleAddMA30();
+    
     } else {
+      // Fjern indikator
       setIndicatorData([]);
     }
-
-
-  }, [show_thirty_day_moving_avg, originalChartData]);
-
-
   
+  }, [show_thirty_day_moving_avg, searchQuery]);
+
+
     return (
       <Sheet>
         <SheetTrigger asChild>
