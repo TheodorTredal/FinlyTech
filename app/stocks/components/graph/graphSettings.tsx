@@ -8,70 +8,72 @@ import {
   } from "@/components/ui/sheet"
   import { Settings } from "lucide-react";
   import { Button } from "@/components/ui/button";
-  import { useEffect, useState } from "react";
+  import React, { useEffect, useState } from "react";
   import { ChartDataPoint } from "./graphInterfaces";
 
   // Indicator functions
-  import { calculate_thirtyDayMa } from "./IndicatorFunctions/thirty_day_mAVG";
+import { calculateSMA } from "./IndicatorFunctions/calculateSMA";
 import { fetchStockChart2 } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { useSearch } from "@/app/context/SearchContext";
+import { ColorPallete } from "./colorPallette";
+import { IndicatorKey } from "./graphInterfaces";
+import { INDICATOR_CONFIG } from "./indicatorConfig";
 
 
 interface graphSettingsInterface {
   originalChartData: ChartDataPoint[];
   setIndicatorData: React.Dispatch<React.SetStateAction<ChartDataPoint[]>>; // Setter funksjon som returnerer en liste 
+  setIndicatorColors: React.Dispatch<React.SetStateAction<Record<IndicatorKey, string>>>;
+  indicatorColors: Record<IndicatorKey, string>;
 }
 
 
 // Forbedret GraphSettings komponent
-export const GraphSettings = ({originalChartData, setIndicatorData}: graphSettingsInterface) => {
+export const GraphSettings = ({originalChartData, setIndicatorData, setIndicatorColors, indicatorColors}: graphSettingsInterface) => {
 
-    const [showTrendLine, setShowTrendLine] = useState(true);
-    const [showDataPoints, setShowDataPoints] = useState(false);
-    const [chartType, setChartType] = useState('line');
-    const [show_stock_split, set_show_stock_split] = useState(false);
+  const [showTrendLine, setShowTrendLine] = useState(true);
+  const [showDataPoints, setShowDataPoints] = useState(false);
+  const [chartType, setChartType] = useState('line');
+  const [show_stock_split, set_show_stock_split] = useState(false);
 
+  const [activeIndicators, setActiveIndicators] = useState<Record<IndicatorKey, boolean>>({
+    sma30: false,
+    sma90: false,
+    sma180: false,
+  });
 
-    // Indicators
-    const [show_thirty_day_moving_avg, set_show_thirty_day_moving_avg] = useState(false);
-    const [show_ninethy_day_moving_avg, set_show_ninethy_day_movign_avg] = useState(false);
-    const [show_hundred_80_day_moving_avg, set_show_hundred_80_day_moving_avg] = useState(false);
-    const [show_macd, set_show_macd] = useState(false);
-    const [show_RSI, set_show_RSI] = useState(false);
-    const { searchQuery } = useSearch();
-
-
+  const [show_macd, set_show_macd] = useState(false);
+  const [show_RSI, set_show_RSI] = useState(false);
+  const { searchQuery } = useSearch();
 
 
   useEffect(() => {
-    if (show_thirty_day_moving_avg) {
-      // clear the state
-      setIndicatorData([]);
-
-      const handleAddMA30 = async () => {
-        const response = await fetchStockChart2(searchQuery, "1mo");
-      
-        const maSourceData = response.chart.map((item, i) => ({
-          ...item,
-          index: i
-        }));
-        
-        console.log("maSourceData length:", maSourceData.length);
-        calculate_thirtyDayMa({
-          originalChartData: maSourceData,
-          setIndicatorData,
-        });
-      };
-
     
-      handleAddMA30();
+    const handleIndicators = async () => {
+      const response = await fetchStockChart2(searchQuery, "6mo");
     
-    } else {
-      // Fjern indikator
-      setIndicatorData([]);
+      let data = response.chart.map((item: any, i: any) => ({
+        ...item,
+        index: i,
+      }));
+
+      (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
+        if (!activeIndicators[key]) return;
+
+        const config = INDICATOR_CONFIG[key];
+
+        data = calculateSMA({
+          originalChartData: data,
+          window: config.window,
+          field: config.field,
+        })
+      })
+      setIndicatorData(data);
     }
-  
-  }, [show_thirty_day_moving_avg, searchQuery]);
+
+    handleIndicators();
+
+  }, [activeIndicators, searchQuery])
 
 
     return (
@@ -125,7 +127,6 @@ export const GraphSettings = ({originalChartData, setIndicatorData}: graphSettin
                 className="rounded border-gray-600 bg-gray-800"
               >
               </input>
-
             </div>
   
             {/* Graf type */}
@@ -152,35 +153,36 @@ export const GraphSettings = ({originalChartData, setIndicatorData}: graphSettin
               Indicators
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="text-sm text-gray-300">30 day moving avg</label>
-              <input
-              type="checkbox"
-              checked={show_thirty_day_moving_avg} // set en egen true false for denne
-              onChange={(e) => set_show_thirty_day_moving_avg(e.target.checked)}
-              className="rounded border-gray-600 bg-red-800"
-              ></input>
-            </div>
+            {/**SMA INDICATORS */}
+            {(Object.keys(INDICATOR_CONFIG) as IndicatorKey[]).map((key) => (
+              <div key={key} className="flex items-center justify-between">
+                <label className="text-sm text-gray-300">
+                  {INDICATOR_CONFIG[key].label}
+                </label>
 
-            <div className="flex items-center justify-between">
-              <label className="text-sm text-gray-300">90 day moving avg</label>
-              <input
-              type="checkbox"
-              checked={show_ninethy_day_moving_avg} // set en egen true false for denne
-              onChange={(e) => set_show_ninethy_day_movign_avg(e.target.checked)}
-              className="rounded border-gray-600 bg-red-800"
-              ></input>
-            </div>
+                <ColorPallete
+                  selectedColor={indicatorColors[key]}
+                  onSelectColor={(color) => 
+                  setIndicatorColors((prev) => ({
+                    ...prev,
+                    [key]: color
+                  }))
+                }
+                />
+            
+                <input
+                  type="checkbox"
+                  checked={activeIndicators[key]}
+                  onChange={(e) => 
+                    setActiveIndicators((prev) => ({
+                      ...prev,
+                      [key]: e.target.checked
+                    }))
+                  }
+                />
+              </div>
+            ))}
 
-            <div className="flex items-center justify-between">
-              <label className="text-sm text-gray-300">180 day moving avg</label>
-              <input
-              type="checkbox"
-              checked={show_hundred_80_day_moving_avg} // set en egen true false for denne
-              onChange={(e) => set_show_hundred_80_day_moving_avg(e.target.checked)}
-              className="rounded border-gray-600 bg-red-800"
-              ></input>
-            </div>
 
             <div className="flex items-center justify-between">
               <label className="text-sm text-gray-300">macd</label>

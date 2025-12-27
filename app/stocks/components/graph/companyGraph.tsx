@@ -20,7 +20,24 @@ import {
  } from './graphInterfaces';
 import { calculateTrendLine, calculateTrendLinePercentage } from './trendline';
 import { CustomToolTip } from './tooltip';
-  
+import { IndicatorKey } from './graphInterfaces';
+
+
+// Midlertidig test
+export const INDICATORS = {
+  sma30: {
+    label: "30 day SMA",
+    color: "#14b8a6",
+  },
+  sma90: {
+    label: "90 day SMA",
+    color: "#f97316",
+  },
+  sma180: {
+    label: "180 day SMA",
+    color: "#8b5cf6",
+  },
+};
 
 
 const MyChart = () => {
@@ -33,6 +50,13 @@ const MyChart = () => {
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
   const [trendLineData, setTrendLineData] = useState<ChartDataPoint[] | null>(null);
+
+
+  const [indicatorColors, setIndicatorColors] = useState<Record<IndicatorKey, string>>({
+    sma30: "#14b8a6",
+    sma90: "#f97316",
+    sma180: "#8b5cf6",
+  });
 
 
   const handleChartClick = (event: any) => {
@@ -118,7 +142,11 @@ const MyChart = () => {
           price={latestPrice}
         />
         <div className="ml-4 pt-4 pr-4">
-          <GraphSettings originalChartData={data} setIndicatorData={setIndicatorData}/>
+          <GraphSettings 
+            originalChartData={data} 
+            setIndicatorData={setIndicatorData} 
+            setIndicatorColors={setIndicatorColors} 
+            indicatorColors={indicatorColors}/>
         </div>
       </div>
 
@@ -163,13 +191,19 @@ const MyChart = () => {
           {/* Dynamiske indikator-linjer */}
           {indicatorsData.length > 0 &&
             Object.keys(indicatorsData[0])
-              .filter(key => key !== "date" && key !== "close" && key !== "index" && key !== "open" && key !== "high" && key !== "low" && key !== "volume")
+              .filter(key => key !== "date" 
+                && key !== "close" 
+                && key !== "index" 
+                && key !== "open" 
+                && key !== "high" 
+                && key !== "low" 
+                && key !== "volume")
               .map(indicatorKey => (
                 <Line
                   key={indicatorKey}
                   type="monotone"
                   dataKey={indicatorKey} // finnes nå i combinedData når date matcher
-                  stroke="#3b82f6"
+                  stroke={indicatorColors[indicatorKey as IndicatorKey]}
                   strokeWidth={2}
                   dot={false}
                   isAnimationActive={false}

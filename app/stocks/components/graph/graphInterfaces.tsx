@@ -31,4 +31,7 @@ export interface SelectTimeIntervalProps {
     price: number | null;
 }
 
+export type IndicatorKey = "sma30" | "sma90" | "sma180";
+
+
 
