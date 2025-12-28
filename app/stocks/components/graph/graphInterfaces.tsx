@@ -11,6 +11,13 @@ export interface ChartDataPoint {
     [key: string]: any; // Allow for other properties
   }
   
+
+export type SelectedPoint = {
+  index: number;
+  close: number;
+};
+
+
 export interface ChartDataWithTrend extends ChartDataPoint {
     trendValue: number | null;
   }

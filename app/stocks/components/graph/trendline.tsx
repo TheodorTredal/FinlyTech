@@ -1,33 +1,29 @@
-import { ChartDataPoint, ChartDataWithTrend } from "./graphInterfaces";
+import { ChartDataPoint, ChartDataWithTrend, SelectedPoint } from "./graphInterfaces";
 
 
 export const calculateTrendLine = (
-    data: ChartDataPoint[], 
-    selectedPoints: ChartDataPoint[]
-  ): ChartDataWithTrend[] => {
-  // Add trend line values directly to the main data
-  
-  const chartDataWithTrendLine = data.map(item => {
-    let trendValue = null;
-    
-    if (selectedPoints.length === 2) {
-      const [point1, point2] = selectedPoints;
-      const slope = (point2.close - point1.close) / (point2.index - point1.index);
-      const intercept = point1.close - slope * point1.index;
-      
-      // Only show trend line between selected points
-      const minIndex = Math.min(point1.index, point2.index);
-      const maxIndex = Math.max(point1.index, point2.index);
-      
-      if (item.index >= minIndex && item.index <= maxIndex) {
-        trendValue = slope * item.index + intercept;
-      }
-    }
-    
-    return { ...item, trendValue };
-  });
-  return chartDataWithTrendLine;
-}
+  data: ChartDataPoint[],
+  selectedPoints: SelectedPoint[]
+): ChartDataPoint[] => {
+
+  if (selectedPoints.length !== 2) return data;
+
+  const [p1, p2] = selectedPoints;
+
+  const slope = (p2.close - p1.close) / (p2.index - p1.index);
+  const intercept = p1.close - slope * p1.index;
+
+  const minIndex = Math.min(p1.index, p2.index);
+  const maxIndex = Math.max(p1.index, p2.index);
+
+  return data.map(item => ({
+    ...item,
+    trendValue:
+      item.index >= minIndex && item.index <= maxIndex
+        ? slope * item.index + intercept
+        : null
+  }));
+};
 
 
 export const calculateTrendLinePercentage = (

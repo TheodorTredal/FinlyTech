@@ -17,39 +17,56 @@ import { TimeInterval } from "./graphInterfaces";
 import { 
     StockDataItem,
     ChartDataPoint,
+    SelectedPoint,
  } from './graphInterfaces';
 import { calculateTrendLine, calculateTrendLinePercentage } from './trendline';
 import { CustomToolTip } from './tooltip';
 import { IndicatorKey } from './graphInterfaces';
+import { INDICATOR_CONFIG } from './indicatorConfig';
+import { calculateSMA } from './IndicatorFunctions/calculateSMA';
 
 
-// Midlertidig test
-export const INDICATORS = {
-  sma30: {
-    label: "30 day SMA",
-    color: "#14b8a6",
-  },
-  sma90: {
-    label: "90 day SMA",
-    color: "#f97316",
-  },
-  sma180: {
-    label: "180 day SMA",
-    color: "#8b5cf6",
-  },
-};
+
+  // useEffect(() => {
+    
+  //   const handleIndicators = async () => {
+  //     // Denne må gjøres mer dynamisk senere!
+  //     const response = await fetchStockChart2(searchQuery, "5y");
+
+  //     let data = response.chart.map((item: any, i: any) => ({
+  //       ...item,
+  //       index: i,
+  //     }));
+
+  //     (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
+  //       if (!activeIndicators[key]) return;
+
+  //       const config = INDICATOR_CONFIG[key];
+
+  //       data = calculateSMA({
+  //         originalChartData: data,
+  //         window: config.window,
+  //         field: config.field,
+  //       })
+  //     })
+  //     setIndicatorData(data);
+  //   }
+  //   handleIndicators();
+
+  // }, [activeIndicators, searchQuery])
+
+
 
 
 const MyChart = () => {
   const { searchQuery } = useSearch();
   const [indicatorsData, setIndicatorData] = useState<ChartDataPoint[]>([]); // Liste med indikator grafer
   const [data, setData] = useState<ChartDataPoint[]>([]); // Send denne ned til graph settings
-  const [selectedPoints, setSelectedPoints] = useState<ChartDataPoint[]>([]);
+  const [selectedPoints, setSelectedPoints] = useState<SelectedPoint[]>([]);
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
   const [growthPercentage, setGrowthPercentage] = useState<string>("");
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
-  const [trendLineData, setTrendLineData] = useState<ChartDataPoint[] | null>(null);
 
 
   const [indicatorColors, setIndicatorColors] = useState<Record<IndicatorKey, string>>({
@@ -59,39 +76,45 @@ const MyChart = () => {
   });
 
 
-  const handleChartClick = (event: any) => {
-    if (event && event.activePayload && event.activePayload[0]) {
-      const clickedData = event.activePayload[0].payload;
-      
-      setSelectedPoints(prev => {
-        const newPoints = [...prev, clickedData];
-        if (newPoints.length > 2) {
-          return newPoints.slice(-2);
-        }
-        return newPoints;
-      });
-    }
-  };
+  const [activeIndicators, setActiveIndicators] = useState<Record<IndicatorKey, boolean>>({
+    sma30: false,
+    sma90: false,
+    sma180: false,
+  });
 
 
-  useEffect(() => {
+const handleChartClick = (event: any) => {
+  if (!event || !Array.isArray(event.activePayload)) return;
 
-    console.log("indicatorsData: ", indicatorsData);
+  const graphPayload = event.activePayload.find(
+    (p: any) => p.dataKey === "close"
+  );
 
+  if (!graphPayload) return;
 
-  }, [indicatorsData]);
+  const { index, close } = graphPayload.payload;
+
+  setSelectedPoints((prev) => {
+    // unngå samme punkt
+    if (prev.some(p => p.index === index)) return prev;
+
+    const next = [...prev, { index, close }];
+    return next.length > 2 ? next.slice(-2) : next;
+  });
+};
 
 
   useEffect(() => {
     if (selectedPoints.length === 2) {
-        const growthPercentage: number = calculateTrendLinePercentage(data, selectedPoints);
-        setTrendlinePercentage(growthPercentage)
+      setTrendlinePercentage(
+        calculateTrendLinePercentage(data, selectedPoints)
+      );
+    
+      setData(prev => 
+        calculateTrendLine(prev, selectedPoints)
+      );
     }
-
-    const trendline = calculateTrendLine(data, selectedPoints);
-    setTrendLineData(trendline);
-
-  }, [selectedPoints])
+  }, [selectedPoints]);
 
   useEffect(() => {
     const getData = async () => {
@@ -102,7 +125,9 @@ const MyChart = () => {
         setGrowthPercentage(response.growth_percentage);
         setSelectedPoints([]);
         setTrendlinePercentage(null);
-        setLatestPrice(data.length > 0 ? data[data.length - 1].close : null)
+        setLatestPrice(
+          chartWithIndex.length > 0 ? chartWithIndex[chartWithIndex.length - 1].close : null
+        );
       } catch (err) {
         console.error("Kunne ikke hente data", err);
       }
@@ -111,7 +136,56 @@ const MyChart = () => {
   }, [searchQuery, currentTimeInterval]);
 
 
-  
+
+
+  useEffect(() => {
+    const handleSMA = async () => {
+      if (
+        !Object.values(activeIndicators).some(Boolean)
+      ) {
+        return;
+      }
+
+      // Hent FULL historikk MÅ GJØRES MER DYNAMISK SENERE
+      const response = await fetchStockChart2(searchQuery, "5y");
+
+      let fullData = response.chart.map((item: any, i: number) => ({
+        ...item,
+        index: i,
+      }));
+
+      // Beregn SMA på full historikk
+      (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
+        if (!activeIndicators[key]) return;
+
+        const config = INDICATOR_CONFIG[key];
+
+        fullData = calculateSMA({
+          originalChartData: fullData,
+          window: config.window,
+          field: config.field,
+        });
+      });
+
+      // Map SMA-verdier inn i VISNINGSDATA (`data`)
+      setData(prev =>
+        prev.map(item => {
+          const indicatorItem =
+            fullData.find(fd => fd.date === item.date);
+
+          return {
+            ...item,
+            ...(indicatorItem ?? {}),
+            trendValue: item.trendValue ?? null, // behold trendline
+          };
+        })
+      );
+    };
+
+  handleSMA();
+  }, [activeIndicators, searchQuery]);
+
+
 
   const getMainLineColor = () => {
     if (growthPercentage === null) return "#047857"
@@ -125,12 +199,6 @@ const MyChart = () => {
     }
   }
 
-  // Kombiner data og indikatorer (kun indikatorfelt, ingen dobbel close)
-  const combinedData = data.map(item => {
-    const indicatorItem = indicatorsData.find(ind => ind.date === item.date) || {};
-    return { ...item, ...indicatorItem };
-  });
-
   return (
     <div className="bg-black" style={{ width: 700, height: 470 }}>
       <div className='flex'>
@@ -143,22 +211,19 @@ const MyChart = () => {
         />
         <div className="ml-4 pt-4 pr-4">
           <GraphSettings 
-            originalChartData={data} 
-            setIndicatorData={setIndicatorData} 
+            activeIndicators={activeIndicators}
+            setActiveIndicators={setActiveIndicators} 
             setIndicatorColors={setIndicatorColors} 
             indicatorColors={indicatorColors}/>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={combinedData} onClick={handleChartClick}>
+        <LineChart data={data} onClick={handleChartClick}>
           <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
           <XAxis dataKey="date" />
           <YAxis
-            domain={[
-              (dataMin: number) => Math.min(...data.map(d => d.close)) - 10,
-              (dataMax: number) => Math.max(...data.map(d => d.close)) + 10
-            ]}
+            domain={["auto", "auto"]}
             tickFormatter={(value) => value.toFixed(2)}
           />
           <Tooltip content={<CustomToolTip />} />
@@ -175,10 +240,9 @@ const MyChart = () => {
           />
 
           {/* Trendline */}
-          {selectedPoints.length === 2 && trendLineData && (
+          {selectedPoints.length === 2 && (
             <Line
               type="linear"
-              data={trendLineData}
               dataKey="trendValue"
               stroke="#fbbf24"
               strokeWidth={3}
@@ -189,27 +253,19 @@ const MyChart = () => {
           )}
 
           {/* Dynamiske indikator-linjer */}
-          {indicatorsData.length > 0 &&
-            Object.keys(indicatorsData[0])
-              .filter(key => key !== "date" 
-                && key !== "close" 
-                && key !== "index" 
-                && key !== "open" 
-                && key !== "high" 
-                && key !== "low" 
-                && key !== "volume")
-              .map(indicatorKey => (
-                <Line
-                  key={indicatorKey}
-                  type="monotone"
-                  dataKey={indicatorKey} // finnes nå i combinedData når date matcher
-                  stroke={indicatorColors[indicatorKey as IndicatorKey]}
-                  strokeWidth={2}
-                  dot={false}
-                  isAnimationActive={false}
-                />
-              ))
-            }
+          {(Object.keys(INDICATOR_CONFIG) as IndicatorKey[]).map((key) => (
+            activeIndicators[key] && (
+              <Line
+                key={key}
+                type="monotone"
+                dataKey={INDICATOR_CONFIG[key].field}
+                stroke={indicatorColors[key]}
+                strokeWidth={2}
+                dot={false}
+                isAnimationActive={false}
+              />
+            )
+          ))}
 
         </LineChart>
       </ResponsiveContainer>
