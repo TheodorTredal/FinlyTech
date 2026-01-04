@@ -26,42 +26,10 @@ import { INDICATOR_CONFIG } from './indicatorConfig';
 import { calculateSMA } from './IndicatorFunctions/calculateSMA';
 
 
-
-  // useEffect(() => {
-    
-  //   const handleIndicators = async () => {
-  //     // Denne må gjøres mer dynamisk senere!
-  //     const response = await fetchStockChart2(searchQuery, "5y");
-
-  //     let data = response.chart.map((item: any, i: any) => ({
-  //       ...item,
-  //       index: i,
-  //     }));
-
-  //     (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
-  //       if (!activeIndicators[key]) return;
-
-  //       const config = INDICATOR_CONFIG[key];
-
-  //       data = calculateSMA({
-  //         originalChartData: data,
-  //         window: config.window,
-  //         field: config.field,
-  //       })
-  //     })
-  //     setIndicatorData(data);
-  //   }
-  //   handleIndicators();
-
-  // }, [activeIndicators, searchQuery])
-
-
-
-
 const MyChart = () => {
   const { searchQuery } = useSearch();
-  const [indicatorsData, setIndicatorData] = useState<ChartDataPoint[]>([]); // Liste med indikator grafer
   const [data, setData] = useState<ChartDataPoint[]>([]); // Send denne ned til graph settings
+  const [fullData, setFullData] = useState<ChartDataPoint[]>([]);   // 5y + SMA
   const [selectedPoints, setSelectedPoints] = useState<SelectedPoint[]>([]);
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
   const [growthPercentage, setGrowthPercentage] = useState<string>("");
@@ -121,7 +89,23 @@ const handleChartClick = (event: any) => {
       try {
         const response = await fetchStockChart2(searchQuery, currentTimeInterval);
         const chartWithIndex = response.chart.map((item: StockDataItem, index: number) => ({ ...item, index }));
-        setData(chartWithIndex);
+        
+        
+        // setData(chartWithIndex);
+
+        // setData(prev =>
+        //   chartWithIndex.map((item: any) => {
+        //     const existing = prev.find(p => p.date === item.date);
+        //     return {
+        //       ...item,
+        //       ...(existing ?? {}),
+        //     };
+        //   })
+        // );
+
+        setData(slice(fullData, currentTimeInterval));
+
+
         setGrowthPercentage(response.growth_percentage);
         setSelectedPoints([]);
         setTrendlinePercentage(null);
@@ -171,7 +155,7 @@ const handleChartClick = (event: any) => {
       setData(prev =>
         prev.map(item => {
           const indicatorItem =
-            fullData.find(fd => fd.date === item.date);
+            fullData.find((fd: any) => fd.date === item.date);
 
           return {
             ...item,
@@ -183,7 +167,7 @@ const handleChartClick = (event: any) => {
     };
 
   handleSMA();
-  }, [activeIndicators, searchQuery]);
+  }, [activeIndicators, searchQuery, data]);
 
 
 
