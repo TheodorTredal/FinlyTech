@@ -28,7 +28,7 @@ export type StockChartResponse = {
     growth_percentage: string
 }
 
-export type TimeInterval = "1mo" | "6mo" | "1y" | "ytd" | "3y" | "5y" | "10y" | "all"
+export type TimeInterval = "5d" | "1mo" | "6mo" | "1y" | "ytd" | "3y" | "5y" | "10y" | "all"
 
 export interface SelectTimeIntervalProps {
     currentTimeInterval: TimeInterval;

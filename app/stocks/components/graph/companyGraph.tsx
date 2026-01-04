@@ -26,6 +26,54 @@ import { INDICATOR_CONFIG } from './indicatorConfig';
 import { calculateSMA } from './IndicatorFunctions/calculateSMA';
 
 
+
+const calculateGrowthPercentage = (
+  data: ChartDataPoint[],
+): string => {
+
+  if (!data.length) return "";
+
+  const start = data[0];
+  const end = data[data.length - 1];
+
+  const growth = ((end.close - start.close) / start.close) * 100;
+
+  return `${String(growth.toFixed(2))} %`;
+}
+
+
+const slice = (
+  data: ChartDataPoint[],
+  interval: TimeInterval
+): ChartDataPoint[] => {
+  
+  if (!data) return data;
+
+  if (interval === "ytd") {
+    const currentYear = new Date().getFullYear();
+
+    return data.filter((item: any) => {
+      const itemDate = new Date(item.date);
+      return itemDate.getFullYear() === currentYear;
+    });
+  }
+
+  const map: Record<Exclude<TimeInterval, "ytd">, number> = {
+    "5d": 5,
+    "1mo": 22,
+    "6mo": 126,
+    "1y": 252,
+    "3y": 756,
+    "5y": 1260,
+    "10y": 2520,
+    "all": data.length,
+  };
+
+  const size = map[interval];
+  return data.slice(-size);
+};
+
+
 const MyChart = () => {
   const { searchQuery } = useSearch();
   const [data, setData] = useState<ChartDataPoint[]>([]); // Send denne ned til graph settings
@@ -68,8 +116,63 @@ const handleChartClick = (event: any) => {
 
     const next = [...prev, { index, close }];
     return next.length > 2 ? next.slice(-2) : next;
+    });
+  };
+
+  useEffect(() => {
+    const fetchFullData = async () => {
+      const response = await fetchStockChart2(searchQuery, "5y");
+      
+      const withIndex = response.chart.map(
+        (item: StockDataItem, index: number) => ({
+          ...item,
+          index,
+        })
+      );
+
+      setFullData(withIndex);
+    };
+
+    fetchFullData();
+  }, [searchQuery]);
+
+
+  useEffect(() => {
+  if (!fullData.length) return;
+
+  let next = [...fullData];
+
+  (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
+    if (!activeIndicators[key]) return;
+
+    const config = INDICATOR_CONFIG[key];
+
+    next = calculateSMA({
+      originalChartData: next,
+      window: config.window,
+      field: config.field,
+    });
   });
-};
+
+  setFullData(next);
+  }, [activeIndicators]);
+
+
+  useEffect(() => {
+  const slicedData = slice(fullData, currentTimeInterval);
+  setData(slicedData);
+  setSelectedPoints([]);
+  setTrendlinePercentage(null);
+
+  const chartWithIndex = slicedData.map((item: StockDataItem, index: number) => ({ ...item, index }));
+
+  setLatestPrice(
+    chartWithIndex.length > 0 ? chartWithIndex[chartWithIndex.length - 1].close : null
+  );
+
+  setGrowthPercentage(calculateGrowthPercentage(slicedData));
+
+}, [fullData, currentTimeInterval]);
 
 
   useEffect(() => {
@@ -83,92 +186,6 @@ const handleChartClick = (event: any) => {
       );
     }
   }, [selectedPoints]);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await fetchStockChart2(searchQuery, currentTimeInterval);
-        const chartWithIndex = response.chart.map((item: StockDataItem, index: number) => ({ ...item, index }));
-        
-        
-        // setData(chartWithIndex);
-
-        // setData(prev =>
-        //   chartWithIndex.map((item: any) => {
-        //     const existing = prev.find(p => p.date === item.date);
-        //     return {
-        //       ...item,
-        //       ...(existing ?? {}),
-        //     };
-        //   })
-        // );
-
-        setData(slice(fullData, currentTimeInterval));
-
-
-        setGrowthPercentage(response.growth_percentage);
-        setSelectedPoints([]);
-        setTrendlinePercentage(null);
-        setLatestPrice(
-          chartWithIndex.length > 0 ? chartWithIndex[chartWithIndex.length - 1].close : null
-        );
-      } catch (err) {
-        console.error("Kunne ikke hente data", err);
-      }
-    };
-    getData();
-  }, [searchQuery, currentTimeInterval]);
-
-
-
-
-  useEffect(() => {
-    const handleSMA = async () => {
-      if (
-        !Object.values(activeIndicators).some(Boolean)
-      ) {
-        return;
-      }
-
-      // Hent FULL historikk MÅ GJØRES MER DYNAMISK SENERE
-      const response = await fetchStockChart2(searchQuery, "5y");
-
-      let fullData = response.chart.map((item: any, i: number) => ({
-        ...item,
-        index: i,
-      }));
-
-      // Beregn SMA på full historikk
-      (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
-        if (!activeIndicators[key]) return;
-
-        const config = INDICATOR_CONFIG[key];
-
-        fullData = calculateSMA({
-          originalChartData: fullData,
-          window: config.window,
-          field: config.field,
-        });
-      });
-
-      // Map SMA-verdier inn i VISNINGSDATA (`data`)
-      setData(prev =>
-        prev.map(item => {
-          const indicatorItem =
-            fullData.find((fd: any) => fd.date === item.date);
-
-          return {
-            ...item,
-            ...(indicatorItem ?? {}),
-            trendValue: item.trendValue ?? null, // behold trendline
-          };
-        })
-      );
-    };
-
-  handleSMA();
-  }, [activeIndicators, searchQuery, data]);
-
 
 
   const getMainLineColor = () => {

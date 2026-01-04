@@ -54,7 +54,7 @@ const SelectTimeInterval: React.FC<SelectTimeIntervalProps> = ({
                 <p className="text-xl font-semibold">
                     {growthPercentage}
                 </p>
-                <p className="text-xl font-semibold px-4">
+                <p className="text-sm font-semibold text-yellow-400 px-1 py-1 ">
                     {trendLinePercentage !== null ? `( ${trendLinePercentage.toFixed(2)}% )` : ""}
                 </p>
 
@@ -62,6 +62,11 @@ const SelectTimeInterval: React.FC<SelectTimeIntervalProps> = ({
         </div>
 
         <div className="flex gap-2 ml-auto">        
+            <SelectTimeIntervalButton 
+              onClick={() => handleClick("5d")} 
+              text="5d" 
+              isActive={currentTimeInterval === "5d"}
+            />
             <SelectTimeIntervalButton 
               onClick={() => handleClick("1mo")} 
               text="1 mo" 
