@@ -12,15 +12,11 @@ export const StarStock = () => {
 
     const { searchQuery } = useSearch();
 
-
     useEffect(() => {
     
         if (favorite) {
             likedStock(searchQuery);
             console.log(`Liked stock: ${searchQuery}`);
-            const test = get_all_liked_stock_from_user();
-            console.log("TEST GET", test);
-
         }
 
         if (!favorite) {

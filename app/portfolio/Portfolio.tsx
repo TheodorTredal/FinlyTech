@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { AddToPortfolio } from "./components/addToPortfolio";
 import { portfolioFolderInterface } from "./interfaces/stockPortfolioInterface";
 import { PortfolioDevelopment } from "./components/portfolioDevelopment";
-
-
+import { LikedStocksComponent } from "./components/likedStocks/likedStocks";
+import { JWTTestTokenButton } from "../login/tempLogin";
 
 enum ActiveComponentEnum {
     portefølje = "portefølje",
@@ -73,8 +73,12 @@ const Portfolio = () => {
     }
 
     return (
-    <div>
+    <div className="min-h-screen w-screen flex flex-col">
+      <div className="w-2/3">
+
+
       <Menubar className="rounded-xl p-2 flex justify-start space-x-4 mb-4 mt-4">
+        {/* <Menubar className="w-full rounded-xl p-2 mb-4 mt-4"> */}
         <MenubarMenu>
           {Object.values(ActiveComponentEnum).map((component) => (
             <MenubarTrigger
@@ -89,10 +93,14 @@ const Portfolio = () => {
           {component.charAt(0).toUpperCase() + component.slice(1)}
         </MenubarTrigger>
         ))}
-        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="mr-auto border-2"> Add stock + </MenubarTrigger>
+        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="border-2"> Add stock + </MenubarTrigger>
 
         </MenubarMenu>
       </Menubar>
+      </div>
+
+
+        <div className="flex-1 overflow-auto">
 
         {showAddToPortfolio && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -120,10 +128,18 @@ const Portfolio = () => {
 
 
         {activeComponent === ActiveComponentEnum.likteAksjer && (
-            <div>Likte aksjer</div>
+
+          <div className="w-full h-[calc(100vh-120px)]"> 
+
+            <JWTTestTokenButton></JWTTestTokenButton>
+            <LikedStocksComponent>
+
+            </LikedStocksComponent>
+          </div>
         )}
         
         </div>
+      </div>
 
     )
 }
