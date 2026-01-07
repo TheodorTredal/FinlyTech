@@ -245,23 +245,16 @@ NYE MÅL:
     - Risiko score på porteføljen
     - portefølje VS børs / index
 
+    - Sette opp database
+      - Bruker
+        - likte aksjer
+        - portefølje
+        
+
+
+
 5. Marked
   - Dagens vinnere / dagens tapere
   - Mest omsatt
 
 
-
-
-
-NIKE
-META
-PLTR
-
-
-
-Indicators i graf
- - 30 day moving average
- - 90 day moving average
- - 180 day moving average
-
- - Må få displayet n antall indikatorer på grafen, det blir et 2d array.

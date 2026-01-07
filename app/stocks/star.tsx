@@ -1,12 +1,35 @@
 import { Toaster } from "@/components/ui/sonner";
 import { Star } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useSearch } from "../context/SearchContext";
+import { likedStock, unlikeStock, get_all_liked_stock_from_user } from "../portfolio/components/API/likeService";
 
 
 
 export const StarStock = () => {
     const [favorite, setFavorite] = useState<boolean>(false);
+
+    const { searchQuery } = useSearch();
+
+
+    useEffect(() => {
+    
+        if (favorite) {
+            likedStock(searchQuery);
+            console.log(`Liked stock: ${searchQuery}`);
+            const test = get_all_liked_stock_from_user();
+            console.log("TEST GET", test);
+
+        }
+
+        if (!favorite) {
+            unlikeStock(searchQuery);
+            console.log(`Unliked stock: ${searchQuery}`);
+        }
+
+    }, [favorite]);
+
 
     // Funksjon for håndtering av favorittklikk og visning av toast
     const handleFavoriteClick = () => {
@@ -14,9 +37,9 @@ export const StarStock = () => {
 
         // Vis en toast basert på om favoritten er aktivert eller ikke
         if (!favorite) {
-            toast.success("Aksje er lagt til som favoritt!");
+            toast.success(`${searchQuery} er lagt til som favoritt!`);
         } else {
-            toast.error("Aksje er fjernet fra favoritter");
+            toast.error(`${searchQuery} er fjernet fra favoritter`);
         }
     }
 

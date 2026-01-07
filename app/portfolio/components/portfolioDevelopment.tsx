@@ -135,7 +135,7 @@ export const PortfolioDevelopment = ({ currentPortfolio, portfolioList, setCurre
                 portfolio={portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface}
                 />
 
-              <div className="flex space-x-2">
+              {/* <div className="flex space-x-2">
 
           
                 <PortfolioPieChart
@@ -154,7 +154,7 @@ export const PortfolioDevelopment = ({ currentPortfolio, portfolioList, setCurre
                 symbol=" %"
                 />
   
-                </div>
+                </div> */}
             </div>
         </div>
     )

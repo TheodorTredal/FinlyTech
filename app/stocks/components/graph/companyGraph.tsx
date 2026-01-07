@@ -19,65 +19,17 @@ import {
     ChartDataPoint,
     SelectedPoint,
  } from './graphInterfaces';
-import { calculateTrendLine, calculateTrendLinePercentage } from './trendline';
+import { calculateTrendLine, calculateTrendLinePercentage, sliceGraphData, calculateGrowthPercentage } from './graphHelperFunctions';
 import { CustomToolTip } from './tooltip';
 import { IndicatorKey } from './graphInterfaces';
 import { INDICATOR_CONFIG } from './indicatorConfig';
 import { calculateSMA } from './IndicatorFunctions/calculateSMA';
 
-
-
-const calculateGrowthPercentage = (
-  data: ChartDataPoint[],
-): string => {
-
-  if (!data.length) return "";
-
-  const start = data[0];
-  const end = data[data.length - 1];
-
-  const growth = ((end.close - start.close) / start.close) * 100;
-
-  return `${String(growth.toFixed(2))} %`;
-}
-
-
-const slice = (
-  data: ChartDataPoint[],
-  interval: TimeInterval
-): ChartDataPoint[] => {
-  
-  if (!data) return data;
-
-  if (interval === "ytd") {
-    const currentYear = new Date().getFullYear();
-
-    return data.filter((item: any) => {
-      const itemDate = new Date(item.date);
-      return itemDate.getFullYear() === currentYear;
-    });
-  }
-
-  const map: Record<Exclude<TimeInterval, "ytd">, number> = {
-    "5d": 5,
-    "1mo": 22,
-    "6mo": 126,
-    "1y": 252,
-    "3y": 756,
-    "5y": 1260,
-    "10y": 2520,
-    "all": data.length,
-  };
-
-  const size = map[interval];
-  return data.slice(-size);
-};
-
-
 const MyChart = () => {
   const { searchQuery } = useSearch();
   const [data, setData] = useState<ChartDataPoint[]>([]); // Send denne ned til graph settings
   const [fullData, setFullData] = useState<ChartDataPoint[]>([]);   // 5y + SMA
+  const [rawFullData, setRawFullData] = useState<ChartDataPoint[]>([]);
   const [selectedPoints, setSelectedPoints] = useState<SelectedPoint[]>([]);
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
   const [growthPercentage, setGrowthPercentage] = useState<string>("");
@@ -120,46 +72,41 @@ const handleChartClick = (event: any) => {
   };
 
   useEffect(() => {
-    const fetchFullData = async () => {
+    const fetchData = async () => {
       const response = await fetchStockChart2(searchQuery, "5y");
-      
-      const withIndex = response.chart.map(
-        (item: StockDataItem, index: number) => ({
-          ...item,
-          index,
-        })
+      setRawFullData(
+        response.chart.map((item: any, i: any) => ({ ...item, index: i }))
       );
-
-      setFullData(withIndex);
     };
 
-    fetchFullData();
+    fetchData();
   }, [searchQuery]);
 
 
   useEffect(() => {
-  if (!fullData.length) return;
+    if (!rawFullData.length) return;
 
-  let next = [...fullData];
+    let next = [...rawFullData];
 
-  (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
-    if (!activeIndicators[key]) return;
+    (Object.keys(activeIndicators) as IndicatorKey[]).forEach((key) => {
+      if (!activeIndicators[key]) return;
 
-    const config = INDICATOR_CONFIG[key];
+      const config = INDICATOR_CONFIG[key];
 
-    next = calculateSMA({
-      originalChartData: next,
-      window: config.window,
-      field: config.field,
+      next = calculateSMA({
+        originalChartData: next,
+        window: config.window,
+        field: config.field,
+      });
     });
-  });
 
-  setFullData(next);
-  }, [activeIndicators]);
+    setFullData(next);
+  }, [rawFullData, activeIndicators]);
+
 
 
   useEffect(() => {
-  const slicedData = slice(fullData, currentTimeInterval);
+  const slicedData = sliceGraphData(fullData, currentTimeInterval);
   setData(slicedData);
   setSelectedPoints([]);
   setTrendlinePercentage(null);
@@ -178,7 +125,7 @@ const handleChartClick = (event: any) => {
   useEffect(() => {
     if (selectedPoints.length === 2) {
       setTrendlinePercentage(
-        calculateTrendLinePercentage(data, selectedPoints)
+        calculateTrendLinePercentage(selectedPoints)
       );
     
       setData(prev => 
@@ -201,7 +148,7 @@ const handleChartClick = (event: any) => {
   }
 
   return (
-    <div className="bg-black" style={{ width: 700, height: 470 }}>
+    <div className="bg-black" style={{ width: 700, height: 480 }}>
       <div className='flex'>
         <SelectTimeInterval 
           currentTimeInterval={currentTimeInterval} 

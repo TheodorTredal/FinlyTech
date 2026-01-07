@@ -14,9 +14,7 @@ import { BluePrintSidebar } from "./components/blueprint/sidebarAddComponent";
 import { EditTemplateButton } from "./components/blueprint/editTemplateButton";
 import { SidebarAddComponentButton } from "./components/blueprint/addComponentButton";
 import { CompanyAboutInformation } from "./components/keyInfo/companyAboutInformation";
-
-
-import { SalesVolume } from "./components/salesVolume/salesVolume";
+import { JWTTestTokenButton } from "../login/tempLogin";
 
 
 // Definer en enum for aktive komponenter
@@ -107,6 +105,7 @@ export default function StocksPage() {
     )}
 
     <div className={activeComponent === ActiveComponentEnum.News ? "block" : "hidden"}>
+      <JWTTestTokenButton></JWTTestTokenButton>
     </div>
 
     {activeComponent === ActiveComponentEnum.Algorithms && (
