@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { 
   Calendar, 
   Home, 
   Inbox, 
   Search, 
-  Settings, 
-  Factory, 
+  Settings,
   Layers, 
   ChartNoAxesCombined,
   SlidersHorizontal,
@@ -26,6 +25,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+import { getCurrentUser } from "../portfolio/components/API/userMetaAPI";
+
+
 // Menu items.
 const items = [
   { title: "Home", url: "http://localhost:3000/Dashboard", icon: Home },
@@ -39,13 +41,29 @@ const items = [
 
 export function AppSidebar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [userName, setUsername] = useState<string>("");
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getCurrentUser();
+        setUsername(user.username);
+      } catch (error) {
+        console.error("Failed to fetch user", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
 
   return (
     <>
       <Sidebar>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Welcome "user"</SidebarGroupLabel>
+            <SidebarGroupLabel>Welcome {userName || "..."}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {items.map((item) => (

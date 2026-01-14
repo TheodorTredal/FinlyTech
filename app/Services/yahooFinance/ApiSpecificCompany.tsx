@@ -19,7 +19,7 @@ export const fetchStockChart2 = async(symbol: string, dateInterval: string ) => 
         return data
 
     } catch( error: any) {
-        console.error("Data mangler 'chart'");
+        console.error(`${symbol} Data mangler 'chart' ${error}`);
     }
 }
 

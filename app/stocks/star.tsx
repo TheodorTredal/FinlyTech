@@ -7,10 +7,42 @@ import { likedStock, unlikeStock, get_all_liked_stock_from_user } from "../portf
 
 
 
-export const StarStock = () => {
-    const [favorite, setFavorite] = useState<boolean>(false);
+/**
+ *  Vi må hente fra databasen om aksjen er likt eller ikke
+ * Stjernen skal være gul om aksjen er likt
+ * Vi må fikse buggen med å fjerne likte aksjer.
+ */
 
+export const StarStock = () => {
+
+    const [favorite, setFavorite] = useState<boolean>(false);
+    const [likedStocks, setLikedStocks] = useState<any[]>([]);
     const { searchQuery } = useSearch();
+
+
+    useEffect(() => {
+
+        const fetchLikedStocks = async () => {
+            const result = await get_all_liked_stock_from_user();
+            setLikedStocks(result);
+        }
+
+        fetchLikedStocks();
+
+    }, [searchQuery])
+
+
+
+    useEffect(() => {
+        console.log("Liked STOCKS: ", likedStocks);
+
+        const isLiked = likedStocks.some(
+            (stock: any) => stock.ticker === searchQuery
+        );        
+
+        setFavorite(isLiked)
+
+    }, [likedStocks])
 
     useEffect(() => {
     
@@ -19,10 +51,10 @@ export const StarStock = () => {
             console.log(`Liked stock: ${searchQuery}`);
         }
 
-        // if (!favorite) {
-        //     unlikeStock(searchQuery);
-        //     console.log(`Unliked stock: ${searchQuery}`);
-        // }
+        if (!favorite) {
+            unlikeStock(searchQuery);
+            console.log(`Unliked stock: ${searchQuery}`);
+        }
 
     }, [favorite]);
 
