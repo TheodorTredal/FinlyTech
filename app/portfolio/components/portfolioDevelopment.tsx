@@ -103,22 +103,19 @@ export const PortfolioDevelopment = ({ currentPortfolio, portfolioList, setCurre
 
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
       
-      // Current Portfolio
-      const p = portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface
+    //   // Current Portfolio
+    //   const p = portfolioList.find((p) => p.name === currentPortfolio) as portfolioFolderInterface
       
-      const fetchAndCalculate = async () => { 
-        const portfolioCompaniesInfo = await fetchCompanyInfo(p);
-        setSectorExposure(calculateSectorExposure(p, portfolioCompaniesInfo, "sector"))
-        setIndustryExposure(calculateSectorExposure(p, portfolioCompaniesInfo, "industry"))
-      }
+    //   const fetchAndCalculate = async () => { 
+    //     const portfolioCompaniesInfo = await fetchCompanyInfo(p);
+    //     setSectorExposure(calculateSectorExposure(p, portfolioCompaniesInfo, "sector"))
+    //     setIndustryExposure(calculateSectorExposure(p, portfolioCompaniesInfo, "industry"))
+    //   }
   
-      fetchAndCalculate();
-    }, [currentPortfolio, portfolioList])
-
-
-
+    //   fetchAndCalculate();
+    // }, [currentPortfolio, portfolioList])
 
 
 

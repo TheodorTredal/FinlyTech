@@ -1,5 +1,5 @@
 "use client";
-import { PortfolioFolder } from "./portfolioFolder";
+import { NewPortfolioFolder } from "./portfolioFolder";
 import { portfolioFolderInterface } from "../interfaces/stockPortfolioInterface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
@@ -64,12 +64,14 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
     )
 }
 
+
+
 export const StockPortfolio = ({ folders, setPortfolio }: { folders: portfolioFolderInterface[]; setPortfolio: (prev: any) => void;}) => {
 
   return (
     <div className="flex flex-col gap-6">
       {folders.map((folder, i) => (
-        <PortfolioFolder key={i} folder={folder} setPortfolio={setPortfolio}/>
+        <NewPortfolioFolder key={i} folder={folder} setPortfolio={setPortfolio}/>
       ))}
       <AddPortfolio folders={folders} setPortfolio={setPortfolio}></AddPortfolio>
     </div>

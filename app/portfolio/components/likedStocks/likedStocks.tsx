@@ -1,44 +1,10 @@
 import { useEffect, useState } from "react"
 import { get_all_liked_stock_from_user } from "../API/likeService"
-
-
-const likedStocksUI = [
-  {
-    ticker: "AAPL",
-    name: "Apple Inc.",
-    price: "$189.12",
-    change: "+1.42%",
-    positive: true,
-  },
-  {
-    ticker: "TSLA",
-    name: "Tesla Inc.",
-    price: "$248.33",
-    change: "-2.13%",
-    positive: false,
-  },
-  {
-    ticker: "NVDA",
-    name: "NVIDIA",
-    price: "$492.55",
-    change: "+3.87%",
-    positive: true,
-  },
-  {
-    ticker: "EQNR.OL",
-    name: "Equinor ASA",
-    price: "312.40 kr",
-    change: "+0.84%",
-    positive: true,
-  },
-];
-
-
+import { fetchStockChart2 } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 
 
 export const LikedStocksComponent = () => {
     const [likedStocks, setLikedStocks] = useState<any[]>([]);
-
 
     useEffect(() => {
 
@@ -50,6 +16,32 @@ export const LikedStocksComponent = () => {
         fetchLikedStocks();
     }, [])
     
+    useEffect(() => {
+        
+        console.log(likedStocks);
+        if (!likedStocks) {
+            return
+        }
+
+        const fetchStockPrice = async () => {
+            for (let i: number = 0; i < likedStocks.length; i ++) {
+                const ticker = likedStocks[i].ticker;
+
+                console.log("TICKER", ticker);
+                try {
+                    const result = await fetchStockChart2(ticker, "1d")
+                    console.log("RESULT: ",  result);
+
+                } catch (err) {
+                    console.log(`Could not fetch data for ${ticker}`);
+                }
+            }
+        }
+
+        fetchStockPrice();
+
+    }, [likedStocks])
+
 
     return (
         <div className="w-full h-full p-6">
@@ -63,39 +55,41 @@ export const LikedStocksComponent = () => {
 
             {/** Table */}
             <div className="rounded-xl border overflow-hidden">
-                <table className="w-full border-collapse text-sm">
+                <table className="w-full table-fixed border-collapse text-sm">
                     <thead className="bg-muted/40">
-                        <th className="px-4 py-3 text-left font-medium">Ticker</th>
-                        <th className="px-4 py-3 text-left font-medium">Navn</th>
-                        <th className="px-4 py-3 text-left font-medium">Pris</th>
-                        <th className="px-4 py-3 text-left font-medium">Endring</th>
+                        <tr>
+                            <th className="px-4 py-3 text-left font-medium">Ticker</th>
+                            <th className="px-4 py-3 text-left font-medium">Navn</th>
+                            <th className="px-4 py-3 text-left font-medium">Pris</th>
+                            <th className="px-4 py-3 text-left font-medium">Endring</th>
+                        </tr>
                     </thead>
+
+                    <tbody>
+                        {likedStocks.map((stock: any) => (
+                            <tr
+                            key={stock.ticker}
+                            className="border-t hover:bg-muted/40 transition"
+                            >
+                                <td className="px-4 py-3 font-medium font-mono">
+                                    {stock.ticker ?? "Loading..."}
+                                </td>
+                                <td className="px-4 py-3 text-muted-foreground font-mono">
+                                    {stock.name ?? "Loading..."}
+                                </td>
+                                 <td className="px-4 py-3">
+                                    {stock.price ?? "Loading..."}
+                                </td>
+                                <td className={`px-4 py-3 font-medium font-mono ${
+                                    stock.positive ? "text-green-500": "text-red-500"
+                                    }`}>
+                                    {stock.price ?? "-"}
+                                    </td>
+                            </tr>
+                        ))}
+                    </tbody>
                 </table>
             </div>
-
-            <tbody>
-                {likedStocks.map((stock: any) => (
-                    <tr
-                    key={stock.ticker}
-                    className="border-t hover:bg-muted/40 transition"
-                    >
-                        <td className="px-4 py-3 font-medium font-mono">
-                            {stock.ticker}
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground font-mono">
-                            {stock.name}
-                        </td>
-                        {/* <td className="px-4 py-3 text-right">
-                            {stock.ticker}
-                        </td>
-                        <td className={`px-4 py-3 font-medium font-mono ${
-                            stock.positive ? "text-green-500": "text-red-500"
-                        }`}>
-                            {stock.price}
-                        </td> */}
-                    </tr>
-                ))}
-            </tbody>
         </div>
     )
 }

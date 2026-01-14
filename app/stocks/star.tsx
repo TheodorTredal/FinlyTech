@@ -19,10 +19,10 @@ export const StarStock = () => {
             console.log(`Liked stock: ${searchQuery}`);
         }
 
-        if (!favorite) {
-            unlikeStock(searchQuery);
-            console.log(`Unliked stock: ${searchQuery}`);
-        }
+        // if (!favorite) {
+        //     unlikeStock(searchQuery);
+        //     console.log(`Unliked stock: ${searchQuery}`);
+        // }
 
     }, [favorite]);
 

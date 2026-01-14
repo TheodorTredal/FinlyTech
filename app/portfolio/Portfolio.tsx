@@ -12,8 +12,8 @@ enum ActiveComponentEnum {
     portefølje = "portefølje",
     utvikling = "utvikling",
     likteAksjer = "likteAksjer", // skal kanksje ikke være en del av porteføljen
-    targets = "targets",
-    health = "health",
+    // targets = "targets",
+    // health = "health",
   }
 
 
@@ -58,7 +58,7 @@ enum ActiveComponentEnum {
 
 const Portfolio = () => {
 
-    const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.utvikling);
+    const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.portefølje);
     const [portfolioList, setPortfolioList] = useState<portfolioFolderInterface[]>([]);
     const [showAddToPortfolio, setShowAddToPortfolio] = useState<boolean>(false);
     const [currentPortfolio, setCurrentPortfolio] = useState<string>("Dividend");
@@ -73,34 +73,28 @@ const Portfolio = () => {
     }
 
     return (
-    <div className="min-h-screen w-screen flex flex-col">
-      <div className="w-2/3">
+      <div className="w-screen h-screen flex flex-col overflow-y-auto">
 
 
-      <Menubar className="rounded-xl p-2 flex justify-start space-x-4 mb-4 mt-4">
-        {/* <Menubar className="w-full rounded-xl p-2 mb-4 mt-4"> */}
+      <Menubar className="w-1/2 rounded-xl p-2 space-x-4 mb-4 mt-4 border-2">
         <MenubarMenu>
           {Object.values(ActiveComponentEnum).map((component) => (
             <MenubarTrigger
               key={component}
               onClick={() => handleMenuClick(component)}
-              className={`relative px-4 py-2 transition-all duration-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] ${
+              // className={`relative px-4 py-2 transition-all duration-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] ${
+              className={`px-4 py-2 transition-all duration-200 ${
               activeComponent === component
               ? "after:bg-white text-white"
               : "after:bg-transparent text-gray-400 hover:text-gray-200"
               }`}
             >
           {component.charAt(0).toUpperCase() + component.slice(1)}
-        </MenubarTrigger>
-        ))}
-        <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="border-2"> Add stock + </MenubarTrigger>
-
+          </MenubarTrigger>
+          ))}
+          <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="border-2"> Add stock + </MenubarTrigger>
         </MenubarMenu>
       </Menubar>
-      </div>
-
-
-        <div className="flex-1 overflow-auto">
 
         {showAddToPortfolio && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -117,8 +111,6 @@ const Portfolio = () => {
                 setPortfolio={setPortfolioList} />
         )}
 
-
-
         {activeComponent === ActiveComponentEnum.utvikling && (
           <PortfolioDevelopment 
               currentPortfolio={currentPortfolio} 
@@ -129,7 +121,7 @@ const Portfolio = () => {
 
         {activeComponent === ActiveComponentEnum.likteAksjer && (
 
-          <div className="w-full h-[calc(100vh-120px)]"> 
+          <div className="w-full"> 
 
             <JWTTestTokenButton></JWTTestTokenButton>
             <LikedStocksComponent>
@@ -137,8 +129,6 @@ const Portfolio = () => {
             </LikedStocksComponent>
           </div>
         )}
-        
-        </div>
       </div>
 
     )
