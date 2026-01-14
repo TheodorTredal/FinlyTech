@@ -5,6 +5,7 @@ import { AppSidebar } from "./Components/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SearchBar } from "./Components/Search";
 import { SearchProvider } from "./context/SearchContext";
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </div>
           </SidebarProvider>
         </ThemeProvider>
+        <Toaster position="bottom-right"></Toaster>
       </body>
     </html>
   );
