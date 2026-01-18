@@ -32,32 +32,36 @@ export const StarStock = () => {
     }, [searchQuery])
 
 
-
+    // Sjekk om brukeren liker aksjen
     useEffect(() => {
         console.log("Liked STOCKS: ", likedStocks);
 
         const isLiked = likedStocks.some(
-            (stock: any) => stock.ticker === searchQuery
+            (stock: any) => stock.symbol === searchQuery
         );        
 
         setFavorite(isLiked)
 
+
+        console.log("LikedSTOCKS TYPE: ", likedStocks);
+
     }, [likedStocks])
 
+    // Kall like/unlike når favorite endres
     useEffect(() => {
+        const updateFavorite = async () => {
+            if (favorite) {
+                await likedStock(searchQuery);
+                console.log(`Liked stock: ${searchQuery}`);
+            } else {
+                await unlikeStock(searchQuery);
+                console.log(`Unliked stock: ${searchQuery}`);
+            }
+        };
+
+        updateFavorite();
+    }, [favorite, searchQuery]);
     
-        if (favorite) {
-            likedStock(searchQuery);
-            console.log(`Liked stock: ${searchQuery}`);
-        }
-
-        if (!favorite) {
-            unlikeStock(searchQuery);
-            console.log(`Unliked stock: ${searchQuery}`);
-        }
-
-    }, [favorite]);
-
 
     // Funksjon for håndtering av favorittklikk og visning av toast
     const handleFavoriteClick = () => {

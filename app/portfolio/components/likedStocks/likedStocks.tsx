@@ -4,13 +4,13 @@ import { fetchStockChart2 } from "@/app/Services/yahooFinance/ApiSpecificCompany
 
 
 export const LikedStocksComponent = () => {
-    const [likedStocks, setLikedStocks] = useState<any[]>([]);
+    const [likedAssets, setLikedAssets] = useState<any[]>([]);
 
     useEffect(() => {
 
         const fetchLikedStocks = async () => {
             const result = await get_all_liked_stock_from_user();
-            setLikedStocks(result)
+            setLikedAssets(result)
         }
 
         fetchLikedStocks();
@@ -18,29 +18,29 @@ export const LikedStocksComponent = () => {
     
     useEffect(() => {
         
-        console.log(likedStocks);
-        if (!likedStocks) {
+        console.log(likedAssets);
+        if (!likedAssets) {
             return
         }
 
         const fetchStockPrice = async () => {
-            for (let i: number = 0; i < likedStocks.length; i ++) {
-                const ticker = likedStocks[i].ticker;
+            for (let i: number = 0; i < likedAssets.length; i ++) {
+                const symbol = likedAssets[i].symbol;
 
-                console.log("TICKER", ticker);
+                console.log("TICKER", symbol);
                 try {
-                    const result = await fetchStockChart2(ticker, "1d")
+                    const result = await fetchStockChart2(symbol, "1d")
                     console.log("RESULT: ",  result);
 
                 } catch (err) {
-                    console.log(`Could not fetch data for ${ticker}`);
+                    console.log(`Could not fetch data for ${symbol}`);
                 }
             }
         }
 
         fetchStockPrice();
 
-    }, [likedStocks])
+    }, [likedAssets])
 
 
     return (
@@ -66,13 +66,13 @@ export const LikedStocksComponent = () => {
                     </thead>
 
                     <tbody>
-                        {likedStocks.map((stock: any) => (
+                        {likedAssets.map((stock: any) => (
                             <tr
-                            key={stock.ticker}
+                            key={stock.symbol}
                             className="border-t hover:bg-muted/40 transition"
                             >
                                 <td className="px-4 py-3 font-medium font-mono">
-                                    {stock.ticker ?? "Loading..."}
+                                    {stock.symbol ?? "Loading..."}
                                 </td>
                                 <td className="px-4 py-3 text-muted-foreground font-mono">
                                     {stock.name ?? "Loading..."}

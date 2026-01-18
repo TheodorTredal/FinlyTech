@@ -1,11 +1,15 @@
 "use client";
-import { NewPortfolioFolder } from "./portfolioFolder";
-import { portfolioFolderInterface } from "../interfaces/stockPortfolioInterface";
+import { PortfolioView } from "./portfolioFolder";
+import { PortfolioInterface } from "../interfaces/stockPortfolioInterface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { useState } from "react";
 
-export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolderInterface[]; setPortfolio: (prev: any) => void;}) => {
+
+
+
+
+export const AddPortfolio = ({ folders, setPortfolio }: {folders: PortfolioInterface[]; setPortfolio: (prev: any) => void;}) => {
 
   const [showAddPortfolio, setShowAddPortfolio] = useState<boolean>(false);  
   const [newPortfolioName, setNewPortfolioName] = useState<string | null>(null);
@@ -22,7 +26,7 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
     
     
     const nameExists = folders.some(
-      (folder) => folder.name.toLowerCase() === newPortfolioName?.trim().toLowerCase()
+      (folder) => folder.title.toLowerCase() === newPortfolioName?.trim().toLowerCase()
     );
     
     if (nameExists) {
@@ -35,7 +39,7 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
       return;
     }
 
-    setPortfolio((prev: portfolioFolderInterface[])=> [
+    setPortfolio((prev: PortfolioInterface[])=> [
       ...prev,
       {name: newPortfolioName?.trim(), stocks: []}
     ])
@@ -66,14 +70,14 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: portfolioFolde
 
 
 
-export const StockPortfolio = ({ folders, setPortfolio }: { folders: portfolioFolderInterface[]; setPortfolio: (prev: any) => void;}) => {
+export const StockPortfolio = ({ portfolios }: { portfolios: PortfolioInterface[] }) => {
 
   return (
     <div className="flex flex-col gap-6">
-      {folders.map((folder, i) => (
-        <NewPortfolioFolder key={i} folder={folder} setPortfolio={setPortfolio}/>
+      {portfolios.map((portfolio, i) => (
+        <PortfolioView key={i} portfolio={portfolio}/>
       ))}
-      <AddPortfolio folders={folders} setPortfolio={setPortfolio}></AddPortfolio>
+      {/* <AddPortfolio folders={folders} setPortfolio={setPortfolio}></AddPortfolio> */}
     </div>
   );
 };

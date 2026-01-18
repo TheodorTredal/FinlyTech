@@ -1,17 +1,17 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { portfolioEntryInterface } from "../interfaces/stockPortfolioInterface";
+import { useState } from "react";
+import { HoldingInterface } from "../interfaces/stockPortfolioInterface";
 import { get_checkCompanyTicker } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { SelectPortfolio } from "./portfolioSelector";
 
-import { portfolioFolderInterface } from "../interfaces/stockPortfolioInterface";
+import { PortfolioInterface } from "../interfaces/stockPortfolioInterface";
    
 interface AddToPortfolioProps {
     setcloseWindow: (state: boolean) => void;
     setPortfolioList: (prev: any) => void;
-    portfolioList: portfolioFolderInterface[];
+    portfolioList: PortfolioInterface[];
   }
 
 
@@ -58,12 +58,16 @@ export const AddToPortfolio = ({ setcloseWindow, setPortfolioList, portfolioList
             return
         }
 
-        const newStock: portfolioEntryInterface = { ticker, price, volum };
+        const addHolding = {
+            symbol: ticker,
+            avg_price: price,
+            quantity: volum
+        }
         
-        setPortfolioList((prev: portfolioFolderInterface[]) =>
+        setPortfolioList((prev: PortfolioInterface[]) =>
             prev.map((folder) =>
-              folder.name === selectedPortfolio
-                ? { ...folder, stocks: [...folder.stocks, newStock] }
+              folder.title === selectedPortfolio
+                ? { ...folder, stocks: [...folder.holdings, addHolding] }
                 : folder
             )
           );
@@ -127,7 +131,7 @@ export const AddToPortfolio = ({ setcloseWindow, setPortfolioList, portfolioList
             </div>
 
             <div>
-                <SelectPortfolio portfolioList={portfolioList} setPortFolio={setSelectedPortfolio}></SelectPortfolio>
+                {/* <SelectPortfolio portfolioList={portfolioList} setPortFolio={setSelectedPortfolio}></SelectPortfolio> */}
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">

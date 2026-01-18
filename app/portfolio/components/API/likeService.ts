@@ -1,7 +1,7 @@
 
 const url = "http://127.0.0.1:8000/"
 
-export const likedStock = async (ticker: string) => {
+export const likedStock = async (symbol: string) => {
     const token = localStorage.getItem("accessToken");
 
     if (!token) {
@@ -14,11 +14,11 @@ export const likedStock = async (ticker: string) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ticker}),
+        body: JSON.stringify({symbol}),
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to like ticker: ${ticker}`)
+        throw new Error(`Failed to like symbol: ${symbol}`)
     }
 };
 
@@ -46,14 +46,14 @@ export const get_all_liked_stock_from_user = async () => {
 }
 
 
-export const unlikeStock = async (ticker: string) => {
+export const unlikeStock = async (symbol: string) => {
     const token = localStorage.getItem("accessToken");
 
     if (!token) {
         throw new Error("Not authenticated");
     }
 
-    const response = await fetch(`${url}/likes/${ticker}/`, {
+    const response = await fetch(`${url}/likes/${symbol}/`, {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`

@@ -1,16 +1,23 @@
-import { portfolioFolderInterface, portfolioEntryInterface } from "../interfaces/stockPortfolioInterface";
+import { CreateHoldingPayload, HoldingInterface, PortfolioInterface } from "../interfaces/stockPortfolioInterface";
 import { useEffect, useState } from "react";
 import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Notebook } from "lucide-react";
 import { toast } from "sonner";
 
-
+/**
+ * Det neste nå blir å få til portefølje i databasen brukeren skal kunne:
+ * 1. Lage porteføljer med navn
+ * 2. Legge til aksjer
+ * 3. Slette aksjer
+ * 4. Skal kunne redigere portefølje informasjon
+ * 5. Skal kunne skrive notater på aksjer
+ */
 
 export const useLatestStockData = (
-  ticker: string,
+  symbol: string,
   avgPrice: number,
-  volume: number
+  quantity: number
 ) => {
 
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
@@ -19,7 +26,7 @@ export const useLatestStockData = (
     let intervalId: NodeJS.Timeout;
 
     const fetchLatestPrice = async () => {
-      const response = await get_companyLastPrice(ticker); // Dette API Kallet må fjernes DEPRECATED
+      const response = await get_companyLastPrice(symbol); // Dette API Kallet må fjernes DEPRECATED
       if (response?.lastPrice !== undefined) {
         setLatestPrice(response.lastPrice);
       }
@@ -29,7 +36,7 @@ export const useLatestStockData = (
     intervalId = setInterval(fetchLatestPrice, 30_000); // 30 sek
 
     return () => clearInterval(intervalId);
-  }, [ticker])
+  }, [symbol])
 
 
   // Kalkuerer hvor mye prosent enkelt aksjen har økt.
@@ -40,7 +47,7 @@ export const useLatestStockData = (
 
 
   const totalValue =
-    latestPrice !== null ? latestPrice * volume : null;
+    latestPrice !== null ? latestPrice * quantity : null;
 
     return {
       latestPrice,
@@ -50,24 +57,24 @@ export const useLatestStockData = (
 }
 
 
-export const PortfolioTableRow = ({stock}: {stock: portfolioEntryInterface}) => {
+export const PortfolioTableRow = ({ holding}: { holding: HoldingInterface}) => {
 
   const { latestPrice, returnPercent, totalValue } =
-    useLatestStockData(stock.ticker, stock.price, stock.volum);
+    useLatestStockData(holding.asset.symbol, Number(holding.avg_price), Number(holding.quantity));
 
 
   return (
     <tr className="border-t hover:bg-muted/40 transition">
       <td className="px-4 py-3 font-mono font-medium">
-        {stock.ticker}
+        {holding.asset.symbol}
       </td>
 
       <td className="px-4 py-3 font-mono">
-        {stock.price}
+        {holding.avg_price}
       </td>
 
       <td className="px-4 py-3 font-mono">
-        {stock.volum}
+        {holding.quantity}
       </td>
 
       <td
@@ -112,12 +119,11 @@ export const PortfolioTableRow = ({stock}: {stock: portfolioEntryInterface}) => 
 
 
 interface AddToPortfolioModalProps {
-  folder: portfolioFolderInterface;
-  setPortfolio: (prev: any) => void;
+  portfolio: PortfolioInterface;
   onClose: () => void;
 }
 
-export const AddToPortfolioModal = ({ folder, setPortfolio, onClose }: AddToPortfolioModalProps) => {
+export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalProps) => {
 
   const [ticker, setTicker] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
@@ -130,27 +136,27 @@ const handleAdd = () => {
     return;
   }
 
-  const exists = folder.stocks.some(s => s.ticker === ticker);
+  const exists = portfolio.holdings.some(s => s.asset.symbol === ticker);
   if (exists) {
     // Bytt ut alert med toast
     toast.error(`${ticker} finnes allerede i porteføljen`);
     return;
   }
 
-  const newStock: portfolioEntryInterface = {
-    ticker,
-    price,
-    volum: volume
+  const newStock: CreateHoldingPayload = {
+    symbol: ticker,
+    avg_price: price,
+    quantity: volume
   };
 
-  setPortfolio((prev: portfolioFolderInterface[]) =>
-    prev.map(f => f.name === folder.name
-      ? { ...f, stocks: [...f.stocks, newStock] }
-      : f
-    )
-  );
+  // setPortfolio((prev: PortfolioInterface[]) =>
+  //   prev.map(f => f.title === portfolio.title
+  //     ? { ...f, stocks: [...f.holdings, newStock] }
+  //     : f
+  //   )
+  // );
 
-  toast.success(`${ticker} ble lagt til i ${folder.name}`);
+  toast.success(`${ticker} ble lagt til i ${portfolio.title}`);
   onClose();
 }
 
@@ -161,7 +167,7 @@ return (
       
       {/* Header */}
       <h2 className="text-xl font-mono font-semibold mb-4">
-        Legg til aksje i {folder.name}
+        Legg til aksje i {portfolio.title}
       </h2>
 
       {/* Main content: input + textarea */}
@@ -225,10 +231,7 @@ return (
 
 
 
-export const NewPortfolioFolder = 
-  ({ folder, setPortfolio }: 
-  { folder: portfolioFolderInterface; setPortfolio: (prev: any) => void; 
-  }) => {
+export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) => {
 
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
@@ -238,7 +241,7 @@ export const NewPortfolioFolder =
     <div className="w-full h-full p-6">
       {/** Header */}
      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">{folder.name}</h1>
+        <h1 className="text-2xl font-semibold">{portfolio.title}</h1>
         <Button 
         onClick={() => setShowAddModal(true)}
         variant="ghost"
@@ -261,10 +264,10 @@ export const NewPortfolioFolder =
           </thead>
 
           <tbody>
-            {folder.stocks.map((stock) => (
+            {portfolio.holdings.map((holding) => (
               <PortfolioTableRow
-               key={stock.ticker}
-               stock={stock}
+               key={holding.asset.symbol}
+               holding={holding}
               />
             ))}
 
@@ -274,8 +277,7 @@ export const NewPortfolioFolder =
 
       {showAddModal && (
         <AddToPortfolioModal
-          folder={folder}
-          setPortfolio={setPortfolio}
+          portfolio={portfolio}
           onClose={() => setShowAddModal(false)}
         >
 

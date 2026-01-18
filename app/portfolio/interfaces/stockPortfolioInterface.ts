@@ -1,22 +1,35 @@
+import { ScriptableLineSegmentContext } from "chart.js";
 
-
-export interface stockPortfolioInterface {
-    ticker: string; 
-    price: number;
-    volum: number; 
-    // prosentØkning: string; 
-    // currentPrice: number;
-    // setShowOptions: any;
-}
-
-export interface portfolioEntryInterface {
-    ticker: string; 
-    price: number;
-    volum: number; 
-}
-
-
-export interface portfolioFolderInterface {
+export interface AssetInterface {
+    symbol: string;
     name: string;
-    stocks: portfolioEntryInterface[];
+    asset_type: "stock" | "etf" | "index";
+    exchange: string;
+    currency: string;
+    sector: string;
+    industry: string;
+}
+
+export interface HoldingInterface {
+    asset: AssetInterface;
+    quantity: number; // DecimalField -> string
+    avg_price: number; // DecimalField -> string
+    currency: string;
+}
+
+export interface PortfolioInterface {
+    id: number;
+    title: string;
+    base_currency: string;
+    created_at: string;
+    holdings: HoldingInterface[]
+}
+
+
+// Input-DTO (kun frontend → backend)
+export interface CreateHoldingPayload {
+  symbol: string;
+  avg_price: number;
+  quantity: number;
+  note?: string;
 }

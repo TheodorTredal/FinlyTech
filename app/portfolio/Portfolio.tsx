@@ -3,10 +3,22 @@ import { StockPortfolio } from "./components/stockPortfolio";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { useEffect, useState } from "react";
 import { AddToPortfolio } from "./components/addToPortfolio";
-import { portfolioFolderInterface } from "./interfaces/stockPortfolioInterface";
+import { PortfolioInterface } from "./interfaces/stockPortfolioInterface";
 import { PortfolioDevelopment } from "./components/portfolioDevelopment";
 import { LikedStocksComponent } from "./components/likedStocks/likedStocks";
 import { JWTTestTokenButton } from "../login/tempLogin";
+import { getUserPortfolio } from "./components/API/portfolioAPI";
+
+
+/**
+ * IMORGEN
+ * 
+ * 1. POST og DELETE på Porteføljer (Legg til flere portefølher)
+ * 
+ * 2. POST og Delete på Assets inne i porteføljer
+ * 
+ * 3. Få til notat på hver enkelt aksje
+ */
 
 enum ActiveComponentEnum {
     portefølje = "portefølje",
@@ -17,55 +29,26 @@ enum ActiveComponentEnum {
   }
 
 
-  const portfolioData2: portfolioFolderInterface = {
-    name: "Dividend",
-    stocks: [
-      { ticker: "O", price: 60, volum: 10 },
-      { ticker: "T", price: 15, volum: 20 },
-      { ticker: "gme", price: 1000, volum: 100 },
-    ],
-  }
-
-
-  export const portfolioData: portfolioFolderInterface[] = [
-    {
-      name: "Dividend",
-      stocks: [
-        { ticker: "O", price: 60, volum: 10 },
-        { ticker: "T", price: 15, volum: 20 },
-        { ticker: "TSLA", price: 200, volum: 5 },
-        { ticker: "AAPL", price: 150, volum: 8 },
-        { ticker: "NVDA", price: 150, volum: 8 },
-        { ticker: "INTC", price: 150, volum: 8 },
-        { ticker: "AMD", price: 150, volum: 8 },
-      ],
-    },
-    {
-      name: "Growth",
-      stocks: [
-        { ticker: "TSLA", price: 200, volum: 5 },
-        { ticker: "AAPL", price: 150, volum: 8 },
-      ],
-    },
-    {
-      name: "Nordic",
-      stocks: [
-        { ticker: "EQNR.OL", price: 300, volum: 15 },
-      ],
-    },
-  ];
-  
 
 const Portfolio = () => {
 
     const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.portefølje);
-    const [portfolioList, setPortfolioList] = useState<portfolioFolderInterface[]>([]);
+    const [portfolioList, setPortfolioList] = useState<PortfolioInterface[]>([]);
     const [showAddToPortfolio, setShowAddToPortfolio] = useState<boolean>(false);
     const [currentPortfolio, setCurrentPortfolio] = useState<string>("Dividend");
 
 
     useEffect(() => {
-      setPortfolioList(portfolioData);
+
+        const fetchPortfolios = async () => {
+
+          const response = await getUserPortfolio();
+          setPortfolioList(response);
+
+        }
+
+        fetchPortfolios();
+
     }, [])
 
     const handleMenuClick = (component: ActiveComponentEnum) => {
@@ -107,16 +90,16 @@ const Portfolio = () => {
 
         {activeComponent === ActiveComponentEnum.portefølje && (
             <StockPortfolio 
-                folders={portfolioList} 
-                setPortfolio={setPortfolioList} />
+                portfolios={portfolioList} 
+            />
         )}
 
-        {activeComponent === ActiveComponentEnum.utvikling && (
+        {/* {activeComponent === ActiveComponentEnum.utvikling && (
           <PortfolioDevelopment 
               currentPortfolio={currentPortfolio} 
               portfolioList={portfolioList} 
               setCurrentPortfolio={setCurrentPortfolio} />            
-        )}
+        )} */}
 
 
         {activeComponent === ActiveComponentEnum.likteAksjer && (
