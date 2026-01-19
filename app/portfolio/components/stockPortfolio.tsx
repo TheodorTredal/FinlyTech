@@ -3,18 +3,23 @@ import { PortfolioView } from "./portfolioFolder";
 import { PortfolioInterface } from "../interfaces/stockPortfolioInterface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortfolio } from "./API/portfolioAPI";
 
 
 
+interface AddPortfolioProps {
+  setPortfolioList: React.Dispatch<React.SetStateAction<PortfolioInterface[]>>;
+}
 
 
-export const AddPortfolio = ({ folders, setPortfolio }: {folders: PortfolioInterface[]; setPortfolio: (prev: any) => void;}) => {
+export const AddPortfolio = ({ setPortfolioList }: AddPortfolioProps) => {
 
   const [showAddPortfolio, setShowAddPortfolio] = useState<boolean>(false);  
-  const [newPortfolioName, setNewPortfolioName] = useState<string | null>(null);
+  const [newPortfolioName, setNewPortfolioName] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAddPortfolio = () => {
+  const handleOpenAddPortfolio = () => {
     setShowAddPortfolio(true);
   }
 
@@ -22,62 +27,90 @@ export const AddPortfolio = ({ folders, setPortfolio }: {folders: PortfolioInter
     setShowAddPortfolio(false);
   }
   
-  const handleConfirmAdd = () => {
-    
-    
-    const nameExists = folders.some(
-      (folder) => folder.title.toLowerCase() === newPortfolioName?.trim().toLowerCase()
-    );
-    
-    if (nameExists) {
-      // vis feilmelding
+  const handleConfirmAdd = async () => {
+
+    if (newPortfolioName.trim() === "") {
+      setError("Porteføljenavn kan ikke være tomt");
       return;
     }
 
-    if (!newPortfolioName?.trim()) {
-      // eventuelt sett en feilmelding
-      return;
+    setError(null);
+
+
+    try {
+      const data = await createPortfolio(newPortfolioName, "USD");
+      console.log("Portefølje opprettet:", data);
+
+      // Legg til ny portefølhe i listen
+      setPortfolioList(prev => [...prev, data]);
+
+      setNewPortfolioName("");
+      setShowAddPortfolio(false);
+
+    } catch (err: any) {
+      setError(err.message || "Noe gikk galt ved opprettelse av portefølje");
     }
 
-    setPortfolio((prev: PortfolioInterface[])=> [
-      ...prev,
-      {name: newPortfolioName?.trim(), stocks: []}
-    ])
-
-    setShowAddPortfolio(false);
   }
 
-    return (
-      <div>
-        {!showAddPortfolio ? (
-          <Button onClick={handleAddPortfolio} variant={"outline"} className="space-y-6 text-gray-300 text-2xl w-12">+</Button>
-        ) : (
-          <div className="flex w-1/4">
-            <Input
-            placeholder="Ny portefølje..."
-            onChange={(e) => setNewPortfolioName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleConfirmAdd();
-            }}
-            />
-            <Button onClick={handleConfirmAdd} className="bg-green-600 hover:bg-green-700 text-white px-6">Opprett</Button>
-            <Button onClick={handleAbort} variant={"ghost"} className="text-red-700">Avbryt</Button>
-          </div>
-          )}
+  return (
+  <div>
+    {!showAddPortfolio ? (
+      <Button 
+        onClick={handleOpenAddPortfolio} 
+        variant="outline"
+        className="text-white text-xl font-semibold px-6 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-black transition-colors duration-200"
+      >
+        Add portfolio +
+      </Button>
+
+    ) : (
+      <div className="flex w-1/4 gap-2">
+        <Input
+          placeholder="Ny portefølje..."
+          value={newPortfolioName}
+          onChange={(e) => setNewPortfolioName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleConfirmAdd();
+          }}
+        />
+        <Button 
+          onClick={handleConfirmAdd} 
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+        >
+          Opprett
+        </Button>
+        
+        <Button 
+          onClick={handleAbort} 
+          variant="ghost" 
+          className="text-red-700 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors duration-200"
+        >
+          Avbryt
+        </Button>
       </div>
-    )
+    )}
+  </div>
+)
+
 }
 
 
+interface stockPortfolioInterface {
+  portfolios: PortfolioInterface[];
+  setPortfolioList: React.Dispatch<React.SetStateAction<PortfolioInterface[]>>
 
-export const StockPortfolio = ({ portfolios }: { portfolios: PortfolioInterface[] }) => {
+
+}
+
+export const StockPortfolio = ({ portfolios, setPortfolioList }: stockPortfolioInterface) => {
 
   return (
     <div className="flex flex-col gap-6">
       {portfolios.map((portfolio, i) => (
         <PortfolioView key={i} portfolio={portfolio}/>
       ))}
-      {/* <AddPortfolio folders={folders} setPortfolio={setPortfolio}></AddPortfolio> */}
+      <AddPortfolio setPortfolioList={setPortfolioList}/>
     </div>
   );
 };

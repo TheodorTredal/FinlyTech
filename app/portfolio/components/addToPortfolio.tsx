@@ -6,6 +6,8 @@ import { HoldingInterface } from "../interfaces/stockPortfolioInterface";
 import { get_checkCompanyTicker } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import { SelectPortfolio } from "./portfolioSelector";
 
+import { createPortfolio } from "./API/portfolioAPI";
+
 import { PortfolioInterface } from "../interfaces/stockPortfolioInterface";
    
 interface AddToPortfolioProps {

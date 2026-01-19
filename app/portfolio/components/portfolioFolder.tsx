@@ -236,7 +236,6 @@ export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) 
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
 
-
   return (
     <div className="w-full h-full p-6">
       {/** Header */}
@@ -279,9 +278,8 @@ export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) 
         <AddToPortfolioModal
           portfolio={portfolio}
           onClose={() => setShowAddModal(false)}
-        >
-
-        </AddToPortfolioModal>
+        />
+      
       )}
 
     </div>

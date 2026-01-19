@@ -34,21 +34,16 @@ const Portfolio = () => {
 
     const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.portefølje);
     const [portfolioList, setPortfolioList] = useState<PortfolioInterface[]>([]);
-    const [showAddToPortfolio, setShowAddToPortfolio] = useState<boolean>(false);
     const [currentPortfolio, setCurrentPortfolio] = useState<string>("Dividend");
 
 
     useEffect(() => {
 
         const fetchPortfolios = async () => {
-
           const response = await getUserPortfolio();
           setPortfolioList(response);
-
         }
-
         fetchPortfolios();
-
     }, [])
 
     const handleMenuClick = (component: ActiveComponentEnum) => {
@@ -75,22 +70,13 @@ const Portfolio = () => {
           {component.charAt(0).toUpperCase() + component.slice(1)}
           </MenubarTrigger>
           ))}
-          <MenubarTrigger onClick={() => setShowAddToPortfolio(true)} className="border-2"> Add stock + </MenubarTrigger>
         </MenubarMenu>
       </Menubar>
-
-        {showAddToPortfolio && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <AddToPortfolio 
-                        setcloseWindow={setShowAddToPortfolio} 
-                        setPortfolioList={setPortfolioList} 
-                        portfolioList={portfolioList} />
-            </div>
-        )}
 
         {activeComponent === ActiveComponentEnum.portefølje && (
             <StockPortfolio 
                 portfolios={portfolioList} 
+                setPortfolioList={setPortfolioList}
             />
         )}
 

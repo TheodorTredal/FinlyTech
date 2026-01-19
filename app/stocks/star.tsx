@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useSearch } from "../context/SearchContext";
-import { likedStock, unlikeStock, get_all_liked_stock_from_user } from "../portfolio/components/API/likeService";
+import { likedStock, unlikeStock, get_all_liked_stock_from_user } from "../portfolio/components/API/likeAPI";
 
 
 

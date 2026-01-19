@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get_all_liked_stock_from_user } from "../API/likeService"
+import { get_all_liked_stock_from_user } from "../API/likeAPI"
 import { fetchStockChart2 } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 
 
