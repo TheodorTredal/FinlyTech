@@ -8,6 +8,7 @@ import { PortfolioDevelopment } from "./components/portfolioDevelopment";
 import { LikedStocksComponent } from "./components/likedStocks/likedStocks";
 import { JWTTestTokenButton } from "../login/tempLogin";
 import { getUserPortfolio } from "./components/API/portfolioAPI";
+import { AddPortfolio } from "./components/stockPortfolio";
 
 
 /**
@@ -74,10 +75,17 @@ const Portfolio = () => {
       </Menubar>
 
         {activeComponent === ActiveComponentEnum.portefølje && (
-            <StockPortfolio 
-                portfolios={portfolioList} 
-                setPortfolioList={setPortfolioList}
+          <>
+            <AddPortfolio 
+              setPortfolioList={setPortfolioList}
+              portfolioList={portfolioList}
             />
+            
+            <StockPortfolio 
+              portfolios={portfolioList} 
+              setPortfolioList={setPortfolioList}
+            />
+          </>
         )}
 
         {/* {activeComponent === ActiveComponentEnum.utvikling && (

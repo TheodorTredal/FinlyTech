@@ -6,14 +6,16 @@ import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react";
 import { createPortfolio } from "./API/portfolioAPI";
 
+import { Settings } from "lucide-react";
 
 
 interface AddPortfolioProps {
   setPortfolioList: React.Dispatch<React.SetStateAction<PortfolioInterface[]>>;
+  portfolioList: PortfolioInterface[];
 }
 
 
-export const AddPortfolio = ({ setPortfolioList }: AddPortfolioProps) => {
+export const AddPortfolio = ({ setPortfolioList, portfolioList }: AddPortfolioProps) => {
 
   const [showAddPortfolio, setShowAddPortfolio] = useState<boolean>(false);  
   const [newPortfolioName, setNewPortfolioName] = useState<string>("");
@@ -28,6 +30,17 @@ export const AddPortfolio = ({ setPortfolioList }: AddPortfolioProps) => {
   }
   
   const handleConfirmAdd = async () => {
+
+
+    const exists = portfolioList.some(
+      (p) => p.title.toLocaleLowerCase() === newPortfolioName.trim().toLowerCase()
+    );
+
+    if (exists) {
+      setError(`Porteføljen "${newPortfolioName}" finnes allerede`);
+      return
+    }
+
 
     if (newPortfolioName.trim() === "") {
       setError("Porteføljenavn kan ikke være tomt");
@@ -59,7 +72,7 @@ export const AddPortfolio = ({ setPortfolioList }: AddPortfolioProps) => {
       <Button 
         onClick={handleOpenAddPortfolio} 
         variant="outline"
-        className="text-white text-xl font-semibold px-6 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-black transition-colors duration-200"
+        className="bg-red-700 text-white text-xl font-semibold px-6 py-3 border-2 border-white rounded-lg hover:bg-white hover:text-black transition-colors duration-200"
       >
         Add portfolio +
       </Button>
@@ -108,9 +121,12 @@ export const StockPortfolio = ({ portfolios, setPortfolioList }: stockPortfolioI
   return (
     <div className="flex flex-col gap-6">
       {portfolios.map((portfolio, i) => (
-        <PortfolioView key={i} portfolio={portfolio}/>
+        <PortfolioView 
+          key={i} 
+          portfolio={portfolio}
+          setPortfolioList={setPortfolioList}
+          />
       ))}
-      <AddPortfolio setPortfolioList={setPortfolioList}/>
     </div>
   );
 };

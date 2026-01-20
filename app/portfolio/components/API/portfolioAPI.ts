@@ -92,3 +92,47 @@ export const deletePortfolio = async (portfolio_title: string) => {
         throw new Error(errorMessage);
     }
 }
+
+
+/**
+ * user=request.user,
+ * portfolio_title=portfolio_title,
+ * symbol=symbol,
+ * avg_price=avg_price,
+ * quantity=quantity,
+ * currency=request.data["currency"],
+ */
+
+export const addNewHolding = async (symbol: string, portfolio_title: string, avg_price: number, quantity: number, currency: string = "USD") => {
+
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+        throw new Error("Not authenticated");
+    }
+
+    const response = await fetch(`${url}/portfolios/new-holding/`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({symbol, portfolio_title, avg_price, quantity, currency})
+    });
+
+    let data;
+    try {
+        data = await response.json()
+
+    } catch (err) {
+        throw new Error(`Unexpected error: ${response.statusText}`);
+    }
+
+
+    if (!response.ok) {
+        const errorMessage = data.detail || `Request failed with status ${response.status}`;
+        throw new Error(errorMessage);
+    }
+
+    return data;
+}

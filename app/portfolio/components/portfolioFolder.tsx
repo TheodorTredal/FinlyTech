@@ -4,15 +4,138 @@ import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCom
 import { Button } from "@/components/ui/button";
 import { SquarePen, Notebook } from "lucide-react";
 import { toast } from "sonner";
+import { Settings, Minus } from "lucide-react";
+import { deletePortfolio } from "./API/portfolioAPI";
 
 /**
  * Det neste nå blir å få til portefølje i databasen brukeren skal kunne:
- * 1. Lage porteføljer med navn
+ * 1 X. Lage porteføljer med navn
  * 2. Legge til aksjer
  * 3. Slette aksjer
  * 4. Skal kunne redigere portefølje informasjon
  * 5. Skal kunne skrive notater på aksjer
+ * 6. Slette porteføljer
  */
+
+
+
+interface AddToPortfolioModalProps {
+  portfolio: PortfolioInterface;
+  onClose: () => void;
+}
+
+
+/**
+ * 1. Gjøre checks og error handling
+ * 2. Oppdatere database via API
+ * 3. Oppdatere UI (setState)
+ */
+export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalProps) => {
+
+  const [ticker, setTicker] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
+  const [volume, setVolume] = useState<number>(0);
+
+  // Checks og error handling
+  const handleAdd = () => {
+    if (!ticker || price <= 0 || volume <= 0) {
+      toast.error("Vennligst fyll inn alle feltene korrekt");
+      return;
+    }
+
+  // Sjekk om asset'en allerede er lagt til i porteføljen
+  const exists = portfolio.holdings.some(s => s.asset.symbol === ticker);
+  if (exists) {
+    // Bytt ut alert med toast
+    toast.error(`${ticker} finnes allerede i porteføljen`);
+    return;
+  }
+
+  // Lag en ny stock entry i porteføljen
+  const newStock: CreateHoldingPayload = {
+    symbol: ticker,
+    avg_price: price,
+    quantity: volume
+  };
+
+  // setPortfolio((prev: PortfolioInterface[]) =>
+  //   prev.map(f => f.title === portfolio.title
+  //     ? { ...f, stocks: [...f.holdings, newStock] }
+  //     : f
+  //   )
+  // );
+
+  toast.success(`${ticker} ble lagt til i ${portfolio.title}`);
+  onClose();
+}
+
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="w-2/3 h-96 bg-sidebar border rounded-xl p-6 flex flex-col">
+
+        {/* Header */}
+        <h2 className="text-xl font-mono font-semibold mb-4">
+          Legg til aksje i {portfolio.title}
+        </h2>
+
+        {/* Main content: input + textarea */}
+        <div className="flex flex-1 gap-6">
+          {/* Venstre side: inputfeltene */}
+          <div className="flex flex-col flex-1 space-y-3">
+            <p className="font-mono">Ticker</p>
+            <input 
+              type="text" 
+              placeholder="Ticker" 
+              value={ticker} 
+              onChange={(e) => setTicker(e.target.value.toUpperCase())} 
+              className="border px-3 py-2 rounded w-full"
+            />
+
+            <p className="font-mono">Pris</p>
+            <input 
+              type="number" 
+              placeholder="Pris" 
+              value={price} 
+              onChange={(e) => setPrice(Number(e.target.value))} 
+              className="border px-3 py-2 rounded w-full"
+            />
+            <p className="font-mono">Antall</p>
+            <input 
+              type="number" 
+              placeholder="Volum" 
+              value={volume} 
+              onChange={(e) => setVolume(Number(e.target.value))} 
+              className="border px-3 py-2 rounded w-full"
+            />
+          </div>
+
+          {/* Høyre side: tekstfelt */}
+          <div className="flex-1">
+            <textarea
+              placeholder="Notater..."
+              className="w-full h-full border px-3 py-2 rounded resize-none"
+            />
+          </div>
+        </div>
+
+        {/* Footer: knapper nederst */}
+        <div className="flex justify-end space-x-3 mt-4">
+          <Button 
+            variant="ghost" 
+            onClick={onClose}
+            className="hover:underline"
+            >Avbryt</Button>
+          <Button 
+            className="bg-brand-button-primary hover:bg-brand-button-primary text-white-200" 
+            onClick={handleAdd}
+            >Legg til</Button>
+        </div>
+
+      </div>
+    </div>
+  )
+}
 
 export const useLatestStockData = (
   symbol: string,
@@ -57,7 +180,7 @@ export const useLatestStockData = (
 }
 
 
-export const PortfolioTableRow = ({ holding}: { holding: HoldingInterface}) => {
+export const PortfolioTableRow = ({ holding, showSettings }: { holding: HoldingInterface, showSettings: boolean}) => {
 
   const { latestPrice, returnPercent, totalValue } =
     useLatestStockData(holding.asset.symbol, Number(holding.avg_price), Number(holding.quantity));
@@ -112,135 +235,80 @@ export const PortfolioTableRow = ({ holding}: { holding: HoldingInterface}) => {
           <SquarePen />
         </Button>
       </td>
+      
+      {/* If settings is clicked */}
+      <td className="text-right">
+        <div
+          className={`
+            transition-all duration-200 ease-out
+            ${showSettings ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"}
+          `}
+        >
+          <Button
+            variant="ghost"
+            className="text-red-600"
+          >
+            <Minus size={16} />
+          </Button>
+        </div>
+      </td>
     </tr>
   );
 }
 
-
-
-interface AddToPortfolioModalProps {
+interface portfolioViewInterface {
   portfolio: PortfolioInterface;
-  onClose: () => void;
-}
-
-export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalProps) => {
-
-  const [ticker, setTicker] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0);
-
-
-const handleAdd = () => {
-  if (!ticker || price <= 0 || volume <= 0) {
-    toast.error("Vennligst fyll inn alle feltene korrekt");
-    return;
-  }
-
-  const exists = portfolio.holdings.some(s => s.asset.symbol === ticker);
-  if (exists) {
-    // Bytt ut alert med toast
-    toast.error(`${ticker} finnes allerede i porteføljen`);
-    return;
-  }
-
-  const newStock: CreateHoldingPayload = {
-    symbol: ticker,
-    avg_price: price,
-    quantity: volume
-  };
-
-  // setPortfolio((prev: PortfolioInterface[]) =>
-  //   prev.map(f => f.title === portfolio.title
-  //     ? { ...f, stocks: [...f.holdings, newStock] }
-  //     : f
-  //   )
-  // );
-
-  toast.success(`${ticker} ble lagt til i ${portfolio.title}`);
-  onClose();
+  setPortfolioList: React.Dispatch<React.SetStateAction<PortfolioInterface[]>>;
 }
 
 
-return (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="w-2/3 h-96 bg-sidebar border rounded-xl p-6 flex flex-col">
-      
-      {/* Header */}
-      <h2 className="text-xl font-mono font-semibold mb-4">
-        Legg til aksje i {portfolio.title}
-      </h2>
-
-      {/* Main content: input + textarea */}
-      <div className="flex flex-1 gap-6">
-        {/* Venstre side: inputfeltene */}
-        <div className="flex flex-col flex-1 space-y-3">
-          <p className="font-mono">Ticker</p>
-          <input 
-            type="text" 
-            placeholder="Ticker" 
-            value={ticker} 
-            onChange={(e) => setTicker(e.target.value.toUpperCase())} 
-            className="border px-3 py-2 rounded w-full"
-          />
-
-          <p className="font-mono">Pris</p>
-          <input 
-            type="number" 
-            placeholder="Pris" 
-            value={price} 
-            onChange={(e) => setPrice(Number(e.target.value))} 
-            className="border px-3 py-2 rounded w-full"
-          />
-          <p className="font-mono">Antall</p>
-          <input 
-            type="number" 
-            placeholder="Volum" 
-            value={volume} 
-            onChange={(e) => setVolume(Number(e.target.value))} 
-            className="border px-3 py-2 rounded w-full"
-          />
-        </div>
-
-        {/* Høyre side: tekstfelt */}
-        <div className="flex-1">
-          <textarea
-            placeholder="Notater..."
-            className="w-full h-full border px-3 py-2 rounded resize-none"
-          />
-        </div>
-      </div>
-
-      {/* Footer: knapper nederst */}
-      <div className="flex justify-end space-x-3 mt-4">
-        <Button 
-          variant="ghost" 
-          onClick={onClose}
-          className="hover:underline"
-          >Avbryt</Button>
-        <Button 
-          className="bg-brand-button-primary hover:bg-brand-button-primary text-white-200" 
-          onClick={handleAdd}
-          >Legg til</Button>
-      </div>
-
-    </div>
-  </div>
-)
-
-}
-
-
-
-export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) => {
+export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInterface) => {
 
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+
+
+  const handleDeletePortfolio = async () => {
+    const confirmed = window.confirm(
+      `Er du sikker på at du vil slette porteføljen "${portfolio.title}"?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deletePortfolio(portfolio.title);
+      toast.success(`Porteføljen "${portfolio.title}" ble slettet`);
+
+      // Fjern porteføljen fra selve interface til brukeren.
+      setPortfolioList(prev => 
+        prev.filter(p => p.title !== portfolio.title)
+      );
+
+
+    } catch (error: any) {
+      toast.error(error.message || "Kunne ikke slette porteføljen");
+    }
+  };
 
 
   return (
     <div className="w-full h-full p-6">
       {/** Header */}
      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">{portfolio.title}</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-semibold">
+          <span>
+            {portfolio.title}
+          </span>
+          {showSettings && (
+              <Button 
+                className="text-red-600" 
+                variant="ghost"
+                onClick={handleDeletePortfolio}>
+                <Minus />
+              </Button>
+            )}
+        </h1>
+        
         <Button 
         onClick={() => setShowAddModal(true)}
         variant="ghost"
@@ -259,6 +327,11 @@ export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) 
               <th className="px-4 py-3 text-left font-medium">Total verdi</th>
               <th className="px-4 py-3 text-left font-medium">Notat</th>
               <th className="px-4 py-3 text-left font-medium">Edit</th>
+              <th className="py-2 text-right font-medium">
+              <Button variant="ghost" onClick={() => setShowSettings(!showSettings)}>
+                <Settings size={16} />
+              </Button>
+            </th>
             </tr>
           </thead>
 
@@ -267,9 +340,9 @@ export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) 
               <PortfolioTableRow
                key={holding.asset.symbol}
                holding={holding}
+               showSettings={showSettings}
               />
             ))}
-
           </tbody>
         </table>
       </div>
@@ -279,9 +352,7 @@ export const PortfolioView = ({ portfolio }: { portfolio: PortfolioInterface }) 
           portfolio={portfolio}
           onClose={() => setShowAddModal(false)}
         />
-      
       )}
-
     </div>
   )
 }
