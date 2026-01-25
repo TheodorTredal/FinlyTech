@@ -35,7 +35,6 @@ const Portfolio = () => {
 
     const [activeComponent, setActiveComponent] = useState<ActiveComponentEnum>(ActiveComponentEnum.portefølje);
     const [portfolioList, setPortfolioList] = useState<PortfolioInterface[]>([]);
-    const [currentPortfolio, setCurrentPortfolio] = useState<string>("Dividend");
 
 
     useEffect(() => {
@@ -51,64 +50,52 @@ const Portfolio = () => {
         setActiveComponent(component);
     }
 
-    return (
-      <div className="w-screen h-screen flex flex-col overflow-y-auto">
-
-
+  return (
+    <div className="w-screen h-[calc(100vh-50px)] flex flex-col">
+      
       <Menubar className="w-1/2 rounded-xl p-2 space-x-4 mb-4 mt-4 border-2">
         <MenubarMenu>
-          {Object.values(ActiveComponentEnum).map((component) => (
+          {Object.values(ActiveComponentEnum).map(component => (
             <MenubarTrigger
               key={component}
               onClick={() => handleMenuClick(component)}
-              // className={`relative px-4 py-2 transition-all duration-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] ${
               className={`px-4 py-2 transition-all duration-200 ${
-              activeComponent === component
-              ? "after:bg-white text-white"
-              : "after:bg-transparent text-gray-400 hover:text-gray-200"
+                activeComponent === component
+                  ? "text-white"
+                  : "text-gray-400 hover:text-gray-200"
               }`}
             >
-          {component.charAt(0).toUpperCase() + component.slice(1)}
-          </MenubarTrigger>
+              {component.charAt(0).toUpperCase() + component.slice(1)}
+            </MenubarTrigger>
           ))}
         </MenubarMenu>
       </Menubar>
 
+    {/* SCROLL-CONTAINER */}
+      <div className="flex-1 overflow-y-auto px-4">
         {activeComponent === ActiveComponentEnum.portefølje && (
           <>
-            <AddPortfolio 
+            <AddPortfolio
               setPortfolioList={setPortfolioList}
               portfolioList={portfolioList}
             />
-            
-            <StockPortfolio 
-              portfolios={portfolioList} 
+
+            <StockPortfolio
+              portfolios={portfolioList}
               setPortfolioList={setPortfolioList}
             />
           </>
         )}
 
-        {/* {activeComponent === ActiveComponentEnum.utvikling && (
-          <PortfolioDevelopment 
-              currentPortfolio={currentPortfolio} 
-              portfolioList={portfolioList} 
-              setCurrentPortfolio={setCurrentPortfolio} />            
-        )} */}
-
-
         {activeComponent === ActiveComponentEnum.likteAksjer && (
-
-          <div className="w-full"> 
-
-            <JWTTestTokenButton></JWTTestTokenButton>
-            <LikedStocksComponent>
-
-            </LikedStocksComponent>
-          </div>
+          <>
+            <JWTTestTokenButton />
+            <LikedStocksComponent />
+          </>
         )}
       </div>
-
-    )
+    </div>
+  );
 }
 
 export default Portfolio;

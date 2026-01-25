@@ -11,12 +11,12 @@ import { Input } from "@/components/ui/input";
 
 /**
  * Det neste nå blir å få til portefølje i databasen brukeren skal kunne:
- * 1 X. Lage porteføljer med navn
- * 2. Legge til aksjer
+ * 1. X Lage porteføljer med navn
+ * 2. X Legge til aksjer
  * 3. Slette aksjer
  * 4. Skal kunne redigere portefølje informasjon
  * 5. Skal kunne skrive notater på aksjer
- * 6. Slette porteføljer
+ * 6. X Slette porteføljer
  */
 
 
@@ -326,7 +326,7 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
 
 
   return (
-    <div className="w-full h-full p-6">
+    <div className="w-full p-6">
       {/** Header */}
      <div className="flex justify-between items-center mb-6">
         <h1 className="flex items-center gap-2 text-2xl font-semibold">
@@ -349,7 +349,7 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
         >Legg til aksje +</Button>
       </div>
 
-      <div className="rounded-xl border overflow-y-auto">
+      <div className="rounded-xl border">
         <table className="w-full table-fixed border-collapse text-sm">
           <thead className="bg-muted/40">
             <tr>
