@@ -352,21 +352,21 @@ export const get_checkCompanyTicker = async ( ticker: string) => {
     }
 }
 
-export const get_companyLastPrice = async ( ticker: string ) => {
-    try {
-        const response = await fetch(`http://127.0.0.1:8000/stock/fetchCompanyLatestPrice/${ticker}/`);
-        const data = await response.json();
-        return {
-            lastPrice: data.last_price
-        }
+// export const get_companyLastPrice = async ( ticker: string ) => {
+//     try {
+//         const response = await fetch(`http://127.0.0.1:8000/stock/fetchCompanyLatestPrice/${ticker}/`);
+//         const data = await response.json();
+//         return {
+//             lastPrice: data.last_price
+//         }
 
-    } catch (error) {
-        console.log(`Feil ved henting av ${ticker} sin siste pris`);
-        return {
-            lastPrice: -1
-        }
-    }
-}
+//     } catch (error) {
+//         console.log(`Feil ved henting av ${ticker} sin siste pris`);
+//         return {
+//             lastPrice: -1
+//         }
+//     }
+// }
 
 
 export const get_companyInfo = async ( ticker: string ) => {

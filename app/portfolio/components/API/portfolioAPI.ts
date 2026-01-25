@@ -111,13 +111,17 @@ export const addNewHolding = async (symbol: string, portfolio_title: string, avg
         throw new Error("Not authenticated");
     }
 
-    const response = await fetch(`${url}/portfolios/new-holding/`, {
+    const response = await fetch(`${url}/portfolios/${portfolio_title}/holdings/${symbol}`, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({symbol, portfolio_title, avg_price, quantity, currency})
+        body: JSON.stringify({
+            avg_price, 
+            quantity, 
+            currency
+        })
     });
 
     let data;

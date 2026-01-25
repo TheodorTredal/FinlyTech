@@ -1,11 +1,13 @@
 import { CreateHoldingPayload, HoldingInterface, PortfolioInterface } from "../interfaces/stockPortfolioInterface";
-import { useEffect, useState } from "react";
-import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCompany";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Notebook } from "lucide-react";
 import { toast } from "sonner";
 import { Settings, Minus } from "lucide-react";
 import { deletePortfolio } from "./API/portfolioAPI";
+import { addNewHolding } from "./API/portfolioAPI";
+import { Input } from "@/components/ui/input";
+
 
 /**
  * Det neste nå blir å få til portefølje i databasen brukeren skal kunne:
@@ -22,6 +24,7 @@ import { deletePortfolio } from "./API/portfolioAPI";
 interface AddToPortfolioModalProps {
   portfolio: PortfolioInterface;
   onClose: () => void;
+  onHoldingAdded: (holding: HoldingInterface) => void;
 }
 
 
@@ -30,15 +33,20 @@ interface AddToPortfolioModalProps {
  * 2. Oppdatere database via API
  * 3. Oppdatere UI (setState)
  */
-export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalProps) => {
+export const AddToPortfolioModal = ({ portfolio, onClose, onHoldingAdded }: AddToPortfolioModalProps) => {
 
   const [ticker, setTicker] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0);
+  const [price, setPrice] = useState<string>("");
+  const [volume, setVolume] = useState<string>("");
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const numericPrice = Number(price);
+  const numericVolume = Number(volume);
 
   // Checks og error handling
-  const handleAdd = () => {
-    if (!ticker || price <= 0 || volume <= 0) {
+  const handleAdd = async () => {
+    if (!ticker || numericPrice <= 0 || numericVolume <= 0) {
       toast.error("Vennligst fyll inn alle feltene korrekt");
       return;
     }
@@ -54,19 +62,32 @@ export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalP
   // Lag en ny stock entry i porteføljen
   const newStock: CreateHoldingPayload = {
     symbol: ticker,
-    avg_price: price,
-    quantity: volume
+    avg_price: numericPrice,
+    quantity: numericVolume,
   };
 
-  // setPortfolio((prev: PortfolioInterface[]) =>
-  //   prev.map(f => f.title === portfolio.title
-  //     ? { ...f, stocks: [...f.holdings, newStock] }
-  //     : f
-  //   )
-  // );
 
-  toast.success(`${ticker} ble lagt til i ${portfolio.title}`);
-  onClose();
+  try {
+
+    setIsLoading(true);
+    
+    const response = await addNewHolding(
+      ticker, 
+      portfolio.title, 
+      numericPrice, 
+      numericVolume, 
+      "USD"
+    );
+    
+    onHoldingAdded(response); // NY
+    toast.success(`${ticker} ble lagt til i ${portfolio.title}`);
+    onClose();
+
+  } catch (err: any) {
+    toast.error(err.message || "Noe gikk galt");
+  } finally {
+    setIsLoading(false);
+  }  
 }
 
 
@@ -84,28 +105,28 @@ export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalP
           {/* Venstre side: inputfeltene */}
           <div className="flex flex-col flex-1 space-y-3">
             <p className="font-mono">Ticker</p>
-            <input 
+            <Input 
               type="text" 
-              placeholder="Ticker" 
+              placeholder="Enter a ticker" 
               value={ticker} 
               onChange={(e) => setTicker(e.target.value.toUpperCase())} 
               className="border px-3 py-2 rounded w-full"
             />
 
             <p className="font-mono">Pris</p>
-            <input 
+            <Input 
               type="number" 
               placeholder="Pris" 
               value={price} 
-              onChange={(e) => setPrice(Number(e.target.value))} 
+              onChange={(e) => setPrice(e.target.value)} 
               className="border px-3 py-2 rounded w-full"
             />
             <p className="font-mono">Antall</p>
-            <input 
+            <Input 
               type="number" 
               placeholder="Volum" 
               value={volume} 
-              onChange={(e) => setVolume(Number(e.target.value))} 
+              onChange={(e) => setVolume(e.target.value)} 
               className="border px-3 py-2 rounded w-full"
             />
           </div>
@@ -127,9 +148,11 @@ export const AddToPortfolioModal = ({ portfolio, onClose }: AddToPortfolioModalP
             className="hover:underline"
             >Avbryt</Button>
           <Button 
+            disabled={isLoading} // skru av knappen når man legger til aksjen i portefljen
             className="bg-brand-button-primary hover:bg-brand-button-primary text-white-200" 
             onClick={handleAdd}
-            >Legg til</Button>
+            >{isLoading ? "Legger til..." : "Legg til"}
+          </Button>
         </div>
 
       </div>
@@ -145,21 +168,21 @@ export const useLatestStockData = (
 
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
+  // useEffect(() => {
+  //   let intervalId: NodeJS.Timeout;
 
-    const fetchLatestPrice = async () => {
-      const response = await get_companyLastPrice(symbol); // Dette API Kallet må fjernes DEPRECATED
-      if (response?.lastPrice !== undefined) {
-        setLatestPrice(response.lastPrice);
-      }
-    }
+  //   const fetchLatestPrice = async () => {
+  //     const response = await get_companyLastPrice(symbol); // Dette API Kallet må fjernes DEPRECATED
+  //     if (response?.lastPrice !== undefined) {
+  //       setLatestPrice(response.lastPrice);
+  //     }
+  //   }
 
-    fetchLatestPrice();
-    intervalId = setInterval(fetchLatestPrice, 30_000); // 30 sek
+  //   fetchLatestPrice();
+  //   intervalId = setInterval(fetchLatestPrice, 30_000); // 30 sek
 
-    return () => clearInterval(intervalId);
-  }, [symbol])
+  //   return () => clearInterval(intervalId);
+  // }, [symbol])
 
 
   // Kalkuerer hvor mye prosent enkelt aksjen har økt.
@@ -291,6 +314,17 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
   };
 
 
+  const handleHoldingAdded = (newHolding: HoldingInterface) => {
+    setPortfolioList(prev =>
+      prev.map(p => 
+        p.title === portfolio.title
+        ? {...p, holdings: [...p.holdings, newHolding] }
+        : p
+      )
+    )
+  }
+
+
   return (
     <div className="w-full h-full p-6">
       {/** Header */}
@@ -351,6 +385,7 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
         <AddToPortfolioModal
           portfolio={portfolio}
           onClose={() => setShowAddModal(false)}
+          onHoldingAdded={handleHoldingAdded}
         />
       )}
     </div>
