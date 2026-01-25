@@ -1,11 +1,11 @@
 import { CreateHoldingPayload, HoldingInterface, PortfolioInterface } from "../interfaces/stockPortfolioInterface";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Notebook } from "lucide-react";
 import { toast } from "sonner";
 import { Settings, Minus } from "lucide-react";
 import { deletePortfolio } from "./API/portfolioAPI";
-import { addNewHolding } from "./API/portfolioAPI";
+import { addNewHolding, deleteHoldingFromPortfolio } from "./API/portfolioAPI";
 import { Input } from "@/components/ui/input";
 
 
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
  * Det neste nå blir å få til portefølje i databasen brukeren skal kunne:
  * 1. X Lage porteføljer med navn
  * 2. X Legge til aksjer
- * 3. Slette aksjer
+ * 3. X Slette aksjer
  * 4. Skal kunne redigere portefølje informasjon
  * 5. Skal kunne skrive notater på aksjer
  * 6. X Slette porteføljer
@@ -168,6 +168,7 @@ export const useLatestStockData = (
 
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
 
+  // DETTE LEGGES TIL NÅR VI HAR KJØPT API TILGANG 
   // useEffect(() => {
   //   let intervalId: NodeJS.Timeout;
 
@@ -203,11 +204,40 @@ export const useLatestStockData = (
 }
 
 
-export const PortfolioTableRow = ({ holding, showSettings }: { holding: HoldingInterface, showSettings: boolean}) => {
+export const PortfolioTableRow = ({ 
+  holding, 
+  portfolio_title, 
+  showSettings,
+  onHoldingDeleted,
+}: { 
+  holding: HoldingInterface, 
+  portfolio_title: string,  
+  showSettings: boolean
+  onHoldingDeleted: (holding: HoldingInterface) => void;
+}) => {
 
   const { latestPrice, returnPercent, totalValue } =
     useLatestStockData(holding.asset.symbol, Number(holding.avg_price), Number(holding.quantity));
 
+
+  const handleDeleteHolding = async () => {
+      
+    const confirmed = window.confirm(
+    `Er du sikker på at du vil ${holding.asset.symbol} fra ${portfolio_title}?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await deleteHoldingFromPortfolio(holding.asset.symbol, portfolio_title);
+
+      onHoldingDeleted(holding);
+      toast.success(`${holding.asset.symbol} ble fjernet fra ${portfolio_title}`);
+
+      } catch (error: any) {
+        toast.error(error.message || `Kunne ikke fjerne ${holding.asset.symbol}`);
+      }
+    }
 
   return (
     <tr className="border-t hover:bg-muted/40 transition">
@@ -270,6 +300,7 @@ export const PortfolioTableRow = ({ holding, showSettings }: { holding: HoldingI
           <Button
             variant="ghost"
             className="text-red-600"
+            onClick={handleDeleteHolding}
           >
             <Minus size={16} />
           </Button>
@@ -314,6 +345,8 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
   };
 
 
+
+
   const handleHoldingAdded = (newHolding: HoldingInterface) => {
     setPortfolioList(prev =>
       prev.map(p => 
@@ -323,6 +356,22 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
       )
     )
   }
+
+  const handleHoldingDeleted = (holdingToRemove: HoldingInterface) => {
+    setPortfolioList(prev =>
+      prev.map(p =>
+        p.title === portfolio.title
+          ? {
+              ...p,
+              holdings: p.holdings.filter(
+                h => h.asset.symbol !== holdingToRemove.asset.symbol
+              ),
+            }
+          : p
+      )
+    );
+  };
+
 
 
   return (
@@ -374,7 +423,9 @@ export const PortfolioView = ({ portfolio, setPortfolioList }: portfolioViewInte
               <PortfolioTableRow
                key={holding.asset.symbol}
                holding={holding}
+               portfolio_title={portfolio.title}
                showSettings={showSettings}
+               onHoldingDeleted={handleHoldingDeleted}
               />
             ))}
           </tbody>
