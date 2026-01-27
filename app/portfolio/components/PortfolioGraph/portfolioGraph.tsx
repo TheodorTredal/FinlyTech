@@ -3,9 +3,7 @@ import React, { useEffect, useState } from "react";
 import annotationPlugin from "chartjs-plugin-annotation";
 import SkeletonGraph from "@/app/stocks/components/graph/SkeletonGraph";
 import { DateComponent } from "@/app/Components/StockGraphDates";
-import { portfolioFolderInterface } from "../../interfaces/stockPortfolioInterface";
 import { fetchStockChart } from "@/app/Services/yahooFinance/ApiSpecificCompany";
-import { get_companyLastPrice } from "@/app/Services/yahooFinance/ApiSpecificCompany";
 import {
   LineChart,
   Line,

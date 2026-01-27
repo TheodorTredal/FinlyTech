@@ -1,11 +1,16 @@
 import { CreateHoldingPayload, HoldingInterface, PortfolioInterface } from "../interfaces/stockPortfolioInterface";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Notebook } from "lucide-react";
 import { toast } from "sonner";
 import { Settings, Minus } from "lucide-react";
 import { deletePortfolio } from "./API/portfolioAPI";
-import { addNewHolding, deleteHoldingFromPortfolio } from "./API/portfolioAPI";
+import { 
+  addNewHolding, 
+  deleteHoldingFromPortfolio, 
+  get_latest_asset_price,
+  } from "./API/portfolioAPI";
+
 import { Input } from "@/components/ui/input";
 
 
@@ -17,6 +22,17 @@ import { Input } from "@/components/ui/input";
  * 4. Skal kunne redigere portefølje informasjon
  * 5. Skal kunne skrive notater på aksjer
  * 6. X Slette porteføljer
+ * 
+ * 7. Legge til "Dummy test data" for aksje priser i database
+ *   - NåværendePris (siste kjente pris)
+ *   - Lage modell
+ *   - Lage en serializer?
+ *   - Lage backend og frontend api for å hente sist kjente pris på en aksje.
+ * 
+ *   - Da vil vi så å si automatisk få
+ *      - Avkastning, nåværende pris og total verdi. og det er nice ;)
+ * 
+ * 
  */
 
 
@@ -160,6 +176,11 @@ export const AddToPortfolioModal = ({ portfolio, onClose, onHoldingAdded }: AddT
   )
 }
 
+/**
+ * Må finne ut hvorfor jeg ikke kan se prisene fra APIET, mest sannsynlig så matcher ikke det jeg prøver å hente ut, med feltene som kommer fra API'et
+ */
+
+
 export const useLatestStockData = (
   symbol: string,
   avgPrice: number,
@@ -169,21 +190,28 @@ export const useLatestStockData = (
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
 
   // DETTE LEGGES TIL NÅR VI HAR KJØPT API TILGANG 
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
 
-  //   const fetchLatestPrice = async () => {
-  //     const response = await get_companyLastPrice(symbol); // Dette API Kallet må fjernes DEPRECATED
-  //     if (response?.lastPrice !== undefined) {
-  //       setLatestPrice(response.lastPrice);
-  //     }
-  //   }
+    const fetchLatestPrice = async () => {
+      const response = await get_latest_asset_price(symbol);
+      console.log(response);
+      if (response) {
+        setLatestPrice(response.price);
+      }
+    }
 
-  //   fetchLatestPrice();
-  //   intervalId = setInterval(fetchLatestPrice, 30_000); // 30 sek
+    fetchLatestPrice();
+    intervalId = setInterval(fetchLatestPrice, 30_000); // 30 sek
 
-  //   return () => clearInterval(intervalId);
-  // }, [symbol])
+    return () => clearInterval(intervalId);
+  }, [])
+
+
+  useEffect(() => {
+    console.log("LATEST PRICE: ", latestPrice);
+
+  }, [latestPrice])
 
 
   // Kalkuerer hvor mye prosent enkelt aksjen har økt.

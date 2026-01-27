@@ -163,3 +163,40 @@ export const deleteHoldingFromPortfolio = async (symbol: string, portfolio_title
 
     return data;
 }
+
+
+
+export const get_latest_asset_price = async (symbol: string) => {
+
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+        throw new Error("Not authenticated");
+    }
+
+    const response = await fetch(`${url}/assets/${symbol}/price/`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    let data;
+    
+    try {
+        data = await response.json()
+
+    } catch (err) {
+        throw new Error(`Unexpected error: ${response.statusText}`);
+    }
+
+    if (!response.ok) {
+        const errorMessage = data.detail || `Request failed with status ${response.status}`;
+        throw new Error(errorMessage);
+    }
+
+    return data;
+
+}
