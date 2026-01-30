@@ -200,3 +200,40 @@ export const get_latest_asset_price = async (symbol: string) => {
     return data;
 
 }
+
+
+export const get_asset_historic_chart_data = async (symbol: string, period: string = "1mo") => {
+    
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+        throw new Error("Not authenticated");
+    }
+
+
+    const response = await fetch(`${url}/assets/${symbol}/history/${period}/`, 
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    let data;
+
+    try {
+        data = await response.json()
+    } catch (err) {
+        throw new Error(`Unexpected error: ${response.statusText}`);
+    }
+    
+    if (!response.ok) {
+        const errorMessage = data.detail || `Request failed with status ${response.status}`;
+        throw new Error(errorMessage);
+    }
+
+    return data;
+
+
+}

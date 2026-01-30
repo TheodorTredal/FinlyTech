@@ -2,14 +2,14 @@
 import { StockPortfolio } from "./components/stockPortfolio";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { useEffect, useState } from "react";
-import { AddToPortfolio } from "./components/addToPortfolio";
+
 import { PortfolioInterface } from "./interfaces/stockPortfolioInterface";
-import { PortfolioDevelopment } from "./components/portfolioDevelopment";
+
 import { LikedStocksComponent } from "./components/likedStocks/likedStocks";
 import { JWTTestTokenButton } from "../login/tempLogin";
 import { getUserPortfolio } from "./components/API/portfolioAPI";
 import { AddPortfolio } from "./components/stockPortfolio";
-
+import { MainPortfolioDevelopmentAndDevelopment } from "./components/portfolioCompositionAndDevelopment/mainPortfolioCompAndDev";
 
 /**
  * IMORGEN
@@ -84,6 +84,12 @@ const Portfolio = () => {
               portfolios={portfolioList}
               setPortfolioList={setPortfolioList}
             />
+          </>
+        )}
+
+        {activeComponent === ActiveComponentEnum.utvikling && (
+          <>
+            <MainPortfolioDevelopmentAndDevelopment></MainPortfolioDevelopmentAndDevelopment>
           </>
         )}
 

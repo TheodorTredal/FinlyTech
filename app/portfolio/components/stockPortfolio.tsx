@@ -3,7 +3,7 @@ import { PortfolioView } from "./portfolioFolder";
 import { PortfolioInterface } from "../interfaces/stockPortfolioInterface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortfolio } from "./API/portfolioAPI";
 
 import { Settings } from "lucide-react";

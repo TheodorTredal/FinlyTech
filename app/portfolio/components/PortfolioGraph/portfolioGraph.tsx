@@ -1,9 +1,5 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import annotationPlugin from "chartjs-plugin-annotation";
-import SkeletonGraph from "@/app/stocks/components/graph/SkeletonGraph";
-import { DateComponent } from "@/app/Components/StockGraphDates";
-import { fetchStockChart } from "@/app/Services/yahooFinance/ApiSpecificCompany";
+import { useEffect, useState } from 'react';
+import { GraphSettings } from "@/app/stocks/components/graph/graphSettings";
 import {
   LineChart,
   Line,
@@ -14,24 +10,46 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import SelectTimeInterval from "@/app/stocks/components/graph/selectTimeInterval";
+import SelectTimeInterval from '@/app/stocks/components/graph/selectTimeInterval';
 import { TimeInterval } from "@/app/stocks/components/graph/graphInterfaces";
-import { CustomToolTip } from "@/app/stocks/components/graph/tooltip";
+import { calculateTrendLine, calculateTrendLinePercentage, sliceGraphData, calculateGrowthPercentage } from '@/app/stocks/components/graph/graphHelperFunctions';
+import { CustomToolTip } from '@/app/stocks/components/graph/tooltip';
+
+import { useCalculatePortfolioChart, portfolioChartPointInterface } from '../hooks/useLatestStockData'; // BRUK DENNE FOR Å HENTE INFO OM ENKELT AKSJER I PORTEFØLJEN
 
 
 
-const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) => {
-  const [chartData, setChartData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [dateInterval, setDateInterval] = useState<string>("1y");
+const PortfolioGraph = () => {
 
+  const [data, setData] = useState<portfolioChartPointInterface[]>([]); // Send denne ned til graph settings
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
   const [growthPercentage, setGrowthPercentage] = useState<string>("");
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
 
-  const [data, setData] = useState<any>([]); // Send denne ned til graph settings
+  const newChart = useCalculatePortfolioChart({portfolio_title: "test", time_period: currentTimeInterval});
 
+
+
+
+  useEffect(() => {
+    console.log("NEW CHART: ", newChart);
+    setData(newChart)
+  }, [newChart])
+
+
+
+  const getMainLineColor = () => {
+    if (growthPercentage === null) return "#047857"
+    const numericValue = Number(growthPercentage.replace("%", "").trim())
+
+    if (numericValue >= 0) {
+        return "#047857"
+    }
+    if (numericValue < 0) {
+        return "#ef4444"
+    }
+  }
 
   return (
     <div className="bg-black" style={{ width: 700, height: 480 }}>
@@ -43,33 +61,40 @@ const PortfolioGraph = ({ portfolio }: {portfolio: portfolioFolderInterface}) =>
           trendLinePercentage={trendLinePercentage}
           price={latestPrice}
         />
+        {/* <div className="ml-4 pt-4 pr-4">
+          <GraphSettings 
+            activeIndicators={activeIndicators}
+            setActiveIndicators={setActiveIndicators} 
+            setIndicatorColors={setIndicatorColors} 
+            indicatorColors={indicatorColors}/>
+        </div> */}
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={data} >
+        <LineChart data={data}>
           <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
           <XAxis dataKey="date" />
           <YAxis
             domain={["auto", "auto"]}
             tickFormatter={(value) => value.toFixed(2)}
           />
-              <Tooltip content={<CustomToolTip />} />
+          <Tooltip content={<CustomToolTip />} />
           <Legend />
+
+          {/* Hovedstock linje */}
           <Line
             type="monotone"
-            dataKey="close"
-            stroke={"#ffffff"}
+            dataKey="totalValue"
+            stroke={getMainLineColor()}
             dot={false}
             strokeWidth={2}
             isAnimationActive={false}
           />
-
         </LineChart>
       </ResponsiveContainer>
-      </div>
-    )
-
-}
+    </div>
+  );
+};
 
 
 export default PortfolioGraph;

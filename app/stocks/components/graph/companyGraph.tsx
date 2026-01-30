@@ -73,7 +73,7 @@ const handleChartClick = (event: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetchStockChart2(searchQuery, "5y");
+      const response = await fetchStockChart2(searchQuery, "5y"); // Må endre denne senere til å være dynamisk, spesifikt interval + 180 dager for SMA
       setRawFullData(
         response.chart.map((item: any, i: any) => ({ ...item, index: i }))
       );

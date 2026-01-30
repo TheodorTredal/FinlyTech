@@ -1,5 +1,5 @@
 import { CreateHoldingPayload, HoldingInterface, PortfolioInterface } from "../interfaces/stockPortfolioInterface";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Notebook } from "lucide-react";
 import { toast } from "sonner";
@@ -8,10 +8,10 @@ import { deletePortfolio } from "./API/portfolioAPI";
 import { 
   addNewHolding, 
   deleteHoldingFromPortfolio, 
-  get_latest_asset_price,
   } from "./API/portfolioAPI";
 
 import { Input } from "@/components/ui/input";
+import { useLatestStockData } from "./hooks/useLatestStockData";
 
 
 /**
@@ -43,12 +43,6 @@ interface AddToPortfolioModalProps {
   onHoldingAdded: (holding: HoldingInterface) => void;
 }
 
-
-/**
- * 1. Gjøre checks og error handling
- * 2. Oppdatere database via API
- * 3. Oppdatere UI (setState)
- */
 export const AddToPortfolioModal = ({ portfolio, onClose, onHoldingAdded }: AddToPortfolioModalProps) => {
 
   const [ticker, setTicker] = useState<string>("");
@@ -181,55 +175,6 @@ export const AddToPortfolioModal = ({ portfolio, onClose, onHoldingAdded }: AddT
  */
 
 
-export const useLatestStockData = (
-  symbol: string,
-  avgPrice: number,
-  quantity: number
-) => {
-
-  const [latestPrice, setLatestPrice] = useState<number | null>(null);
-
-  // DETTE LEGGES TIL NÅR VI HAR KJØPT API TILGANG 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    const fetchLatestPrice = async () => {
-      const response = await get_latest_asset_price(symbol);
-      console.log(response);
-      if (response) {
-        setLatestPrice(response.price);
-      }
-    }
-
-    fetchLatestPrice();
-    intervalId = setInterval(fetchLatestPrice, 30_000); // 30 sek
-
-    return () => clearInterval(intervalId);
-  }, [])
-
-
-  useEffect(() => {
-    console.log("LATEST PRICE: ", latestPrice);
-
-  }, [latestPrice])
-
-
-  // Kalkuerer hvor mye prosent enkelt aksjen har økt.
-  const returnPercent =
-  latestPrice !== null && avgPrice > 0 
-  ? ((latestPrice - avgPrice) / avgPrice) * 100
-  : null;
-
-
-  const totalValue =
-    latestPrice !== null ? latestPrice * quantity : null;
-
-    return {
-      latestPrice,
-      returnPercent,
-      totalValue
-    }
-}
 
 
 export const PortfolioTableRow = ({ 
