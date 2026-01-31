@@ -1,10 +1,7 @@
-import { Cell, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Legend } from "recharts";
 import { get_latest_asset_price, getUserPortfolio } from "../API/portfolioAPI";
 import { useEffect, useState } from "react";
 import { PortfolioInterface } from "../../interfaces/stockPortfolioInterface";
-import { get_overview_specific_company } from "../API/portfolioAPI";
-import { Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { PieChartSettings } from "./portfolioPieChartSettings";
 
 
@@ -56,6 +53,18 @@ const COLORS = [
  *  vise i PieChart
  */
 
+/**
+ * For å få PieChart dynamisk
+ * 1. Må flytte ut useEffekten (den nederste)
+ * 2. UseEffecten må bli kallt når man klikker på riktig radio knapp
+ */
+
+
+interface HoldingWithValueInterface {
+    sector: string;
+    value: number;
+}
+
 interface PortfolioPieChartInterface {
     name: string;
     value: number;
@@ -65,7 +74,8 @@ interface PortfolioPieChartInterface {
 export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) => {
 
     const [portfolioData, setPortfolioData] = useState<PortfolioInterface[]>([]);
-    const [pieData, setPieData] = useState<PortfolioPieChartInterface[]>([])
+    const [pieData, setPieData] = useState<PortfolioPieChartInterface[]>([]);
+    const [RadioValue, setRadioValue] = useState<string>("aksjer");
 
     useEffect(() => {
 
@@ -87,24 +97,71 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
 
         if (!matchingPortfolio) return;
 
-        const pieData = await Promise.all(
-          matchingPortfolio.holdings.map(async (holding) => {
-            const res = await get_latest_asset_price(
-              holding.asset.symbol
+        switch (RadioValue) {
+          case "aksjer": {
+            const pieData = await Promise.all(
+              matchingPortfolio.holdings.map(async (holding) => {
+                const res = await get_latest_asset_price(holding.asset.symbol);
+
+                return {
+                  name: holding.asset.symbol,
+                  value: Number(res.price) * holding.quantity,
+                };
+              })
             );
 
-            return {
-              name: holding.asset.symbol,
-              value: Number(res.price) * holding.quantity,
-            };
-          })
-        );
+            setPieData(pieData);
+            break;
+          }
 
-        setPieData(pieData);
+          case "sektor":
+            console.log("Sektor");
+            const sectorMap: Record<string, number> = {}
+
+            for (const holding of matchingPortfolio.holdings) {
+                const res = await get_latest_asset_price(holding.asset.symbol);
+            
+                const sector = holding.asset.sector || "Unknown";
+                const value = Number(res.price) * holding.quantity;
+
+                sectorMap[sector] = (sectorMap[sector] ?? 0 + value);
+            }
+
+            setPieData(
+                Object.entries(sectorMap).map(([name, value]) => ({
+                    name,
+                    value,
+                }))
+            )
+            break;
+
+          case "industri":
+            console.log("Industri");
+            const industryMap: Record<string, number> = {}
+
+            for (const holding of matchingPortfolio.holdings) {
+                const res = await get_latest_asset_price(holding.asset.industry);
+
+                const industry = holding.asset.industry || "Unknown";
+                const value = Number(res.price) * holding.quantity;
+
+                industryMap[industry] = (industryMap[industry ?? 0 + value]);
+            }
+
+            setPieData(
+                Object.entries(industryMap).map(([name, value]) => ({
+                    name,
+                    value,
+                }))
+            )
+            break;
+        }
       };
 
-      fetchPieData();
-    }, [portfolioData, portfolioTitle]);
+    fetchPieData();
+
+    }, [portfolioData, portfolioTitle, RadioValue]);
+
 
 
     return (
@@ -115,11 +172,11 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
           <h2 className="text-sm font-semibold text-gray-700">
             {portfolioTitle}
           </h2>
-            <PieChartSettings></PieChartSettings>
+            <PieChartSettings value={RadioValue} onChange={setRadioValue}></PieChartSettings>
         </div>
 
         {/* CONTENT */}
-        <div className="flex justify-center py-4 h-80">
+        <div className="flex justify-center py-4 h-96">
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -138,6 +195,7 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
                         />
                       ))}
                   </Pie>
+                  <Legend/>
                 </PieChart>
             </ResponsiveContainer>
         </div>

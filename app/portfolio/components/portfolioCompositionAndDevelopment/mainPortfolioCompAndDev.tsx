@@ -100,6 +100,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { PortfolioPieChart } from "../pieCharts.tsx/PortfolioPieChart"
 
 // Dropdown menu for porteføljen til brukeren
 const SelectPortfolio = ({setCurrentSelectedPortfolio}: {setCurrentSelectedPortfolio: React.Dispatch<SetStateAction<string>>}) => {
@@ -145,11 +146,7 @@ const SelectPortfolio = ({setCurrentSelectedPortfolio}: {setCurrentSelectedPortf
 
 
 export const MainPortfolioDevelopment = () => {
-    const [currentSelectedPortfolio, setCurrentSelectedPortfolio] = useState<string>("");
-
-    useEffect(() => {
-        console.log("SELECTING PORTFOLIO: ", currentSelectedPortfolio);
-    }, [currentSelectedPortfolio])
+    const [currentSelectedPortfolio, setCurrentSelectedPortfolio] = useState<string>("test");
 
     return (
         <div className="w-full h-full">
@@ -157,6 +154,7 @@ export const MainPortfolioDevelopment = () => {
             
             {/**Må hente liste over alle porteføljene titlene på bruker via API */}
             <PortfolioGraph portfolio_title={currentSelectedPortfolio}></PortfolioGraph>
+            <PortfolioPieChart portfolioTitle={currentSelectedPortfolio}></PortfolioPieChart>
         </div>
     )
 }
