@@ -14,16 +14,21 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Settings } from "lucide-react"
 import { useState } from "react"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface PieChartSettingsProps {
     value: string;
-    onChange: (value: string) => void
+    onChange: (value: string) => void;
+    showPercent: boolean;
+    setShowPercent: (v: boolean) => void;
 }
 
 
 export const PieChartSettings = ({
   value,
   onChange,
+  showPercent,
+  setShowPercent,
 }: PieChartSettingsProps) => {
   return (
     <Sheet>
@@ -65,7 +70,19 @@ export const PieChartSettings = ({
               <Label htmlFor="industri">Vis industri</Label>
             </div>
           </RadioGroup>
+
+        <div className="flex items-center space-x-3 pt-4">
+            <Checkbox
+                id="showPercent"
+                checked={showPercent}
+                onCheckedChange={(checked: boolean) => setShowPercent(Boolean(checked))}
+                />
+
+            <Label htmlFor="showPercent">Vis prosent</Label>
+
         </div>
+                </div>
+
       </SheetContent>
     </Sheet>
   )

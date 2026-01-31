@@ -1,4 +1,4 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Legend } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { get_latest_asset_price, getUserPortfolio } from "../API/portfolioAPI";
 import { useEffect, useState } from "react";
 import { PortfolioInterface } from "../../interfaces/stockPortfolioInterface";
@@ -76,6 +76,7 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
     const [portfolioData, setPortfolioData] = useState<PortfolioInterface[]>([]);
     const [pieData, setPieData] = useState<PortfolioPieChartInterface[]>([]);
     const [RadioValue, setRadioValue] = useState<string>("aksjer");
+    const [showPercent, setShowPercent] = useState<boolean>(true);
 
     useEffect(() => {
 
@@ -124,7 +125,7 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
                 const sector = holding.asset.sector || "Unknown";
                 const value = Number(res.price) * holding.quantity;
 
-                sectorMap[sector] = (sectorMap[sector] ?? 0 + value);
+                sectorMap[sector] = ((sectorMap[sector] ?? 0) + value);
             }
 
             setPieData(
@@ -145,7 +146,7 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
                 const industry = holding.asset.industry || "Unknown";
                 const value = Number(res.price) * holding.quantity;
 
-                industryMap[industry] = (industryMap[industry ?? 0 + value]);
+                industryMap[industry] = ((industryMap[industry] ?? 0) + value);
             }
 
             setPieData(
@@ -172,32 +173,50 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
           <h2 className="text-sm font-semibold text-gray-700">
             {portfolioTitle}
           </h2>
-            <PieChartSettings value={RadioValue} onChange={setRadioValue}></PieChartSettings>
+            <PieChartSettings 
+                value={RadioValue} 
+                onChange={setRadioValue}
+                setShowPercent={setShowPercent}
+                showPercent={showPercent}
+                ></PieChartSettings>
         </div>
 
         {/* CONTENT */}
         <div className="flex justify-center py-4 h-96">
-            <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
-                    label
-                    >
-                    {pieData.map((_, index) => (
-                        <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                  </Pie>
-                  <Legend/>
-                </PieChart>
-            </ResponsiveContainer>
+<ResponsiveContainer width="100%" height="100%">
+  <PieChart>
+    <Pie
+      data={pieData}
+      dataKey="value"
+      nameKey="name"
+      cx="50%"
+      cy="50%"
+      outerRadius={120}
+      label={({ name, value }) =>
+        showPercent
+          ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
+          : `${value.toLocaleString()} kr`
+      }
+    >
+      {pieData.map((_, index) => (
+        <Cell
+          key={`cell-${index}`}
+          fill={COLORS[index % COLORS.length]}
+        />
+      ))}
+    </Pie>
+
+    <Tooltip
+      formatter={(value: number) =>
+        showPercent
+          ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
+          : `${value.toLocaleString()} kr`
+      }
+    />
+    <Legend />
+  </PieChart>
+</ResponsiveContainer>
+
         </div>
 
       </div>
