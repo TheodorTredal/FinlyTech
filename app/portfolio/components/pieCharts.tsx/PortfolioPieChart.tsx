@@ -3,6 +3,7 @@ import { get_latest_asset_price, getUserPortfolio } from "../API/portfolioAPI";
 import { useEffect, useState } from "react";
 import { PortfolioInterface } from "../../interfaces/stockPortfolioInterface";
 import { PieChartSettings } from "./portfolioPieChartSettings";
+import { usePortfolio } from "@/app/context/portfolioContext";
 
 
 // Farge 1
@@ -59,19 +60,15 @@ const COLORS = [
  * 2. UseEffecten må bli kallt når man klikker på riktig radio knapp
  */
 
-
-interface HoldingWithValueInterface {
-    sector: string;
-    value: number;
-}
-
 interface PortfolioPieChartInterface {
     name: string;
     value: number;
 }
 
 // Enkel portfolio pie chart som viser hvor stor aksjene er i forhold til hverandre.
-export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) => {
+export const PortfolioPieChart = () => {
+
+    const { currentPortfolio } = usePortfolio();
 
     const [portfolioData, setPortfolioData] = useState<PortfolioInterface[]>([]);
     const [pieData, setPieData] = useState<PortfolioPieChartInterface[]>([]);
@@ -93,7 +90,7 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
 
       const fetchPieData = async () => {
         const matchingPortfolio = portfolioData.find(
-          (p) => p.title === portfolioTitle
+          (p) => p.title === currentPortfolio
         );
 
         if (!matchingPortfolio) return;
@@ -161,64 +158,53 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
 
     fetchPieData();
 
-    }, [portfolioData, portfolioTitle, RadioValue]);
+    }, [portfolioData, currentPortfolio, RadioValue]);
 
+  return (
+    <div className="w-80 rounded-xl border shadow-sm bg-black" style={{ width: 400, height: 400}}>
 
-
-    return (
-      <div className="w-1/3 rounded-xl border shadow-sm">
-
-        {/* HEADER */}
-        <div className="flex items-center justify-between border-b px-4 py-3">
-          <h2 className="text-sm font-semibold text-gray-700">
-            {portfolioTitle}
-          </h2>
-            <PieChartSettings 
-                value={RadioValue} 
-                onChange={setRadioValue}
-                setShowPercent={setShowPercent}
-                showPercent={showPercent}
-                ></PieChartSettings>
-        </div>
-
-        {/* CONTENT */}
-        <div className="flex justify-center py-4 h-96">
-<ResponsiveContainer width="100%" height="100%">
-  <PieChart>
-    <Pie
-      data={pieData}
-      dataKey="value"
-      nameKey="name"
-      cx="50%"
-      cy="50%"
-      outerRadius={120}
-      label={({ name, value }) =>
-        showPercent
-          ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
-          : `${value.toLocaleString()} kr`
-      }
-    >
-      {pieData.map((_, index) => (
-        <Cell
-          key={`cell-${index}`}
-          fill={COLORS[index % COLORS.length]}
+      {/* HEADER */}
+      <div className="flex items-center justify-between border-b px-4 py-3">
+        <h2 className="text-sm font-semibold text-gray-700">{currentPortfolio}</h2>
+        <PieChartSettings
+          value={RadioValue}
+          onChange={setRadioValue}
+          setShowPercent={setShowPercent}
+          showPercent={showPercent}
         />
-      ))}
-    </Pie>
-
-    <Tooltip
-      formatter={(value: number) =>
-        showPercent
-          ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
-          : `${value.toLocaleString()} kr`
-      }
-    />
-    <Legend />
-  </PieChart>
-</ResponsiveContainer>
-
-        </div>
-
       </div>
-    );
+
+      {/* CONTENT */}
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart width={300} height={300}>
+            <Pie
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
+              label={({ name, value }) =>
+                showPercent
+              ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
+              : `${value.toLocaleString()} kr`
+            }
+            >
+              {pieData.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+            </Pie>
+
+            <Tooltip
+              formatter={(value: number) =>
+                showPercent
+                ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
+                : `${value.toLocaleString()} kr`
+            }
+            />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+    </div>
+  )
 }

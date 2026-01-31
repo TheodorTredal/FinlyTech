@@ -1,9 +1,13 @@
 import Portfolio from "./Portfolio";
+import { PortfolioProvider } from "../context/portfolioContext";
+
 
 const Page = () => {
     return (
         <div>
-            <Portfolio></Portfolio>
+            <PortfolioProvider>
+                <Portfolio></Portfolio>
+            </PortfolioProvider>
         </div>
     )
 }

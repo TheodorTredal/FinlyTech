@@ -79,9 +79,7 @@ export default function StocksPage() {
           <SidebarAddComponentButton setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></SidebarAddComponentButton>
           <BluePrintSidebar setEdit={setEdit} setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></BluePrintSidebar>
         </div>
-
-
-  </div>
+      </div>
 
     <div className={activeComponent === ActiveComponentEnum.Stock ? "block" : "hidden"}>
       <BluePrintTemplateTest edit={edit} />

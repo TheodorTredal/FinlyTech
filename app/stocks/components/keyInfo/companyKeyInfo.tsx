@@ -53,7 +53,7 @@ export const CompanyKeyInfo = ( {className = ""}: CompanyKeyInfoProps ) => {
                 return (
                   <div key={key} className="flex justify-between text-sm border-b pb-1">
                     <span className="font-medium">{label}</span>
-                    <span>{value ?? "–"}</span>
+                    <span>{value ?? "-"}</span>
                   </div>
                 )
               })}

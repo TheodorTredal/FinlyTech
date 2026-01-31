@@ -81,7 +81,7 @@
  *   -
  *
  * 
- * DIV
+ * DIV Passer til STOCKS delene av applikasjonen
  *  - Firma segmenter, hvor stor er hver divisjon?
  *    -  Etter inntjening
  * 
@@ -89,7 +89,7 @@
  */
 
 
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import PortfolioGraph from "../PortfolioGraph/portfolioGraph"
 import { PortfolioInterface } from "../../interfaces/stockPortfolioInterface"
 import { getUserPortfolio } from "../API/portfolioAPI"
@@ -101,9 +101,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { PortfolioPieChart } from "../pieCharts.tsx/PortfolioPieChart"
+import { usePortfolio } from "@/app/context/portfolioContext"
+
 
 // Dropdown menu for porteføljen til brukeren
-const SelectPortfolio = ({setCurrentSelectedPortfolio}: {setCurrentSelectedPortfolio: React.Dispatch<SetStateAction<string>>}) => {
+export const SelectPortfolio = () => {
+
+
+    const { currentPortfolio, setCurrentPortfolio } = usePortfolio();
 
     const [portfolioList, setPortfolioList] = useState<PortfolioInterface[]>([]);
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState<boolean>(false);
@@ -134,7 +139,9 @@ const SelectPortfolio = ({setCurrentSelectedPortfolio}: {setCurrentSelectedPortf
 
             <DropdownMenuContent>
                 {portfolioList.map((portfolio) => (
-                    <DropdownMenuItem key={portfolio.id} onClick={() => setCurrentSelectedPortfolio(portfolio.title)}>
+                    <DropdownMenuItem 
+                        key={portfolio.id} 
+                        onClick={() => setCurrentPortfolio(portfolio.title)}>
                         {portfolio.title}
                     </DropdownMenuItem>
                 ))}
@@ -145,16 +152,13 @@ const SelectPortfolio = ({setCurrentSelectedPortfolio}: {setCurrentSelectedPortf
 }
 
 
-export const MainPortfolioDevelopment = () => {
-    const [currentSelectedPortfolio, setCurrentSelectedPortfolio] = useState<string>("test");
+export const MainPortfolioDevelopment = ({currentSelectedPortfolio}: {currentSelectedPortfolio: string}) => {
 
     return (
         <div className="w-full h-full">
-            <SelectPortfolio setCurrentSelectedPortfolio={setCurrentSelectedPortfolio}></SelectPortfolio>
-            
             {/**Må hente liste over alle porteføljene titlene på bruker via API */}
             <PortfolioGraph portfolio_title={currentSelectedPortfolio}></PortfolioGraph>
-            <PortfolioPieChart portfolioTitle={currentSelectedPortfolio}></PortfolioPieChart>
+            <PortfolioPieChart></PortfolioPieChart>
         </div>
     )
 }
