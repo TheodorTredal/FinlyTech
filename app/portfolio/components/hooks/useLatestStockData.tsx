@@ -107,43 +107,47 @@ export const useCalculatePortfolioChart = ({portfolio_title, time_period}: {port
   // 1. bare få opp totalverdi uten å tenke på når aksjen ble kjøpt.
   // 2. Vi må nok legge til litt ekstra data i porteføljen for når asset ble kjøpt / solgt typ kalender aktig
   // OBS!!! KAN FOREKOMME BUGS HVIS BEGGE ASSETTENE IKKE HAR SAMME DATOER (AKA LIKE MYE DATA!!!)
-useEffect(() => {
-  if (portfolioList.length === 0) return;
+  useEffect(() => {
+    if (portfolioList.length === 0) {
+      return;
+    }
 
-  const fetchData = async () => {
-    const matchingPortfolio = portfolioList.find(
-      (p) => p.title === portfolio_title
-    );
+    const fetchData = async () => {
+      const matchingPortfolio = portfolioList.find(
+        (p) => p.title === portfolio_title
+      );
 
-    if (!matchingPortfolio) return;
+      if (!matchingPortfolio) {
+        return;
+      }
 
-    const charts = await Promise.all(
-      matchingPortfolio.holdings.map((holding) =>
-        get_asset_historic_chart_data(
-          holding.asset.symbol,
-          time_period
+      const charts = await Promise.all(
+        matchingPortfolio.holdings.map((holding) =>
+          get_asset_historic_chart_data(
+            holding.asset.symbol,
+            time_period
+          )
         )
-      )
-    );
+      );
 
-    const portfolioValueByDate: Record<string, number> = {};
+      const portfolioValueByDate: Record<string, number> = {};
 
-    charts.forEach((assetChart, index) => {
-      const quantity = Number(matchingPortfolio.holdings[index].quantity);
-
-      assetChart.chart.forEach((point: any) => {
-        if (!portfolioValueByDate[point.date]) {
-          portfolioValueByDate[point.date] = 0;
-        }
-        portfolioValueByDate[point.date] += point.close * quantity;
+      charts.forEach((assetChart, index) => {
+        const quantity = Number(matchingPortfolio.holdings[index].quantity);
+      
+        assetChart.chart.forEach((point: any) => {
+          if (!portfolioValueByDate[point.date]) {
+            portfolioValueByDate[point.date] = 0;
+          }
+          portfolioValueByDate[point.date] += point.close * quantity;
+        });
       });
-    });
+    
+      const portfolioChart = Object.entries(portfolioValueByDate)
+        .map(([date, totalValue]) => ({ date, totalValue }))
+        .sort((a, b) => a.date.localeCompare(b.date));
 
-    const portfolioChart = Object.entries(portfolioValueByDate)
-      .map(([date, totalValue]) => ({ date, totalValue }))
-      .sort((a, b) => a.date.localeCompare(b.date));
-
-    console.log("Portfolio chart:", portfolioChart);
+    // console.log("Portfolio chart:", portfolioChart);
     setPortfolioChart(portfolioChart);
   };
 

@@ -10,6 +10,7 @@ import { JWTTestTokenButton } from "../login/tempLogin";
 import { getUserPortfolio } from "./components/API/portfolioAPI";
 import { AddPortfolio } from "./components/stockPortfolio";
 import { MainPortfolioDevelopmentAndDevelopment } from "./components/portfolioCompositionAndDevelopment/mainPortfolioCompAndDev";
+import { PortfolioDevelopment } from "./components/portfolioDevelopment";
 
 /**
  * IMORGEN
@@ -90,6 +91,7 @@ const Portfolio = () => {
         {activeComponent === ActiveComponentEnum.utvikling && (
           <>
             <MainPortfolioDevelopmentAndDevelopment></MainPortfolioDevelopmentAndDevelopment>
+            <PortfolioDevelopment></PortfolioDevelopment>
           </>
         )}
 

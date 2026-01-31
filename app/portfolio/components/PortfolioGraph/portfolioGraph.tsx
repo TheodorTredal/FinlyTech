@@ -33,8 +33,23 @@ const PortfolioGraph = () => {
 
 
   useEffect(() => {
-    console.log("NEW CHART: ", newChart);
-    setData(newChart)
+    // console.log("NEW CHART: ", newChart);
+    
+    if (newChart.length === 0) {
+      return
+    }
+    
+    setData(newChart); 
+
+    const firstIndex = newChart[newChart.length - 1];
+    setLatestPrice(firstIndex.totalValue);
+
+
+    // kalkuler hvor mye porteføljen har vokst innen tidsintervallet
+    const lastIndex = newChart[0];
+    const growth_percentage = ((firstIndex.totalValue - lastIndex.totalValue) / lastIndex.totalValue ) * 100;
+    setGrowthPercentage(String(growth_percentage.toFixed(2)) + "%");
+
   }, [newChart])
 
 

@@ -148,7 +148,7 @@ export const MainPortfolioDevelopmentAndDevelopment = () => {
     const [currentSelectedPortfolio, setCurrentSelectedPortfolio] = useState<string>("");
 
     useEffect(() => {
-        console.log("SELECTING PORTFOLIO: ", currentSelectedPortfolio);
+        // console.log("SELECTING PORTFOLIO: ", currentSelectedPortfolio);
     }, [currentSelectedPortfolio])
 
     return (
