@@ -144,11 +144,11 @@ const SelectPortfolio = ({setCurrentSelectedPortfolio}: {setCurrentSelectedPortf
 }
 
 
-export const MainPortfolioDevelopmentAndDevelopment = () => {
+export const MainPortfolioDevelopment = () => {
     const [currentSelectedPortfolio, setCurrentSelectedPortfolio] = useState<string>("");
 
     useEffect(() => {
-        // console.log("SELECTING PORTFOLIO: ", currentSelectedPortfolio);
+        console.log("SELECTING PORTFOLIO: ", currentSelectedPortfolio);
     }, [currentSelectedPortfolio])
 
     return (
@@ -156,10 +156,7 @@ export const MainPortfolioDevelopmentAndDevelopment = () => {
             <SelectPortfolio setCurrentSelectedPortfolio={setCurrentSelectedPortfolio}></SelectPortfolio>
             
             {/**Må hente liste over alle porteføljene titlene på bruker via API */}
-            <PortfolioGraph></PortfolioGraph>
-
-
+            <PortfolioGraph portfolio_title={currentSelectedPortfolio}></PortfolioGraph>
         </div>
-
     )
 }

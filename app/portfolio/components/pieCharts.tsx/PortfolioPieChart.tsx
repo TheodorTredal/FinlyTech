@@ -5,6 +5,7 @@ import { PortfolioInterface } from "../../interfaces/stockPortfolioInterface";
 import { get_overview_specific_company } from "../API/portfolioAPI";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PieChartSettings } from "./portfolioPieChartSettings";
 
 
 // Farge 1
@@ -114,12 +115,7 @@ export const PortfolioPieChart = ({portfolioTitle}: {portfolioTitle: string} ) =
           <h2 className="text-sm font-semibold text-gray-700">
             {portfolioTitle}
           </h2>
-          <Button
-            variant="ghost"
-                    >
-            <Settings />
-          </Button>
-
+            <PieChartSettings></PieChartSettings>
         </div>
 
         {/* CONTENT */}

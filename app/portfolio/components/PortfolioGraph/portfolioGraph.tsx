@@ -19,7 +19,7 @@ import { useCalculatePortfolioChart, portfolioChartPointInterface } from '../hoo
 
 
 
-const PortfolioGraph = () => {
+const PortfolioGraph = ({portfolio_title}: {portfolio_title: string}) => {
 
   const [data, setData] = useState<portfolioChartPointInterface[]>([]); // Send denne ned til graph settings
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
@@ -27,7 +27,7 @@ const PortfolioGraph = () => {
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
 
-  const newChart = useCalculatePortfolioChart({portfolio_title: "test", time_period: currentTimeInterval});
+  const newChart = useCalculatePortfolioChart({portfolio_title: portfolio_title, time_period: currentTimeInterval});
 
 
 
