@@ -37,8 +37,6 @@ const PortfolioGraph = () => {
 
 
   useEffect(() => {
-    // console.log("NEW CHART: ", newChart);
-    
     if (newChart.length === 0) {
       return
     }
@@ -71,7 +69,7 @@ const PortfolioGraph = () => {
   }
 
   return (
-    <div className="bg-black" style={{ width: 700, height: 480 }}>
+    <div className="bg-black" style={{ width: 700, height: 400 }}>
       <div className='flex'>
         <SelectTimeInterval 
           currentTimeInterval={currentTimeInterval} 
@@ -90,7 +88,7 @@ const PortfolioGraph = () => {
         </div> */}
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <CartesianGrid stroke="#505050" strokeDasharray="0 0" strokeWidth={1} />
           <XAxis dataKey="date" />

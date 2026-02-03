@@ -161,10 +161,10 @@ export const PortfolioPieChart = () => {
     }, [portfolioData, currentPortfolio, RadioValue]);
 
   return (
-    <div className="w-80 rounded-xl border shadow-sm bg-black" style={{ width: 400, height: 400}}>
+    <div className="w-80 rounded-xl border shadow-sm bg-black" style={{ width: 350, height: 350}}>
 
       {/* HEADER */}
-      <div className="flex items-center justify-between border-b px-4 py-3">
+      <div className="flex items-center justify-between border-b px-4">
         <h2 className="text-sm font-semibold text-gray-700">{currentPortfolio}</h2>
         <PieChartSettings
           value={RadioValue}
@@ -176,14 +176,14 @@ export const PortfolioPieChart = () => {
 
       {/* CONTENT */}
         <ResponsiveContainer width="100%" height={300}>
-          <PieChart width={300} height={300}>
+          <PieChart width={200} height={200}>
             <Pie
               data={pieData}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius={120}
+              outerRadius={90}
               label={({ name, value }) =>
                 showPercent
               ? `${((value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(1)}%`
