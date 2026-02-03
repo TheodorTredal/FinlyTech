@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GraphSettings } from "@/app/stocks/components/graph/graphSettings";
+import { Settings } from 'lucide-react';
 import {
   LineChart,
   Line,
@@ -16,10 +17,10 @@ import { calculateTrendLine, calculateTrendLinePercentage, sliceGraphData, calcu
 import { CustomToolTip } from '@/app/stocks/components/graph/tooltip';
 
 import { useCalculatePortfolioChart, portfolioChartPointInterface } from '../hooks/useLatestStockData'; // BRUK DENNE FOR Å HENTE INFO OM ENKELT AKSJER I PORTEFØLJEN
+import { usePortfolio } from '@/app/context/portfolioContext';
 
 
-
-const PortfolioGraph = ({portfolio_title}: {portfolio_title: string}) => {
+const PortfolioGraph = () => {
 
   const [data, setData] = useState<portfolioChartPointInterface[]>([]); // Send denne ned til graph settings
   const [currentTimeInterval, setCurrentTimeInterval] = useState<TimeInterval>("1y");
@@ -27,7 +28,10 @@ const PortfolioGraph = ({portfolio_title}: {portfolio_title: string}) => {
   const [trendLinePercentage, setTrendlinePercentage] = useState<number | null>(null);
   const [latestPrice, setLatestPrice] = useState<number | null>(null);
 
-  const newChart = useCalculatePortfolioChart({portfolio_title: portfolio_title, time_period: currentTimeInterval});
+  const { currentPortfolio } = usePortfolio();
+
+
+  const newChart = useCalculatePortfolioChart({portfolio_title: currentPortfolio, time_period: currentTimeInterval});
 
 
 
@@ -76,6 +80,7 @@ const PortfolioGraph = ({portfolio_title}: {portfolio_title: string}) => {
           trendLinePercentage={trendLinePercentage}
           price={latestPrice}
         />
+        {/* <Settings className=''></Settings> */}
         {/* <div className="ml-4 pt-4 pr-4">
           <GraphSettings 
             activeIndicators={activeIndicators}

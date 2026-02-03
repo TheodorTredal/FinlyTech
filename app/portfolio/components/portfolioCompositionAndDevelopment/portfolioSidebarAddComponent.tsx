@@ -11,6 +11,7 @@ interface BluePrintSidebarProps {
 const COMPONENTS = [
     { type: "keyInfo", icon: "🧾", label: "Nøkkeltall om Porteføljen" },
     { type: "pieChart", icon: "p", label: "Portefølje fordeling" },
+    { type: "portfolioChart", icon: "G", label: "Portefølje graf" },
 ];
 
 export const BluePrintSidebarPortfolio = ({ setEdit, setIsOpen, isOpen }: BluePrintSidebarProps) => {

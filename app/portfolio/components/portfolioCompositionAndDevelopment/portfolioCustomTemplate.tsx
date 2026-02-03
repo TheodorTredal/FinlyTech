@@ -1,12 +1,11 @@
 // BluePrintTemplateTest.tsx
 import React, { useEffect, useState } from "react"
 import { DraggableWrapper } from "@/app/stocks/components/blueprint/draggableWrapper"
-// import "./blueprint.css"
-// import blueprint.css
 
 // Komponenter
 import { CompanyKeyInfo } from "@/app/stocks/components/keyInfo/companyKeyInfo"
 import { PortfolioPieChart } from "../pieCharts.tsx/PortfolioPieChart"
+import PortfolioGraph from "../PortfolioGraph/portfolioGraph"
 
 
 
@@ -116,6 +115,10 @@ export const BluePrintTemplateTestPortfolio = ({ edit, currentPortfolio }: BlueP
 
         case "keyInfo":
             ComponentToRender = CompanyKeyInfo;
+            break;
+
+          case "portfolioChart":
+            ComponentToRender = PortfolioGraph;
             break;
       default:
         return null;

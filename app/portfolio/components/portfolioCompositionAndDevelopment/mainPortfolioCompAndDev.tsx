@@ -11,7 +11,8 @@
  *
  *  - Sector og industry pie chart
  *  - Hvor mye % av porteføljen min består av aksje x
- *  - Data om porteføljen som brukeren har lyst til å få innsikt på
+ *  - og andre data om porteføljen som brukeren har lyst til å få innsikt på via pie chart??
+ * 
  * - Risiko & volatilitet
  *   - Hvor risikabel er porteføljen min?
  *   - Maks drawdown
@@ -51,6 +52,8 @@
  *      - Risiko vs mål
  *      - Allokeringsmål -> Faktisk vs ønsket (f.eks 70/30, aksjer, renter) 
  * 
+ * 
+ *  Performers vs potential underperformers
  * 
  * Alerts & innsikt
  * Hva bør jeg vite nå?
@@ -97,12 +100,14 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
+    DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { PortfolioPieChart } from "../pieCharts.tsx/PortfolioPieChart"
 import { usePortfolio } from "@/app/context/portfolioContext"
-
+import { ChevronDown } from "lucide-react"
+import { AddPortfolio } from "../stockPortfolio"
 
 // Dropdown menu for porteføljen til brukeren
 export const SelectPortfolio = () => {
@@ -132,19 +137,30 @@ export const SelectPortfolio = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" onClick={handleOpenMenu}>
-                    Velg portefølje
+                <Button variant="outline" className="flex gap-2 min-w-[200px] justify-between">
+                  {currentPortfolio ?? "Velg portefølje"}
+                  <ChevronDown className="h-4 w-4 opacity-60" />
                 </Button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
+                    
                 {portfolioList.map((portfolio) => (
-                    <DropdownMenuItem 
-                        key={portfolio.id} 
-                        onClick={() => setCurrentPortfolio(portfolio.title)}>
-                        {portfolio.title}
+                    <DropdownMenuItem
+                    key={portfolio.id}
+                    onClick={() => setCurrentPortfolio(portfolio.title)}
+                    className={`flex justify-between min-w-[190px] ${
+                        currentPortfolio === portfolio.title ? "bg-muted font-medium" : ""
+                    }`}
+                    >
+                      {portfolio.title}
+                      {currentPortfolio === portfolio.title}
                     </DropdownMenuItem>
                 ))}
+                    <DropdownMenuSeparator></DropdownMenuSeparator>
+                    <DropdownMenuItem className="text-primary font-medium">
+                    + Opprett ny portefølje
+                    </DropdownMenuItem>
             </DropdownMenuContent>
 
         </DropdownMenu>
@@ -157,8 +173,8 @@ export const MainPortfolioDevelopment = ({currentSelectedPortfolio}: {currentSel
     return (
         <div className="w-full h-full">
             {/**Må hente liste over alle porteføljene titlene på bruker via API */}
-            <PortfolioGraph portfolio_title={currentSelectedPortfolio}></PortfolioGraph>
-            <PortfolioPieChart></PortfolioPieChart>
+            {/* <PortfolioGraph portfolio_title={currentSelectedPortfolio}></PortfolioGraph> */}
+            {/* <PortfolioPieChart></PortfolioPieChart> */}
         </div>
     )
 }

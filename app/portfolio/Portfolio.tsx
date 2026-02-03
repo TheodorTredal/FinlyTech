@@ -72,23 +72,40 @@ const Portfolio = () => {
   return (
     <div className="w-screen h-[calc(100vh-50px)] flex flex-col">
       
-      <Menubar className="w-1/2 rounded-xl p-2 space-x-4 mb-4 mt-4 border-2">
+      <div className="flex flex-row">
+
+      <Menubar className="w-1/2 rounded-xl p-2 space-x-4 mb-4 border-2">
         <MenubarMenu>
           {Object.values(ActiveComponentEnum).map(component => (
             <MenubarTrigger
-              key={component}
-              onClick={() => handleMenuClick(component)}
-              className={`px-4 py-2 transition-all duration-200 ${
-                activeComponent === component
-                  ? "text-white"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
+            key={component}
+            onClick={() => handleMenuClick(component)}
+            className={`px-4 py-2 transition-all duration-200 ${
+              activeComponent === component
+              ? "text-white"
+              : "text-gray-400 hover:text-gray-200"
+            }`}
             >
               {component.charAt(0).toUpperCase() + component.slice(1)}
             </MenubarTrigger>
           ))}
         </MenubarMenu>
+
+      
+      
+      
       </Menubar>
+
+
+          <SelectPortfolio />
+        <div className={`${activeComponent === ActiveComponentEnum.utvikling ? "block": "hidden"} relative flex justify-between space-x-4 ml-auto`}>
+          <EditTemplateButton edit={edit} setEdit={setEdit}/>
+          <SidebarAddComponentButton setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></SidebarAddComponentButton>
+          <BluePrintSidebarPortfolio setEdit={setEdit} setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></BluePrintSidebarPortfolio>
+        </div>
+
+      </div>
+
 
     {/* SCROLL-CONTAINER */}
       <div className="flex-1 overflow-y-auto px-4">
@@ -107,12 +124,6 @@ const Portfolio = () => {
         )}
 
 
-        <div className={`${activeComponent === ActiveComponentEnum.utvikling ? "block": "hidden"} relative flex justify-between space-x-4`}>
-          <SelectPortfolio />
-          <EditTemplateButton edit={edit} setEdit={setEdit}/>
-          <SidebarAddComponentButton setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></SidebarAddComponentButton>
-          <BluePrintSidebarPortfolio setEdit={setEdit} setIsOpen={setSidebarIsOpen} isOpen={SidebarIsOpen}></BluePrintSidebarPortfolio>
-        </div>
 
         <div className={`${activeComponent === ActiveComponentEnum.utvikling ? "block" : "hidden"}`}>
             <BluePrintTemplateTestPortfolio edit={edit} currentPortfolio={currentSelectedPortfolio}></BluePrintTemplateTestPortfolio>
